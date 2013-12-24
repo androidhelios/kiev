@@ -21,35 +21,39 @@ public class App {
         ApplicationContext appContext = 
     	  new ClassPathXmlApplicationContext("applicationContext.xml");
  
-    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
+//    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
+//        System.out.println("Hello World!");
+        
+    	FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
+    	frameMain.initFrameMain();
         System.out.println("Hello World!");
-
-        Trader trader = new Trader();
-        trader.setTraderName("ivan");
-        trader.setTraderAddress("ivan");
-        trader.setTraderBankAccount("ivan");
-        trader.setTraderBankName("ivan");
-        trader.setTraderRegistryNumber("pile");        
-        
-        traderJpaServiceImpl.save(trader);
-        
-        trader.setTraderRegistryNumber("chadikovski");        
-        
-        traderJpaServiceImpl.save(trader);
-        
-
-        System.out.println("Bye " + trader.getTraderName() + "!");
+//
+//        Trader trader = new Trader();
+//        trader.setTraderName("ivan");
+//        trader.setTraderAddress("ivan");
+//        trader.setTraderBankAccount("ivan");
+//        trader.setTraderBankName("ivan");
+//        trader.setTraderRegistryNumber("pile");        
+//        
+//        traderJpaServiceImpl.save(trader);
+//        
+//        trader.setTraderRegistryNumber("чадиковски");        
+//        
+//        traderJpaServiceImpl.save(trader);
+//        
+//
+//        System.out.println("Bye " + trader.getTraderName() + "!");
     	
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrameMain frame = new FrameMain();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			}
-		});
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					FrameMain frame = new FrameMain();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				
+//			}
+//		});
     }
 }

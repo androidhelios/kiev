@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 
+@Component
 public class PanelTrader extends JPanel {
 
 	private JTable table;

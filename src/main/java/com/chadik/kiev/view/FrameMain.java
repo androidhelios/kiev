@@ -13,15 +13,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class FrameMain extends JFrame {
 
 	private JPanel contentPane;
 	private PanelTrader traderPanel;
 
-	/**
-	 * Create the frame.
-	 */
-	public FrameMain() {
+	public void initFrameMain() {
 		setTitle("kiev");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 850, 500);
