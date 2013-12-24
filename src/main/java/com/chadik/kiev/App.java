@@ -7,6 +7,7 @@ import com.chadik.kiev.view.FrameMain;
 
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -39,6 +40,14 @@ public class App {
         traderJpaServiceImpl.save(trader);        
 
         System.out.println("bye " + trader.getTraderName());
+        
+//        List<Trader> traderNo = new ArrayList<Trader>();
+//        traderNo = traderJpaServiceImpl.getAll();
+        
+//        Trader trader0 = traderNo.get(0);
+//        System.out.println("ovovjv:" + trader0.getTraderBankName());
+        
+//        System.out.println("no " + traderNo.size());
         
         FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
         frameMain.initFrameMain();

@@ -58,6 +58,7 @@ public class FrameMain extends JFrame {
 		menuFile.add(menuItemExit);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
+		panelTrader.initPaneTraider();
 		contentPane.add(panelTrader);
 		
 	}

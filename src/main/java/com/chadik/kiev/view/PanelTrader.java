@@ -13,16 +13,18 @@ import javax.swing.table.DefaultTableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
+import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 
 @Component
 public class PanelTrader extends JPanel {
 
 	private JTable table;
-
 	private IGenericJpaService traderJpaServiceImpl;	
 	
 	/**
@@ -35,6 +37,7 @@ public class PanelTrader extends JPanel {
 	}
 
 	public void initPaneTraider() {
+		
 		setLayout(new BorderLayout());
 
 		JPanel labelPanel = new JPanel();
