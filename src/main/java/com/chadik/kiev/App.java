@@ -26,6 +26,7 @@ public class App {
         
     	FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
     	frameMain.initFrameMain();
+    	frameMain.setVisible(true);
         System.out.println("Hello World!");
 //
 //        Trader trader = new Trader();

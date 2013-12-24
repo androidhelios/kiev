@@ -13,13 +13,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FrameMain extends JFrame {
 
 	private JPanel contentPane;
-	private PanelTrader traderPanel;
+	
+//	@Autowired
+//	@Qualifier("panelTrader")
+//	private PanelTrader panelTrader;
 
 	public void initFrameMain() {
 		setTitle("kiev");
@@ -48,8 +53,8 @@ public class FrameMain extends JFrame {
 		menuFile.add(menuItemExit);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-		traderPanel = new PanelTrader();
-		contentPane.add(traderPanel);
+//		traderPanel = new PanelTrader();
+//		contentPane.add(panelTrader);
 	}
 
 }
