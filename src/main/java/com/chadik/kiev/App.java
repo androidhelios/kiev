@@ -22,7 +22,7 @@ public class App {
         ApplicationContext appContext = 
     	  new ClassPathXmlApplicationContext("applicationContext.xml");
  
-    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
+    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl) appContext.getBean("traderJpaServiceImpl");
         System.out.println("hello traderJpaServiceImpl");
         
         Trader trader = new Trader();
