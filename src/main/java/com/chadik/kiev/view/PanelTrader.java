@@ -40,13 +40,13 @@ public class PanelTrader extends JPanel {
 		
 		setLayout(new BorderLayout());
 
-		JPanel labelPanel = new JPanel();
-		add(labelPanel, BorderLayout.CENTER);
-		labelPanel.setLayout(null);
+		JPanel buttonsPanel = new JPanel();
+		add(buttonsPanel, BorderLayout.CENTER);
+		buttonsPanel.setLayout(null);
 
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.setBounds(0, 0, 89, 23);
-		labelPanel.add(btnNewButton);
+		buttonsPanel.add(btnNewButton);
 
 		JPanel tablePanel = new JPanel();
 		tablePanel.setPreferredSize(new Dimension(300, 300));
@@ -54,7 +54,7 @@ public class PanelTrader extends JPanel {
 		tablePanel.setLayout(new BorderLayout());
 
 		JScrollPane scrollPane = new JScrollPane();
-		tablePanel.add(scrollPane, BorderLayout.CENTER);
+		tablePanel.add(scrollPane, BorderLayout.WEST);
 
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		table = new JTable();
