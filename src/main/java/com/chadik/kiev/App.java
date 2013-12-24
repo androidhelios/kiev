@@ -22,12 +22,12 @@ public class App {
     	  new ClassPathXmlApplicationContext("applicationContext.xml");
  
 //    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
-//        System.out.println("Hello World!");
+        System.out.println("Hello World!");
         
     	FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
     	frameMain.initFrameMain();
     	frameMain.setVisible(true);
-        System.out.println("Hello World!");
+//        System.out.println("Hello World!");
 //
 //        Trader trader = new Trader();
 //        trader.setTraderName("ivan");
