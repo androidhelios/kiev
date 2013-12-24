@@ -3,7 +3,7 @@ package com.chadik.kiev;
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.ITraderJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
-import com.chadik.kiev.view.MainFrame;
+import com.chadik.kiev.view.FrameMain;
 
 import java.awt.EventQueue;
 import java.util.List;
@@ -18,32 +18,32 @@ public class App {
 
     public static void main(String[] args) {
         
-//        ApplicationContext appContext = 
-//    	  new ClassPathXmlApplicationContext("applicationContext.xml");
-// 
-//    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
-//        System.out.println("Hello World!");
-//
-//        Trader trader = new Trader();
-//        trader.setTraderName("ivan");
-//        trader.setTraderAddress("ivan");
-//        trader.setTraderBankAccount("ivan");
-//        trader.setTraderBankName("ivan");
-//        trader.setTraderRegistryNumber("pile");        
-//        
-//        traderJpaServiceImpl.save(trader);
-//        
-//        trader.setTraderRegistryNumber("chadikovski");        
-//        
-//        traderJpaServiceImpl.save(trader);
-//        
-//
-//        System.out.println("Bye " + trader.getTraderName() + "!");
+        ApplicationContext appContext = 
+    	  new ClassPathXmlApplicationContext("applicationContext.xml");
+ 
+    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
+        System.out.println("Hello World!");
+
+        Trader trader = new Trader();
+        trader.setTraderName("ivan");
+        trader.setTraderAddress("ivan");
+        trader.setTraderBankAccount("ivan");
+        trader.setTraderBankName("ivan");
+        trader.setTraderRegistryNumber("pile");        
+        
+        traderJpaServiceImpl.save(trader);
+        
+        trader.setTraderRegistryNumber("chadikovski");        
+        
+        traderJpaServiceImpl.save(trader);
+        
+
+        System.out.println("Bye " + trader.getTraderName() + "!");
     	
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainFrame frame = new MainFrame();
+					FrameMain frame = new FrameMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
