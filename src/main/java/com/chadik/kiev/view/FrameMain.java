@@ -28,14 +28,9 @@ public class FrameMain extends JFrame {
 
 	private JPanel contentPane;
 	
-//	@Autowired
-//	private PanelTrader panelTrader;
-	
 	@Autowired
-	private IGenericJpaService traderJpaServiceImpl;
+	private PanelTrader panelTrader;
 	
-	
-
 	public void initFrameMain() {
 		setTitle("kiev");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,10 +58,9 @@ public class FrameMain extends JFrame {
 		menuFile.add(menuItemExit);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-		List<Trader> traders = new ArrayList<Trader>();
-		traders = traderJpaServiceImpl.getAll();
-//		traderPanel = new PanelTrader();
-//		contentPane.add(panelTrader);
+		contentPane.add(panelTrader);
+		
 	}
+	
 
 }
