@@ -17,13 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.chadik.kiev.service.IGenericJpaService;
+
 @Component
 public class FrameMain extends JFrame {
 
 	private JPanel contentPane;
 	
+//	@Autowired
+//	private PanelTrader panelTrader;
+	
 	@Autowired
-	private PanelTrader panelTrader;
+	private IGenericJpaService traderJpaServiceImpl;
+	
+	
 
 	public void initFrameMain() {
 		setTitle("kiev");

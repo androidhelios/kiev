@@ -19,14 +19,14 @@ import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 
-@Component
+//@Component
 public class PanelTrader extends JPanel {
 
 	private JTable table;
 
-	@Autowired
-	@Qualifier("traderJpaServiceImpl")
-	private IGenericJpaService traderJpaServiceImpl;
+//	@Autowired
+//	@Qualifier("traderJpaServiceImpl")
+//	private IGenericJpaService traderJpaServiceImpl;
 
 	/**
 	 * Create the panel.
@@ -58,7 +58,7 @@ public class PanelTrader extends JPanel {
 		table = new JTable();
 		table.setModel(defaultTableModel);
 		List<Trader> traders = new ArrayList<Trader>();
-		traders = traderJpaServiceImpl.getAll();
+//		traders = traderJpaServiceImpl.getAll();
 		defaultTableModel.setColumnIdentifiers(new String[] { "traderId",
 				"traderName", "traderBankName", "traderBankAccount",
 				"traderAddress" });
