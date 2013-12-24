@@ -5,6 +5,7 @@ import com.chadik.kiev.dao.impl.CustomerJpaDaoImpl;
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.service.ICustomerJpaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,24 +16,12 @@ import org.springframework.stereotype.Service;
 public class CustomerJpaServiceImpl extends GenericJpaServiceImpl<Customer> implements ICustomerJpaService {
 
     @Autowired
-    private CustomerJpaDaoImpl customerJpaDaoImpl;
+    @Qualifier("customerJpaDaoImpl")
+    private IGenericJpaDao customerJpaDaoImpl;
     
     @Override
     public IGenericJpaDao getGenericDao() {
-        return getCustomerJpaDaoImpl();
+        return customerJpaDaoImpl;
     }  
 
-    /**
-     * @return the customerJpaDaoImpl
-     */
-    public CustomerJpaDaoImpl getCustomerJpaDaoImpl() {
-        return customerJpaDaoImpl;
-    }
-
-    /**
-     * @param customerJpaDaoImpl the customerJpaDaoImpl to set
-     */
-    public void setCustomerJpaDaoImpl(CustomerJpaDaoImpl customerJpaDaoImpl) {
-        this.customerJpaDaoImpl = customerJpaDaoImpl;
-    }
 }

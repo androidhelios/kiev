@@ -12,29 +12,36 @@ import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Trader;
+import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 
 @Component
 public class PanelTrader extends JPanel {
 
 	private JTable table;
-	
+
 	@Autowired
-	private TraderJpaServiceImpl traderJpaServiceImpl;
+	@Qualifier("traderJpaServiceImpl")
+	private IGenericJpaService traderJpaServiceImpl;
 
 	/**
 	 * Create the panel.
 	 */
 	public PanelTrader() {
+		initPaneTraider();
+	}
+
+	public void initPaneTraider() {
 		setLayout(new BorderLayout());
-		
+
 		JPanel labelPanel = new JPanel();
 		add(labelPanel, BorderLayout.CENTER);
 		labelPanel.setLayout(null);
-		
+
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.setBounds(0, 0, 89, 23);
 		labelPanel.add(btnNewButton);
@@ -51,22 +58,20 @@ public class PanelTrader extends JPanel {
 		table = new JTable();
 		table.setModel(defaultTableModel);
 		List<Trader> traders = new ArrayList<Trader>();
-		traders = getTraderJpaServiceImpl().getAll();
-		defaultTableModel.setColumnIdentifiers(new String[]{"traderId", "traderName", "traderBankName", "traderBankAccount", "traderAddress"});
-		
+		traders = traderJpaServiceImpl.getAll();
+		defaultTableModel.setColumnIdentifiers(new String[] { "traderId",
+				"traderName", "traderBankName", "traderBankAccount",
+				"traderAddress" });
+
 		for (Trader trader : traders) {
-			defaultTableModel.addRow(new String[] {trader.getTraderId().toString(), trader.getTraderName(), trader.getTraderBankName(), trader.getTraderBankAccount(), trader.getTraderAddress()});
+			defaultTableModel.addRow(new String[] {
+					trader.getTraderId().toString(), trader.getTraderName(),
+					trader.getTraderBankName(), trader.getTraderBankAccount(),
+					trader.getTraderAddress() });
 		}
-		
+
 		scrollPane.setViewportView(table);
 
 	}
 
-	private TraderJpaServiceImpl getTraderJpaServiceImpl() {
-		return traderJpaServiceImpl;
-	}
-
-	private void setTraderJpaServiceImpl(TraderJpaServiceImpl traderJpaServiceImpl) {
-		this.traderJpaServiceImpl = traderJpaServiceImpl;
-	}
 }

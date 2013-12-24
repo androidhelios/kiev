@@ -5,6 +5,7 @@ import com.chadik.kiev.dao.impl.RequestJpaDaoImpl;
 import com.chadik.kiev.model.Request;
 import com.chadik.kiev.service.IRequestJpaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,24 +16,12 @@ import org.springframework.stereotype.Service;
 public class RequestJpaServiceImpl extends GenericJpaServiceImpl<Request> implements IRequestJpaService {
 
     @Autowired
-    private RequestJpaDaoImpl requestJpaDaoImpl;
+    @Qualifier("requestJpaDaoImpl")
+    private IGenericJpaDao requestJpaDaoImpl;
         
     @Override
     public IGenericJpaDao getGenericDao() {
-        return getRequestJpaDaoImpl();
+        return requestJpaDaoImpl;
     }  
 
-    /**
-     * @return the requestJpaDaoImpl
-     */
-    public RequestJpaDaoImpl getRequestJpaDaoImpl() {
-        return requestJpaDaoImpl;
-    }
-
-    /**
-     * @param requestJpaDaoImpl the requestJpaDaoImpl to set
-     */
-    public void setRequestJpaDaoImpl(RequestJpaDaoImpl requestJpaDaoImpl) {
-        this.requestJpaDaoImpl = requestJpaDaoImpl;
-    }
 }
