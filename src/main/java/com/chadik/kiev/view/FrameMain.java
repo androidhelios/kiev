@@ -11,12 +11,16 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JSeparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 
 @Component
@@ -59,6 +63,8 @@ public class FrameMain extends JFrame {
 		menuFile.add(menuItemExit);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
+		List<Trader> traders = new ArrayList<Trader>();
+		traders = traderJpaServiceImpl.getAll();
 //		traderPanel = new PanelTrader();
 //		contentPane.add(panelTrader);
 	}
