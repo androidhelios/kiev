@@ -5,6 +5,7 @@ import com.chadik.kiev.service.ITraderJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 import com.chadik.kiev.view.FrameMain;
 
+
 import java.awt.EventQueue;
 import java.util.List;
 import org.springframework.context.ApplicationContext;
@@ -21,40 +22,27 @@ public class App {
         ApplicationContext appContext = 
     	  new ClassPathXmlApplicationContext("applicationContext.xml");
  
-//    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
-        System.out.println("Hello World!");
+    	TraderJpaServiceImpl traderJpaServiceImpl = (TraderJpaServiceImpl)appContext.getBean("traderJpaServiceImpl");
+        System.out.println("hello traderJpaServiceImpl");
         
-    	FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
-    	frameMain.initFrameMain();
-    	frameMain.setVisible(true);
-//        System.out.println("Hello World!");
-//
-//        Trader trader = new Trader();
-//        trader.setTraderName("ivan");
-//        trader.setTraderAddress("ivan");
-//        trader.setTraderBankAccount("ivan");
-//        trader.setTraderBankName("ivan");
-//        trader.setTraderRegistryNumber("pile");        
-//        
-//        traderJpaServiceImpl.save(trader);
-//        
-//        trader.setTraderRegistryNumber("чадиковски");        
-//        
-//        traderJpaServiceImpl.save(trader);
-//        
-//
-//        System.out.println("Bye " + trader.getTraderName() + "!");
+        Trader trader = new Trader();
+        trader.setTraderName("ivan1");
+        trader.setTraderAddress("ivan2");
+        trader.setTraderBankAccount("ivan3");
+        trader.setTraderBankName("ivan4");
+        trader.setTraderRegistryNumber("pile5");        
+        
+        traderJpaServiceImpl.save(trader);
+        
+        trader.setTraderRegistryNumber("чадиковски");        
+        
+        traderJpaServiceImpl.save(trader);        
+
+        System.out.println("bye " + trader.getTraderName());
+        
+        FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
+        frameMain.initFrameMain();
+        frameMain.setVisible(true);
     	
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					FrameMain frame = new FrameMain();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//				
-//			}
-//		});
     }
 }
