@@ -54,7 +54,7 @@ public class PanelTrader extends JPanel {
 		tablePanel.setLayout(new BorderLayout());
 
 		JScrollPane scrollPane = new JScrollPane();
-		tablePanel.add(scrollPane, BorderLayout.WEST);
+		tablePanel.add(scrollPane, BorderLayout.CENTER);
 
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		table = new JTable();
