@@ -19,13 +19,13 @@ import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 
-
+@Component
 public class PanelTrader extends JPanel {
 
 	private JTable table;
 
-//	@Autowired
-//	@Qualifier("traderJpaServiceImpl")
+	@Autowired
+	@Qualifier("traderJpaServiceImpl")
 	private IGenericJpaService traderJpaServiceImpl;
 
 	/**

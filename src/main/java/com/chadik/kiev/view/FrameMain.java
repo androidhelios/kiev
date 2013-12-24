@@ -22,9 +22,8 @@ public class FrameMain extends JFrame {
 
 	private JPanel contentPane;
 	
-//	@Autowired
-//	@Qualifier("panelTrader")
-//	private PanelTrader panelTrader;
+	@Autowired
+	private PanelTrader panelTrader;
 
 	public void initFrameMain() {
 		setTitle("kiev");
