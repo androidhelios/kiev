@@ -62,10 +62,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<showDeprecation>true</showDeprecation>
-					<showWarnings>true</showWarnings>
-					<executable>${env.JAVA_HOME}/bin/javac</executable>
-					<fork>true</fork>
 				</configuration>
 			</plugin>
 		</plugins>
