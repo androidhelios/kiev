@@ -70,9 +70,9 @@ public class PanelTrader extends JPanel {
 		panelTraderTable.setLayout(new BorderLayout(0, 0));
 
 		JPanel panelTraderTableHolder = new JPanel();
-		panelTraderTableHolder.setPreferredSize(new Dimension(400, 550));
+		panelTraderTableHolder.setPreferredSize(new Dimension(400, 540));
 //		panelTraderTableHolder.setBackground(Color.ORANGE);
-		panelTraderTable.add(panelTraderTableHolder, BorderLayout.NORTH);
+		panelTraderTable.add(panelTraderTableHolder, BorderLayout.CENTER);
 		panelTraderTableHolder.setLayout(new BorderLayout(0, 0));
 		
 		defaultTableModel = new DefaultTableModel();
@@ -98,7 +98,7 @@ public class PanelTrader extends JPanel {
 		JPanel panelTraderButtonHolder = new JPanel();
 		panelTraderButtonHolder.setPreferredSize(new Dimension(400, 50));
 //		panelTraderButtonHolder.setBackground(Color.PINK);
-		panelTraderTable.add(panelTraderButtonHolder);
+		panelTraderTable.add(panelTraderButtonHolder, BorderLayout.SOUTH);
 
 		JButton btnNewTrader = new JButton("Креирај");
 		btnNewTrader.setPreferredSize(new Dimension(100,25));

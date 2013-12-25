@@ -60,12 +60,11 @@ public class FrameMain extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 		panelTrader.initbre();
-		contentPane.add(panelTrader, BorderLayout.CENTER);
-		
-        setLocationRelativeTo(null);
+		contentPane.add(panelTrader, BorderLayout.CENTER);		
+        
         pack();
         setVisible(true);
-        
+        setLocationRelativeTo(null);
 		
 	}
 	
