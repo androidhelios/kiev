@@ -49,7 +49,7 @@ public class PanelTrader extends JPanel {
 		buttonsPanel.add(btnNewButton);
 
 		JPanel tablePanel = new JPanel();
-		tablePanel.setPreferredSize(new Dimension(300, 300));
+		tablePanel.setPreferredSize(new Dimension(600, 300));
 		add(tablePanel, BorderLayout.WEST);
 		tablePanel.setLayout(new BorderLayout());
 
