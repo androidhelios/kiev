@@ -27,6 +27,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @Component
 public class PanelTrader extends JPanel {
@@ -41,6 +43,7 @@ public class PanelTrader extends JPanel {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	private JTextField textField_8;
+	private DefaultTableModel defaultTableModel;
 
 	@Autowired
 	public PanelTrader(
@@ -72,7 +75,7 @@ public class PanelTrader extends JPanel {
 		panelTraderTable.add(panelTraderTableHolder, BorderLayout.NORTH);
 		panelTraderTableHolder.setLayout(new BorderLayout(0, 0));
 		
-		DefaultTableModel defaultTableModel = new DefaultTableModel();
+		defaultTableModel = new DefaultTableModel();
 
 		System.out.println("VELICINA: " + traders.size());
 		defaultTableModel.setColumnIdentifiers(new String[] { "id",
@@ -106,6 +109,13 @@ public class PanelTrader extends JPanel {
 		panelTraderButtonHolder.add(btnEditTrader);
 
 		JButton btnDeleteTrader = new JButton("Избриши");
+		btnDeleteTrader.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				defaultTableModel.setRowCount(0);
+				
+			}
+		});
 		btnDeleteTrader.setPreferredSize(new Dimension(100,25));
 		panelTraderButtonHolder.add(btnDeleteTrader);
 
