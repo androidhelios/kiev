@@ -64,6 +64,7 @@ public class FrameMain extends JFrame {
         setLocationRelativeTo(null);
         pack();
         setVisible(true);
+        
 		
 	}
 	
