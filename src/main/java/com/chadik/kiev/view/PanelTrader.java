@@ -20,60 +20,42 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
+import java.awt.Color;
 
 @Component
 public class PanelTrader extends JPanel {
-
-	private JTable table;
 	private IGenericJpaService traderJpaServiceImpl;	
 	
-	/**
-	 * Create the panel.
-	 */
 	@Autowired
 	public PanelTrader(@Qualifier("traderJpaServiceImpl") IGenericJpaService traderJpaServiceImpl) {
 		this.traderJpaServiceImpl = traderJpaServiceImpl;
-		initPaneTraider();
-	}
-
-	public void initPaneTraider() {
+		setLayout(new BorderLayout(0, 0));
+		setPreferredSize(new Dimension(800, 600));
 		
-		setLayout(new BorderLayout());
-
-		JPanel buttonsPanel = new JPanel();
-		add(buttonsPanel, BorderLayout.CENTER);
-		buttonsPanel.setLayout(null);
-
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(0, 0, 89, 23);
-		buttonsPanel.add(btnNewButton);
-
-		JPanel tablePanel = new JPanel();
-		tablePanel.setPreferredSize(new Dimension(600, 300));
-		add(tablePanel, BorderLayout.WEST);
-		tablePanel.setLayout(new BorderLayout());
-
-		JScrollPane scrollPane = new JScrollPane();
-		tablePanel.add(scrollPane, BorderLayout.CENTER);
-
-		DefaultTableModel defaultTableModel = new DefaultTableModel();
-		table = new JTable();
-		table.setModel(defaultTableModel);
-		List<Trader> traders = new ArrayList<Trader>();
-		traders = traderJpaServiceImpl.getAll();
-		defaultTableModel.setColumnIdentifiers(new String[] { "traderId",
-				"traderName", "traderBankName", "traderBankAccount",
-				"traderAddress" });
-
-		for (Trader trader : traders) {
-			defaultTableModel.addRow(new String[] {
-					trader.getTraderId().toString(), trader.getTraderName(),
-					trader.getTraderBankName(), trader.getTraderBankAccount(),
-					trader.getTraderAddress() });
-		}
-
-		scrollPane.setViewportView(table);
-
+		JPanel panelTraderTable = new JPanel();
+		panelTraderTable.setBackground(Color.YELLOW);
+		panelTraderTable.setPreferredSize(new Dimension(400, 600));
+		add(panelTraderTable, BorderLayout.WEST);
+		panelTraderTable.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panelTraderTableHolder = new JPanel();
+		panelTraderTableHolder.setPreferredSize(new Dimension(400, 550));
+		panelTraderTableHolder.setBackground(Color.ORANGE);
+		panelTraderTable.add(panelTraderTableHolder, BorderLayout.NORTH);
+		
+		JPanel panelTraderButtonHolder = new JPanel();
+		panelTraderButtonHolder.setPreferredSize(new Dimension(400, 50));
+		panelTraderButtonHolder.setBackground(Color.PINK);
+		panelTraderTable.add(panelTraderButtonHolder);
+		
+		JPanel panelTraderInfo = new JPanel();
+		panelTraderInfo.setBackground(Color.RED);
+		add(panelTraderInfo, BorderLayout.CENTER);
+//		initPaneTraider();
 	}
+
+//	public void initPaneTraider() {
+//
+//	}
 
 }

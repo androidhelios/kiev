@@ -1,6 +1,7 @@
 package com.chadik.kiev.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -34,7 +35,6 @@ public class FrameMain extends JFrame {
 	public void initFrameMain() {
 		setTitle("kiev");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 850, 500);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -57,9 +57,13 @@ public class FrameMain extends JFrame {
 		
 		menuFile.add(menuItemExit);
 		contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		panelTrader.initPaneTraider();
-		contentPane.add(panelTrader);
+		contentPane.add(panelTrader, BorderLayout.CENTER);
+		
+        setLocationRelativeTo(null);
+        pack();
+        setVisible(true);
 		
 	}
 	

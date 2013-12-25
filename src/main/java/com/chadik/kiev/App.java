@@ -50,8 +50,6 @@ public class App {
 //        System.out.println("no " + traderNo.size());
         
         FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
-        frameMain.initFrameMain();
-        frameMain.setVisible(true);
-    	
+        frameMain.initFrameMain();    	
     }
 }
