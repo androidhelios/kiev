@@ -66,7 +66,7 @@ public class PanelTrader extends JPanel {
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		List<Trader> traders = new ArrayList<Trader>();
 		traders = traderJpaServiceImpl.getAll();
-
+		System.out.println("VELICINA: " + traders.size());
 		defaultTableModel.setColumnIdentifiers(new String[] { "id",
 				"Name", "BankName", "BankAccount",
 				"Address" });

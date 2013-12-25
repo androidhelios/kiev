@@ -41,15 +41,17 @@ public class App {
 
         System.out.println("bye " + trader.getTraderName());
         
-//        List<Trader> traderNo = new ArrayList<Trader>();
-//        traderNo = traderJpaServiceImpl.getAll();
-        
-//        Trader trader0 = traderNo.get(0);
-//        System.out.println("ovovjv:" + trader0.getTraderBankName());
-        
-//        System.out.println("no " + traderNo.size());
-        
         FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
-        frameMain.initFrameMain();    	
+        frameMain.initFrameMain(); 
+        
+        List<Trader> traderNo = new ArrayList<Trader>();
+        traderNo = traderJpaServiceImpl.getAll();
+        
+        Trader trader0 = traderNo.get(0);
+        System.out.println("ovovjv:" + trader0.getTraderBankName());
+        
+        System.out.println("no " + traderNo.size());
+        
+   	
     }
 }
