@@ -46,6 +46,15 @@ public class PanelTrader extends JPanel {
 	public PanelTrader(
 			@Qualifier("traderJpaServiceImpl") IGenericJpaService traderJpaServiceImpl) {
 		this.traderJpaServiceImpl = traderJpaServiceImpl;
+        System.out.println("hello paneltrader");
+        
+        initbre();
+
+	}
+	
+	public void initbre() {
+		List<Trader> traders = new ArrayList<Trader>();
+		traders = traderJpaServiceImpl.getAll();
 		setLayout(new BorderLayout(0, 0));
 		setPreferredSize(new Dimension(800, 600));
 
@@ -64,8 +73,7 @@ public class PanelTrader extends JPanel {
 		panelTraderTableHolder.setLayout(new BorderLayout(0, 0));
 		
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
-		List<Trader> traders = new ArrayList<Trader>();
-		traders = traderJpaServiceImpl.getAll();
+
 		System.out.println("VELICINA: " + traders.size());
 		defaultTableModel.setColumnIdentifiers(new String[] { "id",
 				"Name", "BankName", "BankAccount",
@@ -186,6 +194,5 @@ public class PanelTrader extends JPanel {
 		textField_8.setBounds(114, 218, 160, 20);
 		panelTraderInfo.add(textField_8);
 		textField_8.setColumns(10);
-
 	}
 }

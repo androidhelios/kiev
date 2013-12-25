@@ -59,6 +59,7 @@ public class FrameMain extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
+		panelTrader.initbre();
 		contentPane.add(panelTrader, BorderLayout.CENTER);
 		
         setLocationRelativeTo(null);
