@@ -39,6 +39,8 @@ import javax.swing.UIManager;
 
 @Component
 public class PanelTrader extends JPanel {
+	public PanelTrader() {
+	}
 	
 	@Autowired
 	@Qualifier("traderJpaServiceImpl")

@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 
 @Component
 public class DialogTrader extends JDialog {
+	public DialogTrader() {
+	}
 	
 	@Autowired
 	@Qualifier("traderJpaServiceImpl")
@@ -147,4 +149,5 @@ public class DialogTrader extends JDialog {
 		setVisible(true);
 		setLocationRelativeTo(null);
 	}
+	
 }
