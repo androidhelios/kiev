@@ -22,6 +22,8 @@ import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.impl.TraderJpaServiceImpl;
 import java.awt.Color;
+
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -29,6 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.TitledBorder;
 
 @Component
 public class PanelTrader extends JPanel {
@@ -58,22 +63,22 @@ public class PanelTrader extends JPanel {
 	public void initbre() {
 		List<Trader> traders = new ArrayList<Trader>();
 		traders = traderJpaServiceImpl.getAll();
-		setLayout(new BorderLayout(0, 0));
+		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(800, 600));
 
 		JPanel panelTraderTable = new JPanel();
-		panelTraderTable.setBorder(new SoftBevelBorder(BevelBorder.LOWERED,
-				null, null, null, null));
+		panelTraderTable.setBorder(new EmptyBorder(10, 10, 10, 10));
 //		panelTraderTable.setBackground(Color.YELLOW);
 		panelTraderTable.setPreferredSize(new Dimension(400, 600));
 		add(panelTraderTable, BorderLayout.WEST);
-		panelTraderTable.setLayout(new BorderLayout(0, 0));
+		panelTraderTable.setLayout(new BorderLayout());
 
 		JPanel panelTraderTableHolder = new JPanel();
+		panelTraderTableHolder.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelTraderTableHolder.setPreferredSize(new Dimension(400, 540));
 //		panelTraderTableHolder.setBackground(Color.ORANGE);
 		panelTraderTable.add(panelTraderTableHolder, BorderLayout.CENTER);
-		panelTraderTableHolder.setLayout(new BorderLayout(0, 0));
+		panelTraderTableHolder.setLayout(new BorderLayout());
 		
 		defaultTableModel = new DefaultTableModel();
 
@@ -120,6 +125,8 @@ public class PanelTrader extends JPanel {
 		panelTraderButtonHolder.add(btnDeleteTrader);
 
 		JPanel panelTraderInfo = new JPanel();
+		panelTraderInfo.setBorder(new EmptyBorder(10, 1, 10, 10));
+		panelTraderInfo.setPreferredSize(new Dimension(400, 600));
 //		panelTraderInfo.setBackground(Color.RED);
 		add(panelTraderInfo, BorderLayout.CENTER);
 		panelTraderInfo.setLayout(null);
