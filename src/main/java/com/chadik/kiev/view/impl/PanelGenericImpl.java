@@ -1,4 +1,4 @@
-package com.chadik.kiev.view;
+package com.chadik.kiev.view.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import com.chadik.kiev.view.IPanelGeneric;
 
 public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
 
