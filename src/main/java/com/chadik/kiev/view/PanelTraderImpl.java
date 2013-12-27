@@ -1,5 +1,5 @@
 package com.chadik.kiev.view;
 
-public class PanelTraderImpl extends Pan {
+public class PanelTraderImpl {
 
 }
