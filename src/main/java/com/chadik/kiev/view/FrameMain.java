@@ -30,7 +30,8 @@ public class FrameMain extends JFrame {
 	private JPanel contentPane;
 	
 	@Autowired
-	private PanelTrader panelTrader;
+	@Qualifier("panelTraderImpl")
+	private IPanelTrader panelTraderImpl;
 	
 	public void initFrameMain() {
 		setTitle("kiev");
@@ -59,8 +60,8 @@ public class FrameMain extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		panelTrader.initPanelTrader();
-		contentPane.add(panelTrader, BorderLayout.CENTER);		
+		panelTraderImpl.initPanel();
+		contentPane.add(panelTraderImpl, BorderLayout.CENTER);		
         
         pack();
         setVisible(true);
