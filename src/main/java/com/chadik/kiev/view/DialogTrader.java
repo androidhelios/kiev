@@ -20,8 +20,6 @@ import java.awt.event.ActionEvent;
 @Component
 public class DialogTrader extends JDialog {
 	
-	@Autowired
-	@Qualifier("traderJpaServiceImpl")
 	private IGenericJpaService traderJpaServiceImpl;
 	
 	private JPanel contentPane;
@@ -34,6 +32,12 @@ public class DialogTrader extends JDialog {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	private JTextField textField_8;
+	
+	@Autowired
+	public DialogTrader(@Qualifier("traderJpaServiceImpl") IGenericJpaService traderJpaServiceImpl) {
+		this.traderJpaServiceImpl = traderJpaServiceImpl;
+//		initDialogTrader();
+	}
 	
 	
 	public void initDialogTrader() {

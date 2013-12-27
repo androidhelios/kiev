@@ -39,11 +39,9 @@ import javax.swing.UIManager;
 
 @Component
 public class PanelTrader extends JPanel {
-	public PanelTrader() {
-	}
 	
-	@Autowired
-	@Qualifier("traderJpaServiceImpl")
+//	@Autowired
+//	@Qualifier("traderJpaServiceImpl")
 	private IGenericJpaService traderJpaServiceImpl;	
 	@Autowired
 	private DialogTrader traderDialog;
@@ -59,25 +57,31 @@ public class PanelTrader extends JPanel {
 	private JTextField textFieldTraderId;
 	private DefaultTableModel defaultTableModel;
 	
+	@Autowired
+	public PanelTrader(@Qualifier("traderJpaServiceImpl") IGenericJpaService traderJpaServiceImpl) {
+		this.traderJpaServiceImpl = traderJpaServiceImpl;
+		initPanelTrader();
+	}
+	
 	public void initPanelTrader() {
 		List<Trader> traders = new ArrayList<Trader>();
 		traders = traderJpaServiceImpl.getAll();
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(800, 600));
 
-		JPanel panelTraderTable = new JPanel();
-		panelTraderTable.setBorder(new EmptyBorder(10, 10, 10, 10));
+		JPanel panelTableHolder = new JPanel();
+		panelTableHolder.setBorder(new EmptyBorder(10, 10, 10, 10));
 //		panelTraderTable.setBackground(Color.YELLOW);
-		panelTraderTable.setPreferredSize(new Dimension(400, 600));
-		add(panelTraderTable, BorderLayout.WEST);
-		panelTraderTable.setLayout(new BorderLayout());
+		panelTableHolder.setPreferredSize(new Dimension(400, 600));
+		add(panelTableHolder, BorderLayout.WEST);
+		panelTableHolder.setLayout(new BorderLayout());
 
-		JPanel panelTraderTableHolder = new JPanel();
-		panelTraderTableHolder.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panelTraderTableHolder.setPreferredSize(new Dimension(400, 540));
+		JPanel panelTableHolderTable = new JPanel();
+		panelTableHolderTable.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panelTableHolderTable.setPreferredSize(new Dimension(400, 540));
 //		panelTraderTableHolder.setBackground(Color.ORANGE);
-		panelTraderTable.add(panelTraderTableHolder, BorderLayout.CENTER);
-		panelTraderTableHolder.setLayout(new BorderLayout());
+		panelTableHolder.add(panelTableHolderTable, BorderLayout.CENTER);
+		panelTableHolderTable.setLayout(new BorderLayout());
 		
 		defaultTableModel = new DefaultTableModel();
 
@@ -97,16 +101,16 @@ public class PanelTrader extends JPanel {
 		tableTrader.setModel(defaultTableModel);
 
 		JScrollPane scrollPaneTable = new JScrollPane(tableTrader);
-		panelTraderTableHolder.add(scrollPaneTable);
+		panelTableHolderTable.add(scrollPaneTable);
 
-		JPanel panelTraderButtonHolder = new JPanel();
-		panelTraderButtonHolder.setPreferredSize(new Dimension(400, 50));
+		JPanel panelTableHolderButtons = new JPanel();
+		panelTableHolderButtons.setPreferredSize(new Dimension(400, 50));
 //		panelTraderButtonHolder.setBackground(Color.PINK);
-		panelTraderTable.add(panelTraderButtonHolder, BorderLayout.SOUTH);
+		panelTableHolder.add(panelTableHolderButtons, BorderLayout.SOUTH);
 
 		JButton btnNewTrader = new JButton("Креирај");
 		btnNewTrader.setPreferredSize(new Dimension(100,25));
-		panelTraderButtonHolder.add(btnNewTrader);
+		panelTableHolderButtons.add(btnNewTrader);
 		btnNewTrader.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				traderDialog.initDialogTrader();				
@@ -115,7 +119,7 @@ public class PanelTrader extends JPanel {
 
 		JButton btnEditTrader = new JButton("Промени");
 		btnEditTrader.setPreferredSize(new Dimension(100,25));
-		panelTraderButtonHolder.add(btnEditTrader);
+		panelTableHolderButtons.add(btnEditTrader);
 
 		JButton btnDeleteTrader = new JButton("Избриши");
 		btnDeleteTrader.addActionListener(new ActionListener() {
@@ -126,93 +130,79 @@ public class PanelTrader extends JPanel {
 			}
 		});
 		btnDeleteTrader.setPreferredSize(new Dimension(100,25));
-		panelTraderButtonHolder.add(btnDeleteTrader);
+		panelTableHolderButtons.add(btnDeleteTrader);
 
-		JPanel panelTraderInfo = new JPanel();
-		panelTraderInfo.setPreferredSize(new Dimension(400, 600));
+		JPanel panelInfoHolder = new JPanel();
+		panelInfoHolder.setPreferredSize(new Dimension(400, 600));
 //		panelTraderInfo.setBackground(Color.RED);
-		add(panelTraderInfo, BorderLayout.CENTER);
-		panelTraderInfo.setLayout(null);
+		add(panelInfoHolder, BorderLayout.CENTER);
+		panelInfoHolder.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panelInfoHolderContent = new JPanel();
+		panelInfoHolder.add(panelInfoHolderContent);
+		panelInfoHolderContent.setLayout(null);
 		
 		JLabel labelTraderName = new JLabel("Име:");
-		labelTraderName.setBounds(10, 25, 116, 14);
-		panelTraderInfo.add(labelTraderName);
+		panelInfoHolderContent.add(labelTraderName);
 		
 		JLabel labelTraderRergistryNumber = new JLabel("Регистарски Број:");
-		labelTraderRergistryNumber.setBounds(10, 50, 116, 14);
-		panelTraderInfo.add(labelTraderRergistryNumber);
+		panelInfoHolderContent.add(labelTraderRergistryNumber);
 		
 		JLabel labelTraderBankName = new JLabel("Банка:");
-		labelTraderBankName.setBounds(10, 75, 116, 14);
-		panelTraderInfo.add(labelTraderBankName);
+		panelInfoHolderContent.add(labelTraderBankName);
 		
 		JLabel labelTraderBankAccount = new JLabel("Банкарска Сметка:");
-		labelTraderBankAccount.setBounds(10, 100, 116, 14);
-		panelTraderInfo.add(labelTraderBankAccount);
+		panelInfoHolderContent.add(labelTraderBankAccount);
 		
 		JLabel labelTraderAddress = new JLabel("Адреса:");
-		labelTraderAddress.setBounds(10, 125, 116, 14);
-		panelTraderInfo.add(labelTraderAddress);
+		panelInfoHolderContent.add(labelTraderAddress);
 		
 		JLabel labelTraderPhoneNumber = new JLabel("Телефонски Број:");
-		labelTraderPhoneNumber.setBounds(10, 150, 116, 14);
-		panelTraderInfo.add(labelTraderPhoneNumber);
+		panelInfoHolderContent.add(labelTraderPhoneNumber);
 		
 		JLabel labelTraderEmailAddress = new JLabel("Email:");
-		labelTraderEmailAddress.setBounds(10, 175, 116, 14);
-		panelTraderInfo.add(labelTraderEmailAddress);
+		panelInfoHolder.add(labelTraderEmailAddress);
 		
 		JLabel labelTraderAdditionalInfo = new JLabel("Забелешка:");
-		labelTraderAdditionalInfo.setBounds(10, 200, 116, 14);
-		panelTraderInfo.add(labelTraderAdditionalInfo);
+		panelInfoHolder.add(labelTraderAdditionalInfo);
 		
 		JLabel labelTraderId = new JLabel("ID:");
-		labelTraderId.setBounds(10, 225, 116, 14);
-		panelTraderInfo.add(labelTraderId);
+		panelInfoHolder.add(labelTraderId);
 		
 		textFieldTraderName = new JTextField();
-		textFieldTraderName.setBounds(130, 22, 230, 20);
-		panelTraderInfo.add(textFieldTraderName);
+		panelInfoHolder.add(textFieldTraderName);
 		textFieldTraderName.setColumns(10);
 		
 		textFieldTraderRegistryNumber = new JTextField();
-		textFieldTraderRegistryNumber.setBounds(130, 47, 230, 20);
-		panelTraderInfo.add(textFieldTraderRegistryNumber);
+		panelInfoHolder.add(textFieldTraderRegistryNumber);
 		textFieldTraderRegistryNumber.setColumns(10);
 		
 		textFieldTraderBankName = new JTextField();
-		textFieldTraderBankName.setBounds(130, 72, 230, 20);
-		panelTraderInfo.add(textFieldTraderBankName);
+		panelInfoHolder.add(textFieldTraderBankName);
 		textFieldTraderBankName.setColumns(10);
 		
 		textFieldTraderBankAccount = new JTextField();
-		textFieldTraderBankAccount.setBounds(130, 97, 230, 20);
-		panelTraderInfo.add(textFieldTraderBankAccount);
+		panelInfoHolder.add(textFieldTraderBankAccount);
 		textFieldTraderBankAccount.setColumns(10);
 		
-		textFieldTraderAddress = new JTextField();
-		textFieldTraderAddress.setBounds(130, 122, 230, 20);
-		panelTraderInfo.add(textFieldTraderAddress);
-		textFieldTraderAddress.setColumns(10);
-		
-		textFieldTraderPhoneNumber = new JTextField();
-		textFieldTraderPhoneNumber.setBounds(130, 147, 230, 20);
-		panelTraderInfo.add(textFieldTraderPhoneNumber);
-		textFieldTraderPhoneNumber.setColumns(10);
-		
 		textFieldTraderEmailAddress = new JTextField();
-		textFieldTraderEmailAddress.setBounds(130, 172, 230, 20);
-		panelTraderInfo.add(textFieldTraderEmailAddress);
+		panelInfoHolder.add(textFieldTraderEmailAddress);
 		textFieldTraderEmailAddress.setColumns(10);
 		
 		textFieldAdditionalInfo = new JTextField();
-		textFieldAdditionalInfo.setBounds(130, 197, 230, 20);
-		panelTraderInfo.add(textFieldAdditionalInfo);
+		panelInfoHolder.add(textFieldAdditionalInfo);
 		textFieldAdditionalInfo.setColumns(10);
 		
 		textFieldTraderId = new JTextField();
-		textFieldTraderId.setBounds(130, 222, 230, 20);
-		panelTraderInfo.add(textFieldTraderId);
+		panelInfoHolder.add(textFieldTraderId);
 		textFieldTraderId.setColumns(10);
+		
+		textFieldTraderPhoneNumber = new JTextField();
+		panelInfoHolder.add(textFieldTraderPhoneNumber);
+		textFieldTraderPhoneNumber.setColumns(10);
+		
+		textFieldTraderAddress = new JTextField();
+		panelInfoHolder.add(textFieldTraderAddress);
+		textFieldTraderAddress.setColumns(10);
 	}
 }
