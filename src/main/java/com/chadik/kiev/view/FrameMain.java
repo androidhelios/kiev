@@ -61,7 +61,7 @@ public class FrameMain extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 		panelTraderImpl.initPanel();
-		contentPane.add(panelTraderImpl, BorderLayout.CENTER);		
+		contentPane.add(panelTraderImpl.getPanel(), BorderLayout.CENTER);		
         
         pack();
         setVisible(true);

@@ -82,11 +82,11 @@ public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 
-		buttonNew = new JButton("Зачувај");
-		buttonNew.setPreferredSize(new Dimension(100, 25));
+		buttonSave = new JButton("Зачувај");
+		buttonSave.setPreferredSize(new Dimension(100, 25));
 
-		buttonEdit = new JButton("Откажи");
-		buttonEdit.setPreferredSize(new Dimension(100, 25));
+		buttonCancel = new JButton("Откажи");
+		buttonCancel.setPreferredSize(new Dimension(100, 25));
 
 		table.setModel(defaultTableModel);
 		scrollPaneTable.add(table);
@@ -113,5 +113,7 @@ public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
 		add(panelInfoHolder);
 
 	}
+	
+	public abstract JPanel getPanel();
 
 }
