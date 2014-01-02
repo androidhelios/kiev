@@ -3,6 +3,7 @@ package com.chadik.kiev.view.impl;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -16,8 +17,10 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.dao.IGenericJpaDao;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.view.IPanelGeneric;
+import com.chadik.kiev.view.dialog.IDialogGeneric;
 import com.chadik.kiev.view.table.ITableGeneric;
 import com.chadik.kiev.view.table.ITableTrader;
+import java.awt.event.ActionListener;
 
 @Component
 public abstract class PanelGenericImpl<T> implements
@@ -41,11 +44,15 @@ public abstract class PanelGenericImpl<T> implements
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
+	
+	
 
 	private IGenericJpaService genericJpaService;
 	
 	private ITableGeneric tableGeneric;
 
+	private IDialogGeneric dialogGeneric;
+	
 	@Override
 	public JPanel initPanel() {
 
@@ -89,6 +96,11 @@ public abstract class PanelGenericImpl<T> implements
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
+		buttonNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getDialogGeneric().initDialog();
+			}
+		});
 
 		buttonEdit = new JButton("Измени");
 		buttonEdit.setPreferredSize(new Dimension(100, 25));
@@ -131,7 +143,49 @@ public abstract class PanelGenericImpl<T> implements
 
 	}
 	
+	public JButton getButtonNew() {
+		return buttonNew;
+	}
+
+	public void setButtonNew(JButton buttonNew) {
+		this.buttonNew = buttonNew;
+	}
+
+	public JButton getButtonEdit() {
+		return buttonEdit;
+	}
+
+	public void setButtonEdit(JButton buttonEdit) {
+		this.buttonEdit = buttonEdit;
+	}
+
+	public JButton getButtonDelete() {
+		return buttonDelete;
+	}
+
+	public void setButtonDelete(JButton buttonDelete) {
+		this.buttonDelete = buttonDelete;
+	}
+
+	public JButton getButtonSave() {
+		return buttonSave;
+	}
+
+	public void setButtonSave(JButton buttonSave) {
+		this.buttonSave = buttonSave;
+	}
+
+	public JButton getButtonCancel() {
+		return buttonCancel;
+	}
+
+	public void setButtonCancel(JButton buttonCancel) {
+		this.buttonCancel = buttonCancel;
+	}
+
 	public abstract ITableGeneric getTableGeneric();
 	
 	public abstract T getTableInfo();
+	
+	public abstract IDialogGeneric getDialogGeneric();
 }

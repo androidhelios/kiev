@@ -1,0 +1,98 @@
+package com.chadik.kiev.view.dialog.impl;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.security.auth.login.FailedLoginException;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import com.chadik.kiev.model.Trader;
+import com.chadik.kiev.service.IGenericJpaService;
+import com.chadik.kiev.view.dialog.IDialogGeneric;
+
+@Component
+public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
+	
+	private JDialog dialog;
+	private JPanel contentPane;
+	private JPanel panelAll;
+	private JPanel panelFields;
+	private JPanel panelFieldsContent;
+	private JPanel panelButtons;
+	private JPanel panelButtonsContent;
+	private JButton buttonSave;
+	private JButton buttonCancel;
+	
+	private IGenericJpaService genericJpaService;
+
+	@Override
+	public JDialog initDialog() {
+		
+		dialog = new JDialog();	
+		dialog.setTitle(getDilogName());
+		
+		contentPane = new JPanel();
+		
+		dialog.setContentPane(contentPane);		
+
+		panelAll = new JPanel();
+		panelAll.setLayout(new BorderLayout());
+		
+		panelFields = new JPanel();
+		panelFields.setLayout(new BorderLayout());
+		
+		panelFieldsContent = getPanelFieldsContent();
+		
+		panelButtons = new JPanel();
+		panelButtons.setLayout(new BorderLayout());
+		panelButtons.setPreferredSize(getPanelButtonsDimension());
+		
+		panelButtonsContent = new JPanel();
+		panelButtonsContent.setLayout(new FlowLayout());
+		
+		buttonSave = new JButton("Зачувај");
+		buttonSave.setPreferredSize(new Dimension(100, 25));
+
+		buttonCancel = new JButton("Откажи");
+		buttonCancel.setPreferredSize(new Dimension(100, 25));
+		
+		panelButtonsContent.add(buttonSave);
+		panelButtonsContent.add(buttonCancel);
+		
+		panelButtons.add(panelButtonsContent, BorderLayout.CENTER);
+		
+		panelFields.add(panelFieldsContent, BorderLayout.CENTER);
+		
+		panelAll.add(panelButtons, BorderLayout.SOUTH);
+		panelAll.add(panelFields, BorderLayout.CENTER);
+		
+		contentPane.add(panelAll);
+		
+		dialog.pack();
+		dialog.setVisible(true);
+		dialog.setLocationRelativeTo(null);		
+		
+		return dialog;
+	}
+	
+	public abstract String getDilogName();
+	
+	public abstract Dimension getPanelFieldsDimension();
+	
+	public abstract Dimension getPanelButtonsDimension();
+	
+	public abstract JPanel getPanelFieldsContent();
+	
+
+}

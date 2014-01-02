@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -21,6 +22,8 @@ import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.ITraderJpaService;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.IPanelTrader;
+import com.chadik.kiev.view.dialog.IDialogGeneric;
+import com.chadik.kiev.view.dialog.IDialogTrader;
 import com.chadik.kiev.view.table.ITableGeneric;
 import com.chadik.kiev.view.table.ITableTrader;
 
@@ -30,6 +33,9 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 
 	@Autowired
 	private ITraderJpaService traderJpaServiceImpl;
+	
+	@Autowired
+	private IDialogTrader dialogTraderImpl;
 	
 	@Autowired
 	private ITableTrader tableTraderImpl;
@@ -44,6 +50,9 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		return null;
 	}
 
-
+	@Override
+	public IDialogGeneric getDialogGeneric() {
+		return dialogTraderImpl;
+	}
 	
 }
