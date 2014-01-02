@@ -2,7 +2,7 @@ package com.chadik.kiev.view;
 
 import javax.swing.JPanel;
 
-public interface IPanelGeneric {
+public interface IPanelGeneric<T> {
 	
 	public void initPanel();
 	

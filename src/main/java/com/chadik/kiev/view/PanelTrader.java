@@ -37,7 +37,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.UIManager;
 
-@Component
+//@Component
 public class PanelTrader extends JPanel {
 	
 //	@Autowired

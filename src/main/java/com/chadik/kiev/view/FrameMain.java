@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
+import com.chadik.kiev.service.ITraderJpaService;
 
 @Component
 public class FrameMain extends JFrame {
@@ -32,6 +33,11 @@ public class FrameMain extends JFrame {
 	@Autowired
 	@Qualifier("panelTraderImpl")
 	private IPanelTrader panelTraderImpl;
+	
+//	@Autowired
+//	private ITraderJpaService traderJpaServiceImpl;
+	
+	private PanelTrader panelTrader;
 	
 	public void initFrameMain() {
 		setTitle("kiev");
@@ -61,6 +67,7 @@ public class FrameMain extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 		panelTraderImpl.initPanel();
+//		panelTrader = new PanelTrader(traderJpaServiceImpl);
 		contentPane.add(panelTraderImpl.getPanel(), BorderLayout.CENTER);		
         
         pack();

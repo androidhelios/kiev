@@ -3,6 +3,7 @@ package com.chadik.kiev.view.impl;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -10,19 +11,26 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.springframework.stereotype.Component;
+
+import com.chadik.kiev.dao.IGenericJpaDao;
+import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.view.IPanelGeneric;
 
-public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
+@Component
+public abstract class PanelGenericImpl<T> extends JPanel implements
+		IPanelGeneric<T> {
 
 	private JPanel panelTableHolder;
 	private JPanel panelTableHolderContent;
 	private JPanel panelTableHolderContentTable;
 	private JPanel panelTableHolderContentButtons;
-	private JScrollPane scrollPaneTable;
 	private JPanel panelInfoHolder;
 	private JPanel panelInfoHolderContent;
 	private JPanel panelInfoHolderContentInfo;
 	private JPanel panelInfoHolderContentButtons;
+	
+	private JScrollPane scrollPaneTable;
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
 	private JButton buttonNew;
@@ -30,6 +38,8 @@ public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
+
+	private IGenericJpaService genericJpaService;
 
 	@Override
 	public void initPanel() {
@@ -63,15 +73,23 @@ public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
 		panelInfoHolderContentInfo.setLayout(null);
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
 
+		populatePanelInfoHolderContentInfo(panelInfoHolderContentInfo);
+
 		panelInfoHolderContentButtons = new JPanel();
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		scrollPaneTable = new JScrollPane();
-
 		defaultTableModel = new DefaultTableModel();
-
+		
 		table = new JTable();
+
+		createTable(table, defaultTableModel, getColumnNames());
+		
+		populateTable(table, defaultTableModel,
+				getGenericJpaService().getAll());
+
+
+		scrollPaneTable = new JScrollPane(table);
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -88,32 +106,47 @@ public abstract class PanelGenericImpl extends JPanel implements IPanelGeneric {
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
 
-		table.setModel(defaultTableModel);
-		scrollPaneTable.add(table);
-
 		panelTableHolderContentTable.add(scrollPaneTable);
 
 		panelTableHolderContentButtons.add(buttonDelete);
 		panelTableHolderContentButtons.add(buttonEdit);
 		panelTableHolderContentButtons.add(buttonNew);
 
-		panelTableHolderContent.add(panelTableHolderContentTable);
-		panelTableHolderContent.add(panelTableHolderContentButtons);
+		panelTableHolderContent.add(panelTableHolderContentTable,
+				BorderLayout.CENTER);
+		panelTableHolderContent.add(panelTableHolderContentButtons,
+				BorderLayout.SOUTH);
 
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
 
-		panelInfoHolderContent.add(panelInfoHolderContentInfo);
-		panelInfoHolderContent.add(panelInfoHolderContentButtons);
+		panelInfoHolderContent.add(panelInfoHolderContentInfo,
+				BorderLayout.CENTER);
+		panelInfoHolderContent.add(panelInfoHolderContentButtons,
+				BorderLayout.SOUTH);
 
 		panelTableHolder.add(panelTableHolderContent);
 		panelInfoHolder.add(panelInfoHolderContent);
 
-		add(panelTableHolder);
-		add(panelInfoHolder);
+		add(panelTableHolder, BorderLayout.WEST);
+		add(panelInfoHolder, BorderLayout.CENTER);
 
 	}
-	
+
 	public abstract JPanel getPanel();
 
+	public abstract void populatePanelInfoHolderContentInfo(
+			JPanel panelInfoHolderContentInfo);
+	
+	public abstract void createTable(JTable table, DefaultTableModel defaultTableModel,
+			String[] columnNames);
+
+	public abstract void populateTable(JTable table, DefaultTableModel defaultTableModel,
+			List<T> t);
+
+	public abstract String[] getColumnNames();
+
+	public abstract IGenericJpaService getGenericJpaService();
+	
+	public abstract T getTableInfo();
 }

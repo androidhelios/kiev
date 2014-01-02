@@ -8,11 +8,15 @@ import org.hibernate.cfg.Configuration;
  *
  * @author ivan.chadikovski
  */
-public class HibernateUtil {
+public final class HibernateUtil {
+	
+	private HibernateUtil() {
+		
+	}
 
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    public static final SessionFactory sessionFactory = buildSessionFactory();
 
-    private static SessionFactory buildSessionFactory() {
+    public static SessionFactory buildSessionFactory() {
         try {
             return new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {

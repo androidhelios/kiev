@@ -1,5 +1,7 @@
 package com.chadik.kiev.view;
 
-public interface IPanelTrader extends IPanelGeneric {
+import com.chadik.kiev.model.Trader;
+
+public interface IPanelTrader extends IPanelGeneric<Trader> {
 
 }
