@@ -1,4 +1,4 @@
-package com.chadik.kiev.view;
+package com.chadik.kiev.view.panel;
 
 import com.chadik.kiev.model.Trader;
 

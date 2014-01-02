@@ -1,4 +1,4 @@
-package com.chadik.kiev.view.impl;
+package com.chadik.kiev.view.panel.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.dao.IGenericJpaDao;
 import com.chadik.kiev.service.IGenericJpaService;
-import com.chadik.kiev.view.IPanelGeneric;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
+import com.chadik.kiev.view.panel.IPanelGeneric;
 import com.chadik.kiev.view.table.ITableGeneric;
 import com.chadik.kiev.view.table.ITableTrader;
 import java.awt.event.ActionListener;

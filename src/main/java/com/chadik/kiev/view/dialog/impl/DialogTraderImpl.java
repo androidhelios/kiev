@@ -36,7 +36,6 @@ public class DialogTraderImpl extends GenericDialogImpl<Trader> implements IDial
 		panelFieldsContent = new JPanel();
 		panelFieldsContent.setLayout(null);
 		panelFieldsContent.setPreferredSize(getPanelFieldsDimension());
-		panelFieldsContent.setBackground(Color.RED);
 		
 		return panelFieldsContent;
 	}

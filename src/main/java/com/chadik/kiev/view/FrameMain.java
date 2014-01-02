@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.ITraderJpaService;
+import com.chadik.kiev.view.panel.IPanelTrader;
 
 @Component
 public class FrameMain extends JFrame {

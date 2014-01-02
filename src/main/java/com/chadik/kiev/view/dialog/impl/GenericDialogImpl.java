@@ -66,6 +66,11 @@ public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
+		buttonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+			}
+		});
 		
 		panelButtonsContent.add(buttonSave);
 		panelButtonsContent.add(buttonCancel);

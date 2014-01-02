@@ -1,4 +1,4 @@
-package com.chadik.kiev.view.impl;
+package com.chadik.kiev.view.panel.impl;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,9 +21,9 @@ import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.ITraderJpaService;
 import com.chadik.kiev.util.TableUtil;
-import com.chadik.kiev.view.IPanelTrader;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
 import com.chadik.kiev.view.dialog.IDialogTrader;
+import com.chadik.kiev.view.panel.IPanelTrader;
 import com.chadik.kiev.view.table.ITableGeneric;
 import com.chadik.kiev.view.table.ITableTrader;
 
