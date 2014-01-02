@@ -16,13 +16,19 @@ public final class TableUtil {
 		table.getColumnModel().getColumn(columnIndex).setPreferredWidth(0);
 	}
 	
-	public static void centerCells(JTable table) {
+	public static void allignCells(JTable table, int alligment) {
 		
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-		cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		cellRenderer.setHorizontalAlignment(alligment);
 		
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+		}
+	}
+	
+	public static void hideColumns(JTable table, int[] columns) {
+		for (int i = 0; i < columns.length; i++) {
+			hideColumn(table, i);
 		}
 	}
 

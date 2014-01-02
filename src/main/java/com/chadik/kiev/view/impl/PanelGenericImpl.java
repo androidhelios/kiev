@@ -18,9 +18,10 @@ import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.view.IPanelGeneric;
 
 @Component
-public abstract class PanelGenericImpl<T> extends JPanel implements
+public abstract class PanelGenericImpl<T> implements
 		IPanelGeneric<T> {
-
+	
+	private JPanel panelAll;
 	private JPanel panelTableHolder;
 	private JPanel panelTableHolderContent;
 	private JPanel panelTableHolderContentTable;
@@ -42,10 +43,11 @@ public abstract class PanelGenericImpl<T> extends JPanel implements
 	private IGenericJpaService genericJpaService;
 
 	@Override
-	public void initPanel() {
+	public JPanel initPanel() {
 
-		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(800, 600));
+		panelAll = new JPanel();
+		panelAll.setLayout(new BorderLayout());
+		panelAll.setPreferredSize(new Dimension(800, 600));
 
 		panelTableHolder = new JPanel();
 		panelTableHolder.setLayout(new BorderLayout());
@@ -128,12 +130,12 @@ public abstract class PanelGenericImpl<T> extends JPanel implements
 		panelTableHolder.add(panelTableHolderContent);
 		panelInfoHolder.add(panelInfoHolderContent);
 
-		add(panelTableHolder, BorderLayout.WEST);
-		add(panelInfoHolder, BorderLayout.CENTER);
+		panelAll.add(panelTableHolder, BorderLayout.WEST);
+		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
+		
+		return panelAll;
 
 	}
-
-	public abstract JPanel getPanel();
 
 	public abstract void populatePanelInfoHolderContentInfo(
 			JPanel panelInfoHolderContentInfo);

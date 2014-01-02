@@ -66,9 +66,9 @@ public class FrameMain extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		panelTraderImpl.initPanel();
+//		panelTraderImpl.initPanel();
 //		panelTrader = new PanelTrader(traderJpaServiceImpl);
-		contentPane.add(panelTraderImpl.getPanel(), BorderLayout.CENTER);		
+		contentPane.add(panelTraderImpl.initPanel(), BorderLayout.CENTER);		
         
         pack();
         setVisible(true);

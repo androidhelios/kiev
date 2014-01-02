@@ -7,8 +7,7 @@ import javax.swing.table.DefaultTableModel;
 
 public interface ITableGeneric<T> {
 	
-	public void createTable(JTable table, DefaultTableModel defaultTableModel,
-			String[] columnNames);
+	public JTable initTable();
 
 	public void populateTable(JTable table, DefaultTableModel defaultTableModel,
 			List<T> t);

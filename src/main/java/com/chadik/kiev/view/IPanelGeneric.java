@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 
 public interface IPanelGeneric<T> {
 	
-	public void initPanel();
-	
-	public JPanel getPanel();
+	public JPanel initPanel();
 
 }

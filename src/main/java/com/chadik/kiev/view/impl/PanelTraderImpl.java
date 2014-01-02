@@ -29,10 +29,6 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 	@Autowired
 	private ITraderJpaService traderJpaServiceImpl;
 
-	@Override
-	public JPanel getPanel() {
-		return this;
-	}
 
 	@Override
 	public void populatePanelInfoHolderContentInfo(
@@ -43,21 +39,29 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 	@Override
 	public void populateTable(JTable table,
 			DefaultTableModel defaultTableModel, List<Trader> traders) {
+		
+		int i = 0;
 
 		defaultTableModel.setRowCount(0);
 
-		for (Trader trader : traders) {
+		for (Trader trader : traders) {			
+			
 			defaultTableModel.addRow(new String[] {
+					Integer.toString(++i),
 					trader.getTraderId().toString(), trader.getTraderName(),
 					trader.getTraderBankName(), trader.getTraderBankAccount(),
 					trader.getTraderAddress() });
+		}
+		
+		if (table.getRowCount() > 0) {
+			table.setRowSelectionInterval(table.getRowCount() - 1, table.getRowCount() - 1);
 		}
 
 	}
 
 	@Override
 	public String[] getColumnNames() {
-		return new String[] { "id", "Name", "BankName", "BankAccount",
+		return new String[] { "No", "id", "Name", "BankName", "BankAccount",
 				"Address" };
 	}
 
@@ -83,7 +87,7 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		TableUtil.hideColumn(table, 3);
 		TableUtil.hideColumn(table, 4);
 
-		TableUtil.centerCells(table);
+		TableUtil.allignCells(table, SwingConstants.CENTER);
 
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
 
