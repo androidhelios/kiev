@@ -9,7 +9,6 @@ public interface ITableGeneric<T> {
 	
 	public JTable initTable();
 
-	public void populateTable(JTable table, DefaultTableModel defaultTableModel,
-			List<T> t);
+	public void populateTable();
 
 }

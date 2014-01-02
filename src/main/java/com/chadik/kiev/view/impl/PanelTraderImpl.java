@@ -21,6 +21,8 @@ import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.service.ITraderJpaService;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.IPanelTrader;
+import com.chadik.kiev.view.table.ITableGeneric;
+import com.chadik.kiev.view.table.ITableTrader;
 
 @Component
 public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
@@ -28,46 +30,13 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 
 	@Autowired
 	private ITraderJpaService traderJpaServiceImpl;
-
-
-	@Override
-	public void populatePanelInfoHolderContentInfo(
-			JPanel panelInfoHolderContentInfo) {
-
-	}
+	
+	@Autowired
+	private ITableTrader tableTraderImpl;
 
 	@Override
-	public void populateTable(JTable table,
-			DefaultTableModel defaultTableModel, List<Trader> traders) {
-		
-		int i = 0;
-
-		defaultTableModel.setRowCount(0);
-
-		for (Trader trader : traders) {			
-			
-			defaultTableModel.addRow(new String[] {
-					Integer.toString(++i),
-					trader.getTraderId().toString(), trader.getTraderName(),
-					trader.getTraderBankName(), trader.getTraderBankAccount(),
-					trader.getTraderAddress() });
-		}
-		
-		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1, table.getRowCount() - 1);
-		}
-
-	}
-
-	@Override
-	public String[] getColumnNames() {
-		return new String[] { "No", "id", "Name", "BankName", "BankAccount",
-				"Address" };
-	}
-
-	@Override
-	public IGenericJpaService getGenericJpaService() {
-		return traderJpaServiceImpl;
+	public ITableGeneric getTableGeneric() {
+		return tableTraderImpl;
 	}
 
 	@Override
@@ -75,22 +44,6 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		return null;
 	}
 
-	@Override
-	public void createTable(JTable table, DefaultTableModel defaultTableModel,
-			String[] columnNames) {
 
-		defaultTableModel.setColumnIdentifiers(columnNames);
-
-		table.setModel(defaultTableModel);
-
-		TableUtil.hideColumn(table, 2);
-		TableUtil.hideColumn(table, 3);
-		TableUtil.hideColumn(table, 4);
-
-		TableUtil.allignCells(table, SwingConstants.CENTER);
-
-		table.getColumnModel().getColumn(0).setMaxWidth(100);
-
-	}
-
+	
 }

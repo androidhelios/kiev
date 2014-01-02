@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.dao.IGenericJpaDao;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.view.IPanelGeneric;
+import com.chadik.kiev.view.table.ITableGeneric;
+import com.chadik.kiev.view.table.ITableTrader;
 
 @Component
 public abstract class PanelGenericImpl<T> implements
@@ -41,6 +43,8 @@ public abstract class PanelGenericImpl<T> implements
 	private JButton buttonCancel;
 
 	private IGenericJpaService genericJpaService;
+	
+	private ITableGeneric tableGeneric;
 
 	@Override
 	public JPanel initPanel() {
@@ -75,21 +79,11 @@ public abstract class PanelGenericImpl<T> implements
 		panelInfoHolderContentInfo.setLayout(null);
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
 
-		populatePanelInfoHolderContentInfo(panelInfoHolderContentInfo);
-
 		panelInfoHolderContentButtons = new JPanel();
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		defaultTableModel = new DefaultTableModel();
-		
-		table = new JTable();
-
-		createTable(table, defaultTableModel, getColumnNames());
-		
-		populateTable(table, defaultTableModel,
-				getGenericJpaService().getAll());
-
+		table = getTableGeneric().initTable();
 
 		scrollPaneTable = new JScrollPane(table);
 
@@ -136,19 +130,8 @@ public abstract class PanelGenericImpl<T> implements
 		return panelAll;
 
 	}
-
-	public abstract void populatePanelInfoHolderContentInfo(
-			JPanel panelInfoHolderContentInfo);
 	
-	public abstract void createTable(JTable table, DefaultTableModel defaultTableModel,
-			String[] columnNames);
-
-	public abstract void populateTable(JTable table, DefaultTableModel defaultTableModel,
-			List<T> t);
-
-	public abstract String[] getColumnNames();
-
-	public abstract IGenericJpaService getGenericJpaService();
+	public abstract ITableGeneric getTableGeneric();
 	
 	public abstract T getTableInfo();
 }

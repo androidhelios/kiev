@@ -28,7 +28,7 @@ public final class TableUtil {
 	
 	public static void hideColumns(JTable table, int[] columns) {
 		for (int i = 0; i < columns.length; i++) {
-			hideColumn(table, i);
+			hideColumn(table, columns[i]);
 		}
 	}
 
