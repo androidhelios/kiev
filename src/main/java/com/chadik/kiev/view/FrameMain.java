@@ -1,29 +1,21 @@
 package com.chadik.kiev.view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.chadik.kiev.model.Trader;
-import com.chadik.kiev.service.IGenericJpaService;
-import com.chadik.kiev.service.ITraderJpaService;
+import com.chadik.kiev.view.panel.IPanelCustomer;
 import com.chadik.kiev.view.panel.IPanelTrader;
 
 @Component
@@ -32,8 +24,10 @@ public class FrameMain extends JFrame {
 	private JPanel contentPane;
 	
 	@Autowired
-	@Qualifier("panelTraderImpl")
 	private IPanelTrader panelTraderImpl;
+	
+	@Autowired
+	private IPanelCustomer panelCustomerImpl;
 	
 	public void initFrameMain() {
 		setTitle("kiev");
@@ -62,9 +56,7 @@ public class FrameMain extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-//		panelTraderImpl.initPanel();
-//		panelTrader = new PanelTrader(traderJpaServiceImpl);
-		contentPane.add(panelTraderImpl.initPanel(), BorderLayout.CENTER);		
+		contentPane.add(panelCustomerImpl.initPanel(), BorderLayout.CENTER);		
         
         pack();
         setVisible(true);
