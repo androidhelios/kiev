@@ -90,7 +90,7 @@ public abstract class PanelGenericImpl<T> implements
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		table = getTableGeneric().initTable();
+		table = getPanelTable().initTable();
 
 		scrollPaneTable = new JScrollPane(table);
 
@@ -183,7 +183,7 @@ public abstract class PanelGenericImpl<T> implements
 		this.buttonCancel = buttonCancel;
 	}
 
-	public abstract ITableGeneric getTableGeneric();
+	public abstract ITableGeneric getPanelTable();
 	
 	public abstract T getTableInfo();
 	

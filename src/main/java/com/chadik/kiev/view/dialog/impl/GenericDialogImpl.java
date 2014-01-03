@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
+import com.chadik.kiev.view.panel.IPanelGeneric;
+import com.chadik.kiev.view.table.ITableGeneric;
 
 @Component
 public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
@@ -35,12 +37,14 @@ public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
 	private JButton buttonCancel;
 	
 	private IGenericJpaService genericJpaService;
+	private IPanelGeneric panelGeneric;
 
 	@Override
 	public JDialog initDialog() {
 		
 		dialog = new JDialog();	
 		dialog.setTitle(getDilogName());
+		dialog.setResizable(false);
 		
 		contentPane = new JPanel();
 		
@@ -63,6 +67,13 @@ public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
 		
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
+		buttonSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getGenericJpaService().save(getT());
+				dialog.dispose();
+				getPanelGeneric().getPanelTable().populateTable();
+			}
+		});
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
@@ -98,6 +109,12 @@ public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
 	public abstract Dimension getPanelButtonsDimension();
 	
 	public abstract JPanel getPanelFieldsContent();
+	
+	public abstract IGenericJpaService getGenericJpaService();
+	
+	public abstract IPanelGeneric getPanelGeneric();
+	
+	public abstract T getT();
 	
 
 }

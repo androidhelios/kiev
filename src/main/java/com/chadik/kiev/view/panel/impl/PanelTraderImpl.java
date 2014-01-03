@@ -41,7 +41,7 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 	private ITableTrader tableTraderImpl;
 
 	@Override
-	public ITableGeneric getTableGeneric() {
+	public ITableGeneric getPanelTable() {
 		return tableTraderImpl;
 	}
 

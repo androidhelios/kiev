@@ -35,11 +35,6 @@ public class FrameMain extends JFrame {
 	@Qualifier("panelTraderImpl")
 	private IPanelTrader panelTraderImpl;
 	
-//	@Autowired
-//	private ITraderJpaService traderJpaServiceImpl;
-	
-	private PanelTrader panelTrader;
-	
 	public void initFrameMain() {
 		setTitle("kiev");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
