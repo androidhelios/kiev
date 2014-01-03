@@ -24,7 +24,7 @@ import com.chadik.kiev.view.panel.IPanelGeneric;
 import com.chadik.kiev.view.table.ITableGeneric;
 
 @Component
-public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
+public abstract class DialogGenericImpl<T> implements IDialogGeneric<T> {
 	
 	private JDialog dialog;
 	private JPanel contentPane;
@@ -71,7 +71,7 @@ public abstract class GenericDialogImpl<T> implements IDialogGeneric<T> {
 			public void actionPerformed(ActionEvent e) {
 				getGenericJpaService().save(getT());
 				dialog.dispose();
-				getPanelGeneric().getPanelTable().populateTable();
+				getPanelGeneric().populateTable();
 			}
 		});
 

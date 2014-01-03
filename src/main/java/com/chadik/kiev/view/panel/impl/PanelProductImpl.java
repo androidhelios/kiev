@@ -11,36 +11,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
+import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.ICustomerJpaService;
+import com.chadik.kiev.service.IProductJpaService;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.IDialogCustomer;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
+import com.chadik.kiev.view.dialog.IDialogProduct;
 import com.chadik.kiev.view.dialog.IDialogTrader;
 import com.chadik.kiev.view.panel.IPanelCustomer;
+import com.chadik.kiev.view.panel.IPanelProduct;
 import com.chadik.kiev.view.table.ITableCustomer;
 import com.chadik.kiev.view.table.ITableGeneric;
+import com.chadik.kiev.view.table.ITableProduct;
 
 @Component
-public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
-		IPanelCustomer {
+public class PanelProductImpl extends PanelGenericImpl<Product> implements
+		IPanelProduct {
 
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
-	private List<Customer> customers;
+	private List<Product> products;
 
 	@Autowired
-	private ICustomerJpaService customerJpaServiceImpl;
+	private IProductJpaService productJpaServiceImpl;
 	@Autowired
-	private IDialogCustomer dialogCustomerImpl;
+	private IDialogProduct dialogProductImpl;
 
 	@Override
-	public Customer getTableEntity() {
+	public Product getTableEntity() {
 		return null;
 	}
 
 	@Override
 	public IDialogGeneric getDialog() {
-		return dialogCustomerImpl;
+		return dialogProductImpl;
 	}
 
 	@Override
@@ -51,19 +56,18 @@ public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 
 	@Override
 	public void populateTable() {
-		customers = customerJpaServiceImpl.getAll();
+		products = productJpaServiceImpl.getAll();
 
 		int i = 0;
 
 		defaultTableModel.setRowCount(0);
 
-		for (Customer customer : customers) {
+		for (Product product : products) {
 			defaultTableModel.addRow(new String[] { Integer.toString(++i),
-					customer.getCustomerId().toString(),
-					customer.getCustomerName(), customer.getCustomerAddress(),
-					customer.getCustomerPhoneNumber(),
-					customer.getCustomerEmail(),
-					customer.getCustomerAdditionalInfo() });
+					product.getProductId().toString(),
+					product.getProductName(), product.getProductMeasurement(),
+					product.getProductTax(), product.getProductPrice(),
+					product.getProductAdditionalInfo() });
 		}
 
 		if (table.getRowCount() > 0) {
@@ -91,13 +95,13 @@ public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 
 	@Override
 	public String[] getTableColumnNames() {
-		return new String[] { "Реден Бр.", "Id", "Назив", "Адреса",
-				"Телефонски број", "Email", "Забелешки" };
+		return new String[] { "Реден Бр.", "Id", "Назив", "Единица Мерка",
+				"Данок", "Цена", "Забелешки" };
 	}
 
 	@Override
 	public int[] getTableHiddenColumns() {
-		return new int[] { 1, 3, 5, 6 };
+		return new int[] { 1, 4, 5, 6 };
 	}
 
 	@Override

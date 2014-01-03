@@ -1,6 +1,7 @@
 package com.chadik.kiev.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,19 +10,40 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.chadik.kiev.util.PanelUtil;
+import com.chadik.kiev.view.dialog.IDialogTrader;
 import com.chadik.kiev.view.panel.IPanelCustomer;
+import com.chadik.kiev.view.panel.IPanelProduct;
 import com.chadik.kiev.view.panel.IPanelTrader;
 
 @Component
-public class FrameMain extends JFrame {
+public class FrameMain {
+	
+	private JFrame mainFrame;
 
+	private JMenuBar menuBar;
+	
+	private JMenu menuFile;
+	private JMenu menuTrader;
+	private JMenu menuProduct;
+	private JMenu menuCustomer;
+	
+	private JMenuItem menuItemExit;
+	private JMenuItem menuItemTrader;
+	private JMenuItem menuItemTraderNew;
+	private JMenuItem menuItemProduct;
+	private JMenuItem menuItemProductNew;
+	private JMenuItem menuItemCustomer;
+	private JMenuItem menuItemCustomerNew;
+	
 	private JPanel contentPane;
+	private JPanel panelTrader;
+	private JPanel panelCustomer;
+	private JPanel panelProduct;
 	
 	@Autowired
 	private IPanelTrader panelTraderImpl;
@@ -29,38 +51,93 @@ public class FrameMain extends JFrame {
 	@Autowired
 	private IPanelCustomer panelCustomerImpl;
 	
-	public void initFrameMain() {
-		setTitle("kiev");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	@Autowired
+	private IPanelProduct panelProductImpl;	
+	
+	@Autowired
+	private IDialogTrader dialogTraderImpl;
+	
+	public JFrame initFrame() {
+		mainFrame = new JFrame();
+		menuBar = new JMenuBar();
+		contentPane = new JPanel();
 		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		panelTrader = panelTraderImpl.initPanel();
+		panelTrader.setVisible(false);
+		panelCustomer = panelCustomerImpl.initPanel();
+		panelCustomer.setVisible(false);
+		panelProduct = panelProductImpl.initPanel();
+		panelProduct.setVisible(false);
 		
-		JMenu menuFile = new JMenu("File");
+		mainFrame.setTitle("kiev");
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		contentPane.setLayout(new BorderLayout());
+		contentPane.setPreferredSize(new Dimension(800, 600));
+		mainFrame.setContentPane(contentPane);
+		
+		mainFrame.setJMenuBar(menuBar);
+		
+		menuFile = new JMenu("Датотека");
+		menuTrader = new JMenu("Корисник");
+		menuProduct = new JMenu("Продукт");
+		menuCustomer = new JMenu("Клиент");
+		
 		menuBar.add(menuFile);
+		menuBar.add(menuTrader);
+		menuBar.add(menuProduct);
+		menuBar.add(menuCustomer);
 		
-		JMenuItem menuItemExit = new JMenuItem("Exit");
+		menuItemExit = new JMenuItem("Излез");
 		menuItemExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 		
-		JMenuItem menuItemTrader = new JMenuItem("Trader");
-		menuFile.add(menuItemTrader);
+		menuItemTrader = new JMenuItem("Измени корисник");
+		menuItemTrader.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, panelTrader, BorderLayout.CENTER);
+				
+			}
+		});
 		
-		JSeparator menuItemSeparator = new JSeparator();
-		menuFile.add(menuItemSeparator);
+		menuItemTraderNew = new JMenuItem("Нов корисник");
+		menuItemTraderNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialogTraderImpl.initDialog();
+			}
+		});
+		
+		menuItemProduct = new JMenuItem("Измени продукт");
+		menuItemProductNew = new JMenuItem("Нов продукт");
+		
+		menuItemCustomer = new JMenuItem("Измени клиент");
+		menuItemCustomerNew = new JMenuItem("Нов клиент");
 		
 		menuFile.add(menuItemExit);
-		contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout());
-		setContentPane(contentPane);
-		contentPane.add(panelCustomerImpl.initPanel(), BorderLayout.CENTER);		
+		
+		menuTrader.add(menuItemTrader);
+		menuTrader.add(menuItemTraderNew);	
+		menuCustomer.add(menuItemCustomer);
+		menuCustomer.add(menuItemCustomerNew);
+		menuProduct.add(menuItemProduct);
+		menuProduct.add(menuItemProductNew);
+		
+		panelTraderImpl.initPanel();
+		panelCustomerImpl.initPanel();
+		panelProductImpl.initPanel();
+		
+		contentPane.add(panelTrader, BorderLayout.CENTER);	
+		contentPane.add(panelCustomer, BorderLayout.CENTER);	
+		contentPane.add(panelProduct, BorderLayout.CENTER);		
         
-        pack();
-        setVisible(true);
-        setLocationRelativeTo(null);
+		mainFrame.pack();
+		mainFrame.setVisible(true);
+		mainFrame.setLocationRelativeTo(null);
+		
+		return mainFrame;
 		
 	}
 	

@@ -37,21 +37,12 @@ public abstract class PanelGenericImpl<T> implements
 	private JPanel panelInfoHolderContentButtons;
 	
 	private JScrollPane scrollPaneTable;
-	private DefaultTableModel defaultTableModel;
 	private JTable table;
 	private JButton buttonNew;
 	private JButton buttonEdit;
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
-	
-	
-
-	private IGenericJpaService genericJpaService;
-	
-	private ITableGeneric tableGeneric;
-
-	private IDialogGeneric dialogGeneric;
 	
 	@Override
 	public JPanel initPanel() {
@@ -82,6 +73,7 @@ public abstract class PanelGenericImpl<T> implements
 		panelInfoHolderContent.setLayout(new BorderLayout());
 		panelInfoHolderContent.setPreferredSize(new Dimension(400, 600));
 
+//		panelInfoHolderContentInfo = createPanelInfoHolderContentInfo();
 		panelInfoHolderContentInfo = new JPanel();
 		panelInfoHolderContentInfo.setLayout(null);
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
@@ -90,7 +82,7 @@ public abstract class PanelGenericImpl<T> implements
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		table = getPanelTable().initTable();
+		table = createTable();
 
 		scrollPaneTable = new JScrollPane(table);
 
@@ -98,7 +90,7 @@ public abstract class PanelGenericImpl<T> implements
 		buttonNew.setPreferredSize(new Dimension(100, 25));
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getDialogGeneric().initDialog();
+				getDialog().initDialog();
 			}
 		});
 
@@ -143,49 +135,19 @@ public abstract class PanelGenericImpl<T> implements
 
 	}
 	
-	public JButton getButtonNew() {
-		return buttonNew;
-	}
-
-	public void setButtonNew(JButton buttonNew) {
-		this.buttonNew = buttonNew;
-	}
-
-	public JButton getButtonEdit() {
-		return buttonEdit;
-	}
-
-	public void setButtonEdit(JButton buttonEdit) {
-		this.buttonEdit = buttonEdit;
-	}
-
-	public JButton getButtonDelete() {
-		return buttonDelete;
-	}
-
-	public void setButtonDelete(JButton buttonDelete) {
-		this.buttonDelete = buttonDelete;
-	}
-
-	public JButton getButtonSave() {
-		return buttonSave;
-	}
-
-	public void setButtonSave(JButton buttonSave) {
-		this.buttonSave = buttonSave;
-	}
-
-	public JButton getButtonCancel() {
-		return buttonCancel;
-	}
-
-	public void setButtonCancel(JButton buttonCancel) {
-		this.buttonCancel = buttonCancel;
-	}
-
-	public abstract ITableGeneric getPanelTable();
+	public abstract JTable createTable();
 	
-	public abstract T getTableInfo();
+	public abstract T getTableEntity();
 	
-	public abstract IDialogGeneric getDialogGeneric();
+	public abstract String[] getTableColumnNames();
+	
+	public abstract int[] getTableHiddenColumns();
+	
+	public abstract JPanel createPanelInfoHolderContentInfo();
+	
+	public abstract void populatePanelInfoHolderContentInfo();
+	
+	public abstract IDialogGeneric getDialog();
+	
+
 }

@@ -24,7 +24,7 @@ import com.chadik.kiev.view.panel.IPanelGeneric;
 import com.chadik.kiev.view.panel.IPanelTrader;
 
 @Component
-public class DialogCustomerImpl extends GenericDialogImpl<Customer> implements
+public class DialogCustomerImpl extends DialogGenericImpl<Customer> implements
 		IDialogCustomer {
 	
 	@Autowired
@@ -34,25 +34,19 @@ public class DialogCustomerImpl extends GenericDialogImpl<Customer> implements
 
 	private JPanel panelFieldsContent;
 
-	private JLabel labelTraderId;
-	private JLabel labelTraderName;
-	private JLabel labelTraderRegistryNumber;
-	private JLabel labelTraderBankName;
-	private JLabel labelTraderBankAccount;
-	private JLabel labelTraderAddress;
-	private JLabel labelTraderPhoneNumber;
-	private JLabel labelTraderEmail;
-	private JLabel labelTraderAdditionalInfo;
+	private JLabel labelCustomerId;
+	private JLabel labelCustomerName;
+	private JLabel labelCustomerAddress;
+	private JLabel labelCustomerPhoneNumber;
+	private JLabel labelCustomerEmail;
+	private JLabel labelCustomerAdditionalInfo;
 
-	private JTextField textFieldTraderId;
-	private JTextField textFieldTraderName;
-	private JTextField textFieldTraderRegistryNumber;
-	private JTextField textFieldTraderBankName;
-	private JTextField textFieldTraderBankAccount;
-	private JTextField textFieldTraderAddress;
-	private JTextField textFieldTraderPhoneNumber;
-	private JTextField textFieldTraderEmail;
-	private JTextField textFieldTraderAdditionalInfo;
+	private JTextField textFieldCustomerId;
+	private JTextField textFieldCustomerName;
+	private JTextField textFieldCustomerAddress;
+	private JTextField textFieldCustomerPhoneNumber;
+	private JTextField textFieldCustomerEmail;
+	private JTextField textFieldCustomerAdditionalInfo;
 
 	@Override
 	public String getDilogName() {
@@ -83,105 +77,69 @@ public class DialogCustomerImpl extends GenericDialogImpl<Customer> implements
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 
-		labelTraderName = new JLabel("Име:");
-		labelTraderName.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerName = new JLabel("Име:");
+		labelCustomerName.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldTraderName = new JTextField();
-		textFieldTraderName.setBounds(xTextField, y, weightTextField, height);
-
-		y = y + height + spacing;
-
-		labelTraderRegistryNumber = new JLabel("Регистерски Број:");
-		labelTraderRegistryNumber.setBounds(xLabel, y, weightLabel, height);
-
-		textFieldTraderRegistryNumber = new JTextField();
-		textFieldTraderRegistryNumber.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldCustomerName = new JTextField();
+		textFieldCustomerName.setBounds(xTextField, y, weightTextField, height);
 
 		y = y + height + spacing;
 
-		labelTraderBankName = new JLabel("Банка:");
-		labelTraderBankName.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerAddress = new JLabel("Адреса:");
+		labelCustomerAddress.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldTraderBankName = new JTextField();
-		textFieldTraderBankName.setBounds(xTextField, y, weightTextField,
-				height);
-
-		y = y + height + spacing;
-
-		labelTraderBankAccount = new JLabel("Банкарска Сметка:");
-		labelTraderBankAccount.setBounds(xLabel, y, weightLabel, height);
-
-		textFieldTraderBankAccount = new JTextField();
-		textFieldTraderBankAccount.setBounds(xTextField, y, weightTextField,
-				height);
-
-		y = y + height + spacing;
-
-		labelTraderAddress = new JLabel("Адреса:");
-		labelTraderAddress.setBounds(xLabel, y, weightLabel, height);
-
-		textFieldTraderAddress = new JTextField();
-		textFieldTraderAddress
+		textFieldCustomerAddress = new JTextField();
+		textFieldCustomerAddress
 				.setBounds(xTextField, y, weightTextField, height);
 
 		y = y + height + spacing;
 
-		labelTraderPhoneNumber = new JLabel("Телефонски Број:");
-		labelTraderPhoneNumber.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerPhoneNumber = new JLabel("Телефонски Број:");
+		labelCustomerPhoneNumber.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldTraderPhoneNumber = new JTextField();
-		textFieldTraderPhoneNumber.setBounds(xTextField, y, weightTextField,
+		textFieldCustomerPhoneNumber = new JTextField();
+		textFieldCustomerPhoneNumber.setBounds(xTextField, y, weightTextField,
 				height);
 
 		y = y + height + spacing;
 
-		labelTraderEmail = new JLabel("Email:");
-		labelTraderEmail.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerEmail = new JLabel("Email:");
+		labelCustomerEmail.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldTraderEmail = new JTextField();
-		textFieldTraderEmail.setBounds(xTextField, y, weightTextField, height);
+		textFieldCustomerEmail = new JTextField();
+		textFieldCustomerEmail.setBounds(xTextField, y, weightTextField, height);
 
 		y = y + height + spacing;
 
-		labelTraderAdditionalInfo = new JLabel("Забелешки:");
-		labelTraderAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerAdditionalInfo = new JLabel("Забелешки:");
+		labelCustomerAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldTraderAdditionalInfo = new JTextField();
-		textFieldTraderAdditionalInfo.setBounds(xTextField, y, weightTextField,
+		textFieldCustomerAdditionalInfo = new JTextField();
+		textFieldCustomerAdditionalInfo.setBounds(xTextField, y, weightTextField,
 				height);
 
 		y = y + height + spacing;
 
-		labelTraderId = new JLabel("ID:");
-		labelTraderId.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerId = new JLabel("ID:");
+		labelCustomerId.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldTraderId = new JTextField();
-		textFieldTraderId.setBounds(xTextField, y, weightTextField, height);
+		textFieldCustomerId = new JTextField();
+		textFieldCustomerId.setBounds(xTextField, y, weightTextField, height);
 
-		panelFieldsContent.add(labelTraderName);
-		panelFieldsContent.add(labelTraderRegistryNumber);
+		panelFieldsContent.add(labelCustomerName);
+		panelFieldsContent.add(textFieldCustomerName);
 
-		panelFieldsContent.add(textFieldTraderName);
-		panelFieldsContent.add(textFieldTraderRegistryNumber);
+		panelFieldsContent.add(labelCustomerAddress);
+		panelFieldsContent.add(textFieldCustomerAddress);
 
-		panelFieldsContent.add(labelTraderBankName);
-		panelFieldsContent.add(textFieldTraderBankName);
+		panelFieldsContent.add(labelCustomerPhoneNumber);
+		panelFieldsContent.add(textFieldCustomerPhoneNumber);
 
-		panelFieldsContent.add(labelTraderBankAccount);
-		panelFieldsContent.add(textFieldTraderBankAccount);
+		panelFieldsContent.add(labelCustomerEmail);
+		panelFieldsContent.add(textFieldCustomerEmail);
 
-		panelFieldsContent.add(labelTraderAddress);
-		panelFieldsContent.add(textFieldTraderAddress);
-
-		panelFieldsContent.add(labelTraderPhoneNumber);
-		panelFieldsContent.add(textFieldTraderPhoneNumber);
-
-		panelFieldsContent.add(labelTraderEmail);
-		panelFieldsContent.add(textFieldTraderEmail);
-
-		panelFieldsContent.add(labelTraderAdditionalInfo);
-		panelFieldsContent.add(textFieldTraderAdditionalInfo);
+		panelFieldsContent.add(labelCustomerAdditionalInfo);
+		panelFieldsContent.add(textFieldCustomerAdditionalInfo);
 
 		return panelFieldsContent;
 	}
@@ -193,17 +151,14 @@ public class DialogCustomerImpl extends GenericDialogImpl<Customer> implements
 
 	@Override
 	public Customer getT() {
-//		Trader trader = new Trader();
-//		trader.setTraderName(textFieldTraderName.getText());
-//		trader.setTraderRegistryNumber(textFieldTraderRegistryNumber.getText());
-//		trader.setTraderBankName(textFieldTraderBankName.getText());
-//		trader.setTraderBankAccount(textFieldTraderBankAccount.getText());
-//		trader.setTraderAddress(textFieldTraderAddress.getText());
-//		trader.setTraderPhoneNumber(textFieldTraderPhoneNumber.getText());
-//		trader.setTraderEmail(textFieldTraderEmail.getText());
-//		trader.setTraderAdditionalInfo(textFieldTraderAdditionalInfo.getText());
+		Customer customer = new Customer();
+		customer.setCustomerName(textFieldCustomerName.getText());
+		customer.setCustomerAddress(textFieldCustomerAddress.getText());
+		customer.setCustomerPhoneNumber(textFieldCustomerPhoneNumber.getText());
+		customer.setCustomerEmail(textFieldCustomerEmail.getText());
+		customer.setCustomerAdditionalInfo(textFieldCustomerAdditionalInfo.getText());
 		
-		return null;
+		return customer;
 	}
 
 	@Override

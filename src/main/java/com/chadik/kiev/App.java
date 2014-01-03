@@ -42,7 +42,7 @@ public class App {
         System.out.println("bye " + trader.getTraderName());
         
         FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
-        frameMain.initFrameMain(); 
+        frameMain.initFrame(); 
         
         List<Trader> traderNo = new ArrayList<Trader>();
         traderNo = traderJpaServiceImpl.getAll();

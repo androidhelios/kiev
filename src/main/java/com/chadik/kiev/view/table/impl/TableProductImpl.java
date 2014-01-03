@@ -9,40 +9,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
+import com.chadik.kiev.model.Product;
 import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.ICustomerJpaService;
 import com.chadik.kiev.service.IGenericJpaService;
+import com.chadik.kiev.service.IProductJpaService;
 import com.chadik.kiev.service.ITraderJpaService;
 import com.chadik.kiev.view.table.ITableCustomer;
+import com.chadik.kiev.view.table.ITableProduct;
 import com.chadik.kiev.view.table.ITableTrader;
 
 @Component
-public class TableCustomerImpl extends TableGenericImpl<Customer> implements
-		ITableCustomer {
+public class TableProductImpl extends TableGenericImpl<Product> implements
+		ITableProduct {
 
-	private List<Customer> customers;
+	private List<Product> products;
 
 	@Autowired
-	private ICustomerJpaService customerJpaServiceImpl;
+	private IProductJpaService productJpaServiceImpl;
 
 	@Override
 	public void populateTable() {
 
-		customers = customerJpaServiceImpl.getAll();
+		products = productJpaServiceImpl.getAll();
 
 		int i = 0;
 
 		getDefaultTableModel().setRowCount(0);
 
-		for (Customer customer : customers) {
+		for (Product product : products) {
 			getDefaultTableModel().addRow(
-					new String[] { Integer.toString(++i),
-							customer.getCustomerId().toString(),
-							customer.getCustomerName(),
-							customer.getCustomerAddress(),
-							customer.getCustomerPhoneNumber(),
-							customer.getCustomerEmail(),
-							customer.getCustomerAdditionalInfo() });
+					new String[] { 
+							Integer.toString(++i),
+							product.getProductId().toString(),
+							product.getProductName(),
+							product.getProductMeasurement(),
+							product.getProductTax(),
+							product.getProductPrice(),
+							product.getProductAdditionalInfo()});
 		}
 
 		if (getTable().getRowCount() > 0) {
@@ -54,18 +58,18 @@ public class TableCustomerImpl extends TableGenericImpl<Customer> implements
 
 	@Override
 	public String[] getColumnsNames() {
-		return new String[] { "Реден Бр.", "Id", "Назив", "Адреса",
-				"Телефонски број", "Email", "Забелешки" };
+		return new String[] { "Реден Бр.", "Id", "Назив", "Единица Мерка",
+				"Данок", "Цена", "Забелешки" };
 	}
 
 	@Override
 	public int[] getHiddenColumns() {
-		return new int[] { 1, 3, 5, 6 };
+		return new int[] { 1, 4, 5, 6 };
 	}
 
 	@Override
 	public IGenericJpaService getGenericJpaService() {
-		return customerJpaServiceImpl;
+		return productJpaServiceImpl;
 	}
 
 }

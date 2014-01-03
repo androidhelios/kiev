@@ -20,7 +20,7 @@ import com.chadik.kiev.view.panel.IPanelGeneric;
 import com.chadik.kiev.view.panel.IPanelTrader;
 
 @Component
-public class DialogTraderImpl extends GenericDialogImpl<Trader> implements
+public class DialogTraderImpl extends DialogGenericImpl<Trader> implements
 		IDialogTrader {
 	
 	@Autowired

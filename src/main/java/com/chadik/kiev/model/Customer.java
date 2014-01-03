@@ -25,7 +25,7 @@ public class Customer implements Serializable {
     private String customerName;
     @NotNull(message = "Адресата на клиентот не е пополнета")
     private String customerAddress;
-    private String customerPhone;
+    private String customerPhoneNumber;
     private String customerEmail;
     private String customerAdditionalInfo;
     @OneToMany(mappedBy = "customer",
@@ -82,15 +82,15 @@ public class Customer implements Serializable {
     /**
      * @return the customerPhone
      */
-    public String getCustomerPhone() {
-        return customerPhone;
+    public String getCustomerPhoneNumber() {
+        return customerPhoneNumber;
     }
 
     /**
      * @param customerPhone the customerPhone to set
      */
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
+    public void setCustomerPhoneNumber(String customerPhoneNumber) {
+        this.customerPhoneNumber = customerPhoneNumber;
     }
 
     /**

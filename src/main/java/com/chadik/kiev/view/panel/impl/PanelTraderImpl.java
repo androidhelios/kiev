@@ -31,28 +31,91 @@ import com.chadik.kiev.view.table.ITableTrader;
 public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		IPanelTrader {
 
+	private DefaultTableModel defaultTableModel;
+	private JTable table;
+	private List<Trader> traders;
+
 	@Autowired
 	private ITraderJpaService traderJpaServiceImpl;
-	
 	@Autowired
 	private IDialogTrader dialogTraderImpl;
-	
-	@Autowired
-	private ITableTrader tableTraderImpl;
 
 	@Override
-	public ITableGeneric getPanelTable() {
-		return tableTraderImpl;
-	}
-
-	@Override
-	public Trader getTableInfo() {
+	public Trader getTableEntity() {
 		return null;
 	}
 
 	@Override
-	public IDialogGeneric getDialogGeneric() {
+	public IDialogGeneric getDialog() {
 		return dialogTraderImpl;
 	}
-	
+
+	@Override
+	public JPanel createPanelInfoHolderContentInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public JTable createTable() {
+		defaultTableModel = new DefaultTableModel();
+		table = new JTable();
+
+		defaultTableModel.setColumnIdentifiers(getTableColumnNames());
+		table.setModel(defaultTableModel);
+		TableUtil.hideColumns(table, getTableHiddenColumns());
+		TableUtil.allignCells(table, SwingConstants.CENTER);
+		table.getColumnModel().getColumn(0).setMaxWidth(100);
+
+		populateTable();
+
+		return table;
+	}
+
+	public void populateTable() {
+
+		traders = traderJpaServiceImpl.getAll();
+
+		int i = 0;
+
+		defaultTableModel.setRowCount(0);
+
+		for (Trader trader : traders) {
+			defaultTableModel
+					.addRow(new String[] { Integer.toString(++i),
+							trader.getTraderId().toString(),
+							trader.getTraderName(),
+							trader.getTraderRegistryNumber(),
+							trader.getTraderBankName(),
+							trader.getTraderBankAccount(),
+							trader.getTraderAddress(),
+							trader.getTraderPhoneNumber(),
+							trader.getTraderEmail(),
+							trader.getTraderAdditionalInfo() });
+		}
+
+		if (table.getRowCount() > 0) {
+			table.setRowSelectionInterval(table.getRowCount() - 1,
+					table.getRowCount() - 1);
+		}
+
+	}
+
+	@Override
+	public String[] getTableColumnNames() {
+		return new String[] { "Реден Бр.", "Id", "Назив", "Регистарски Број",
+				"Банка", "Банкарска Сметка", "Адреса", "Телефонски број",
+				"Email", "Забелешки" };
+	}
+
+	@Override
+	public int[] getTableHiddenColumns() {
+		return new int[] { 1, 3, 4, 5, 6, 8, 9 };
+	}
+
+	@Override
+	public void populatePanelInfoHolderContentInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
