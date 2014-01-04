@@ -53,7 +53,7 @@ public abstract class DialogGenericImpl<T> implements IDialogGeneric<T> {
 		
 		panelButtons = new JPanel();
 		panelButtons.setLayout(new BorderLayout());
-		panelButtons.setPreferredSize(getPanelButtonsDimension());
+		panelButtons.setPreferredSize(new Dimension(400, 50));
 		
 		panelButtonsContent = new JPanel();
 		panelButtonsContent.setLayout(new FlowLayout());
@@ -96,10 +96,6 @@ public abstract class DialogGenericImpl<T> implements IDialogGeneric<T> {
 	}
 	
 	public abstract String getDilogName();
-	
-	public abstract Dimension getPanelFieldsDimension();
-	
-	public abstract Dimension getPanelButtonsDimension();
 	
 	public abstract JPanel getPanelFieldsContent();
 	

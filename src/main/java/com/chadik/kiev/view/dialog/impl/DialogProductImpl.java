@@ -48,20 +48,10 @@ public class DialogProductImpl extends DialogGenericImpl<Product> implements
 	}
 
 	@Override
-	public Dimension getPanelFieldsDimension() {
-		return new Dimension(400, 300);
-	}
-
-	@Override
-	public Dimension getPanelButtonsDimension() {
-		return new Dimension(400, 50);
-	}
-
-	@Override
 	public JPanel getPanelFieldsContent() {
 		panelFieldsContent = new JPanel();
 		panelFieldsContent.setLayout(null);
-		panelFieldsContent.setPreferredSize(getPanelFieldsDimension());
+		panelFieldsContent.setPreferredSize(new Dimension(400, 300));
 
 		int spacing = 5;
 		int weightLabel = 125;
