@@ -1,6 +1,5 @@
 package com.chadik.kiev.view.panel.impl;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.List;
 
@@ -19,10 +18,7 @@ import com.chadik.kiev.service.ICustomerJpaService;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.IDialogCustomer;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
-import com.chadik.kiev.view.dialog.IDialogTrader;
 import com.chadik.kiev.view.panel.IPanelCustomer;
-import com.chadik.kiev.view.table.ITableCustomer;
-import com.chadik.kiev.view.table.ITableGeneric;
 
 @Component
 public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements

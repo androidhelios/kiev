@@ -1,6 +1,5 @@
 package com.chadik.kiev.view.panel.impl;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.List;
 
@@ -14,20 +13,12 @@ import javax.swing.table.DefaultTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Product;
-import com.chadik.kiev.service.ICustomerJpaService;
 import com.chadik.kiev.service.IProductJpaService;
 import com.chadik.kiev.util.TableUtil;
-import com.chadik.kiev.view.dialog.IDialogCustomer;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
 import com.chadik.kiev.view.dialog.IDialogProduct;
-import com.chadik.kiev.view.dialog.IDialogTrader;
-import com.chadik.kiev.view.panel.IPanelCustomer;
 import com.chadik.kiev.view.panel.IPanelProduct;
-import com.chadik.kiev.view.table.ITableCustomer;
-import com.chadik.kiev.view.table.ITableGeneric;
-import com.chadik.kiev.view.table.ITableProduct;
 
 @Component
 public class PanelProductImpl extends PanelGenericImpl<Product> implements

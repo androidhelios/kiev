@@ -6,22 +6,15 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.security.auth.login.FailedLoginException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.chadik.kiev.model.Trader;
 import com.chadik.kiev.service.IGenericJpaService;
 import com.chadik.kiev.view.dialog.IDialogGeneric;
 import com.chadik.kiev.view.panel.IPanelGeneric;
-import com.chadik.kiev.view.table.ITableGeneric;
 
 @Component
 public abstract class DialogGenericImpl<T> implements IDialogGeneric<T> {
