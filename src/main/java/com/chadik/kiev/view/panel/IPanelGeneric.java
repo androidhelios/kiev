@@ -14,7 +14,5 @@ public interface IPanelGeneric<T> {
 	public void populateTable();
 	
 	public JPanel createPanelInfoHolderContentInfo();
-	
-	public void populatePanelInfoHolderContentInfo();
 
 }

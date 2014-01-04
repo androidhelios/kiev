@@ -41,39 +41,29 @@ public class FrameMain {
 	private JMenuItem menuItemCustomerNew;
 	
 	private JPanel contentPane;
-	private JPanel panelTrader;
-	private JPanel panelCustomer;
-	private JPanel panelProduct;
 	
 	@Autowired
-	private IPanelTrader panelTraderImpl;
-	
+	private IPanelTrader panelTraderImpl;	
 	@Autowired
-	private IPanelCustomer panelCustomerImpl;
-	
+	private IPanelCustomer panelCustomerImpl;	
 	@Autowired
-	private IPanelProduct panelProductImpl;	
+	private IPanelProduct panelProductImpl;
 	
 	@Autowired
 	private IDialogTrader dialogTraderImpl;
 	
 	public JFrame initFrame() {
 		mainFrame = new JFrame();
-		menuBar = new JMenuBar();
-		contentPane = new JPanel();
 		
-		panelTrader = panelTraderImpl.initPanel();
-		panelTrader.setVisible(false);
-		panelCustomer = panelCustomerImpl.initPanel();
-		panelCustomer.setVisible(false);
-		panelProduct = panelProductImpl.initPanel();
-		panelProduct.setVisible(false);
+		menuBar = new JMenuBar();
+		
+		contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout());
+		contentPane.setPreferredSize(new Dimension(800, 600));
 		
 		mainFrame.setTitle("kiev");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		contentPane.setLayout(new BorderLayout());
-		contentPane.setPreferredSize(new Dimension(800, 600));
 		mainFrame.setContentPane(contentPane);
 		
 		mainFrame.setJMenuBar(menuBar);
@@ -95,10 +85,10 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemTrader = new JMenuItem("Измени корисник");
+		menuItemTrader = new JMenuItem("Прегледај корисници");
 		menuItemTrader.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelTrader, BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, panelTraderImpl.initPanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -110,10 +100,29 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemProduct = new JMenuItem("Измени продукт");
-		menuItemProductNew = new JMenuItem("Нов продукт");
+		menuItemProduct = new JMenuItem("Прегледај продукти");
+		menuItemProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, panelProductImpl.initPanel(), BorderLayout.CENTER);
+				
+			}
+		});
 		
-		menuItemCustomer = new JMenuItem("Измени клиент");
+		menuItemProductNew = new JMenuItem("Нов продукт");
+		menuItemProductNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialogTraderImpl.initDialog();
+			}
+		});
+		
+		menuItemCustomer = new JMenuItem("Прегледај клиенти");
+		menuItemCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, panelCustomerImpl.initPanel(), BorderLayout.CENTER);
+				
+			}
+		});
+		
 		menuItemCustomerNew = new JMenuItem("Нов клиент");
 		
 		menuFile.add(menuItemExit);
@@ -127,11 +136,7 @@ public class FrameMain {
 		
 		panelTraderImpl.initPanel();
 		panelCustomerImpl.initPanel();
-		panelProductImpl.initPanel();
-		
-		contentPane.add(panelTrader, BorderLayout.CENTER);	
-		contentPane.add(panelCustomer, BorderLayout.CENTER);	
-		contentPane.add(panelProduct, BorderLayout.CENTER);		
+		panelProductImpl.initPanel();	
         
 		mainFrame.pack();
 		mainFrame.setVisible(true);

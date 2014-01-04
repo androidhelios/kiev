@@ -73,10 +73,7 @@ public abstract class PanelGenericImpl<T> implements
 		panelInfoHolderContent.setLayout(new BorderLayout());
 		panelInfoHolderContent.setPreferredSize(new Dimension(400, 600));
 
-//		panelInfoHolderContentInfo = createPanelInfoHolderContentInfo();
-		panelInfoHolderContentInfo = new JPanel();
-		panelInfoHolderContentInfo.setLayout(null);
-		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
+		panelInfoHolderContentInfo = createPanelInfoHolderContentInfo();
 
 		panelInfoHolderContentButtons = new JPanel();
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
@@ -144,8 +141,6 @@ public abstract class PanelGenericImpl<T> implements
 	public abstract int[] getTableHiddenColumns();
 	
 	public abstract JPanel createPanelInfoHolderContentInfo();
-	
-	public abstract void populatePanelInfoHolderContentInfo();
 	
 	public abstract IDialogGeneric getDialog();
 	
