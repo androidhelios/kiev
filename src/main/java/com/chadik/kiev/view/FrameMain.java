@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.util.PanelUtil;
-import com.chadik.kiev.view.dialog.IDialogTrader;
-import com.chadik.kiev.view.panel.IPanelCustomer;
-import com.chadik.kiev.view.panel.IPanelProduct;
-import com.chadik.kiev.view.panel.IPanelTrader;
+import com.chadik.kiev.view.dialog.ITraderDialog;
+import com.chadik.kiev.view.panel.ICustomerPanel;
+import com.chadik.kiev.view.panel.IProductPanel;
+import com.chadik.kiev.view.panel.ITraderPanel;
 
 @Component
 public class FrameMain {
@@ -43,14 +43,14 @@ public class FrameMain {
 	private JPanel contentPane;
 	
 	@Autowired
-	private IPanelTrader panelTraderImpl;	
+	private ITraderPanel panelTraderImpl;	
 	@Autowired
-	private IPanelCustomer panelCustomerImpl;	
+	private ICustomerPanel panelCustomerImpl;	
 	@Autowired
-	private IPanelProduct panelProductImpl;
+	private IProductPanel panelProductImpl;
 	
 	@Autowired
-	private IDialogTrader dialogTraderImpl;
+	private ITraderDialog dialogTraderImpl;
 	
 	public JFrame initFrame() {
 		mainFrame = new JFrame();
@@ -88,7 +88,7 @@ public class FrameMain {
 		menuItemTrader = new JMenuItem("Прегледај корисници");
 		menuItemTrader.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelTraderImpl.initPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, panelTraderImpl.initTraderPanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -96,14 +96,14 @@ public class FrameMain {
 		menuItemTraderNew = new JMenuItem("Нов корисник");
 		menuItemTraderNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dialogTraderImpl.initDialog();
+				dialogTraderImpl.initTraderDialog();
 			}
 		});
 		
 		menuItemProduct = new JMenuItem("Прегледај продукти");
 		menuItemProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelProductImpl.initPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, panelProductImpl.initProductPanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -111,14 +111,14 @@ public class FrameMain {
 		menuItemProductNew = new JMenuItem("Нов продукт");
 		menuItemProductNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dialogTraderImpl.initDialog();
+				dialogTraderImpl.initTraderDialog();
 			}
 		});
 		
 		menuItemCustomer = new JMenuItem("Прегледај клиенти");
 		menuItemCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelCustomerImpl.initPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, panelCustomerImpl.initCustomerPanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -134,9 +134,9 @@ public class FrameMain {
 		menuProduct.add(menuItemProduct);
 		menuProduct.add(menuItemProductNew);
 		
-		panelTraderImpl.initPanel();
-		panelCustomerImpl.initPanel();
-		panelProductImpl.initPanel();	
+		panelTraderImpl.initTraderPanel();
+		panelCustomerImpl.initCustomerPanel();
+		panelProductImpl.initProductPanel();	
         
 		mainFrame.pack();
 		mainFrame.setVisible(true);
