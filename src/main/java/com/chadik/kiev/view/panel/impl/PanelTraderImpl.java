@@ -1,10 +1,16 @@
 package com.chadik.kiev.view.panel.impl;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -23,8 +29,21 @@ import com.chadik.kiev.view.panel.IPanelTrader;
 @Component
 public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		IPanelTrader {
+	
+	private JPanel panelTableHolder;
+	private JPanel panelTableHolderContent;
+	private JPanel panelTableHolderContentTable;
+	private JPanel panelTableHolderContentButtons;
 
+	private JPanel panelInfoHolder;
+	private JPanel panelInfoHolderContent;
 	private JPanel panelInfoHolderContentInfo;
+	private JPanel panelInfoHolderContentButtons;
+	
+	private JScrollPane scrollPaneTable;
+	
+	private DefaultTableModel defaultTableModel;
+	private JTable table;
 	
 	private JLabel labelTraderId;
 	private JLabel labelTraderName;
@@ -46,8 +65,12 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 	private JTextField textFieldTraderEmail;
 	private JTextField textFieldTraderAdditionalInfo;
 	
-	private DefaultTableModel defaultTableModel;
-	private JTable table;
+	private JButton buttonNew;
+	private JButton buttonEdit;
+	private JButton buttonDelete;	
+	private JButton buttonSave;
+	private JButton buttonCancel;
+	
 	private List<Trader> traders;
 
 	@Autowired
@@ -65,11 +88,51 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		return dialogTraderImpl;
 	}
 
+	public void populateTableTrader() {
+
+		traders = traderJpaServiceImpl.getAll();
+
+		int i = 0;
+
+		defaultTableModel.setRowCount(0);
+
+		for (Trader trader : traders) {
+			defaultTableModel
+					.addRow(new String[] { Integer.toString(++i),
+							trader.getTraderId().toString(),
+							trader.getTraderName(),
+							trader.getTraderRegistryNumber(),
+							trader.getTraderBankName(),
+							trader.getTraderBankAccount(),
+							trader.getTraderAddress(),
+							trader.getTraderPhoneNumber(),
+							trader.getTraderEmail(),
+							trader.getTraderAdditionalInfo() });
+		}
+
+		if (table.getRowCount() > 0) {
+			table.setRowSelectionInterval(table.getRowCount() - 1,
+					table.getRowCount() - 1);
+		}
+
+	}
+
 	@Override
-	public JPanel createPanelInfoHolderContentInfo() {
+	public JPanel createPanelInfoHolder() {
+		panelInfoHolder = new JPanel();
+		panelInfoHolder.setLayout(new BorderLayout());
+		
+		panelInfoHolderContent = new JPanel();
+		panelInfoHolderContent.setLayout(new BorderLayout());
+		panelInfoHolderContent.setPreferredSize(new Dimension(400, 600));
+		
 		panelInfoHolderContentInfo = new JPanel();
 		panelInfoHolderContentInfo.setLayout(null);
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
+		
+		panelInfoHolderContentButtons = new JPanel();
+		panelInfoHolderContentButtons.setLayout(new FlowLayout());
+		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 		
 		int spacing = 5;
 		int weightLabel = 125;
@@ -154,6 +217,12 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 
 		textFieldTraderId = new JTextField();
 		textFieldTraderId.setBounds(xTextField, y, weightTextField, height);
+		
+		buttonSave = new JButton("Зачувај");
+		buttonSave.setPreferredSize(new Dimension(100, 25));
+
+		buttonCancel = new JButton("Откажи");
+		buttonCancel.setPreferredSize(new Dimension(100, 25));
 
 		panelInfoHolderContentInfo.add(labelTraderName);
 		panelInfoHolderContentInfo.add(labelTraderRegistryNumber);
@@ -179,63 +248,90 @@ public class PanelTraderImpl extends PanelGenericImpl<Trader> implements
 		panelInfoHolderContentInfo.add(labelTraderAdditionalInfo);
 		panelInfoHolderContentInfo.add(textFieldTraderAdditionalInfo);
 		
-		return panelInfoHolderContentInfo;
+		panelInfoHolderContentButtons.add(buttonSave);
+		panelInfoHolderContentButtons.add(buttonCancel);
+		
+		panelInfoHolderContent.add(panelInfoHolderContentInfo,
+				BorderLayout.CENTER);
+		panelInfoHolderContent.add(panelInfoHolderContentButtons,
+				BorderLayout.SOUTH);
+		
+		panelInfoHolder.add(panelInfoHolderContent);
+		
+		return panelInfoHolder;
 	}
 
-	public JTable createTable() {
+	@Override
+	public JPanel createPanelTableHolder() {		
+		panelTableHolder = new JPanel();
+		panelTableHolder.setLayout(new BorderLayout());
+
+		panelTableHolderContent = new JPanel();
+		panelTableHolderContent.setLayout(new BorderLayout());
+		panelTableHolderContent.setPreferredSize(new Dimension(400, 600));
+
+		panelTableHolderContentTable = new JPanel();
+		panelTableHolderContentTable.setLayout(new BorderLayout());
+		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
+
+		panelTableHolderContentButtons = new JPanel();
+		panelTableHolderContentButtons.setLayout(new FlowLayout());
+		panelTableHolderContentButtons.setPreferredSize(new Dimension(400, 50));
+		
 		defaultTableModel = new DefaultTableModel();
 		table = new JTable();
 
-		defaultTableModel.setColumnIdentifiers(getTableColumnNames());
+		defaultTableModel.setColumnIdentifiers(getTableTraderColumnNames());
 		table.setModel(defaultTableModel);
-		TableUtil.hideColumns(table, getTableHiddenColumns());
+		TableUtil.hideColumns(table, getTableTraderHiddenColumns());
 		TableUtil.allignCells(table, SwingConstants.CENTER);
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
 
-		populateTable();
+		populateTableTrader();
+		
+		scrollPaneTable = new JScrollPane(table);
+		
+		buttonNew = new JButton("Креирај");
+		buttonNew.setPreferredSize(new Dimension(100, 25));
+		buttonNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getDialog().initDialog();
+			}
+		});
 
-		return table;
-	}
+		buttonEdit = new JButton("Измени");
+		buttonEdit.setPreferredSize(new Dimension(100, 25));
 
-	public void populateTable() {
+		buttonDelete = new JButton("Избриши");
+		buttonDelete.setPreferredSize(new Dimension(100, 25));
+		
+		panelTableHolderContentTable.add(scrollPaneTable);
+		
+		panelTableHolderContentButtons.add(buttonDelete);
+		panelTableHolderContentButtons.add(buttonEdit);
+		panelTableHolderContentButtons.add(buttonNew);
 
-		traders = traderJpaServiceImpl.getAll();
+		panelTableHolderContent.add(panelTableHolderContentTable,
+				BorderLayout.CENTER);
+		panelTableHolderContent.add(panelTableHolderContentButtons,
+				BorderLayout.SOUTH);
 
-		int i = 0;
-
-		defaultTableModel.setRowCount(0);
-
-		for (Trader trader : traders) {
-			defaultTableModel
-					.addRow(new String[] { Integer.toString(++i),
-							trader.getTraderId().toString(),
-							trader.getTraderName(),
-							trader.getTraderRegistryNumber(),
-							trader.getTraderBankName(),
-							trader.getTraderBankAccount(),
-							trader.getTraderAddress(),
-							trader.getTraderPhoneNumber(),
-							trader.getTraderEmail(),
-							trader.getTraderAdditionalInfo() });
-		}
-
-		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
-		}
+		panelTableHolder.add(panelTableHolderContent);
+		
+		return panelTableHolder;
 
 	}
 
 	@Override
-	public String[] getTableColumnNames() {
+	public int[] getTableTraderHiddenColumns() {
+		return new int[] { 1, 3, 4, 5, 6, 8, 9 };
+	}
+
+	@Override
+	public String[] getTableTraderColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Регистарски Број",
 				"Банка", "Банкарска Сметка", "Адреса", "Телефонски број",
 				"Email", "Забелешки" };
-	}
-
-	@Override
-	public int[] getTableHiddenColumns() {
-		return new int[] { 1, 3, 4, 5, 6, 8, 9 };
 	}
 
 }

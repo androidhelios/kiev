@@ -64,7 +64,7 @@ public abstract class DialogGenericImpl<T> implements IDialogGeneric<T> {
 			public void actionPerformed(ActionEvent e) {
 				getGenericJpaService().save(getT());
 				dialog.dispose();
-				getPanelGeneric().populateTable();
+//				getPanelGeneric().populateTable();
 			}
 		});
 

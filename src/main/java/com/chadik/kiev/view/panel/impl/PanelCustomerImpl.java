@@ -1,10 +1,16 @@
 package com.chadik.kiev.view.panel.impl;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -24,7 +30,20 @@ import com.chadik.kiev.view.panel.IPanelCustomer;
 public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 		IPanelCustomer {
 	
+	private JPanel panelTableHolder;
+	private JPanel panelTableHolderContent;
+	private JPanel panelTableHolderContentTable;
+	private JPanel panelTableHolderContentButtons;
+
+	private JPanel panelInfoHolder;
+	private JPanel panelInfoHolderContent;
 	private JPanel panelInfoHolderContentInfo;
+	private JPanel panelInfoHolderContentButtons;
+	
+	private JScrollPane scrollPaneTable;
+	
+	private DefaultTableModel defaultTableModel;
+	private JTable table;
 	
 	private JLabel labelCustomerId;
 	private JLabel labelCustomerName;
@@ -39,9 +58,13 @@ public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 	private JTextField textFieldCustomerPhoneNumber;
 	private JTextField textFieldCustomerEmail;
 	private JTextField textFieldCustomerAdditionalInfo;
-
-	private DefaultTableModel defaultTableModel;
-	private JTable table;
+	
+	private JButton buttonNew;
+	private JButton buttonEdit;
+	private JButton buttonDelete;	
+	private JButton buttonSave;
+	private JButton buttonCancel;
+	
 	private List<Customer> customers;
 
 	@Autowired
@@ -60,10 +83,45 @@ public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 	}
 
 	@Override
-	public JPanel createPanelInfoHolderContentInfo() {
+	public void populateTableCustomer() {
+		customers = customerJpaServiceImpl.getAll();
+
+		int i = 0;
+
+		defaultTableModel.setRowCount(0);
+
+		for (Customer customer : customers) {
+			defaultTableModel.addRow(new String[] { Integer.toString(++i),
+					customer.getCustomerId().toString(),
+					customer.getCustomerName(), customer.getCustomerAddress(),
+					customer.getCustomerPhoneNumber(),
+					customer.getCustomerEmail(),
+					customer.getCustomerAdditionalInfo() });
+		}
+
+		if (table.getRowCount() > 0) {
+			table.setRowSelectionInterval(table.getRowCount() - 1,
+					table.getRowCount() - 1);
+		}
+
+	}
+
+	@Override
+	public JPanel createPanelInfoHolder() {
+		panelInfoHolder = new JPanel();
+		panelInfoHolder.setLayout(new BorderLayout());
+		
+		panelInfoHolderContent = new JPanel();
+		panelInfoHolderContent.setLayout(new BorderLayout());
+		panelInfoHolderContent.setPreferredSize(new Dimension(400, 600));
+		
 		panelInfoHolderContentInfo = new JPanel();
 		panelInfoHolderContentInfo.setLayout(null);
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
+		
+		panelInfoHolderContentButtons = new JPanel();
+		panelInfoHolderContentButtons.setLayout(new FlowLayout());
+		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 		
 		int spacing = 5;
 		int weightLabel = 125;
@@ -121,6 +179,12 @@ public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 
 		textFieldCustomerId = new JTextField();
 		textFieldCustomerId.setBounds(xTextField, y, weightTextField, height);
+		
+		buttonSave = new JButton("Зачувај");
+		buttonSave.setPreferredSize(new Dimension(100, 25));
+
+		buttonCancel = new JButton("Откажи");
+		buttonCancel.setPreferredSize(new Dimension(100, 25));
 
 		panelInfoHolderContentInfo.add(labelCustomerName);
 		panelInfoHolderContentInfo.add(textFieldCustomerName);
@@ -137,57 +201,87 @@ public class PanelCustomerImpl extends PanelGenericImpl<Customer> implements
 		panelInfoHolderContentInfo.add(labelCustomerAdditionalInfo);
 		panelInfoHolderContentInfo.add(textFieldCustomerAdditionalInfo);
 		
-		return panelInfoHolderContentInfo;
+		panelInfoHolderContentButtons.add(buttonSave);
+		panelInfoHolderContentButtons.add(buttonCancel);
+		
+		panelInfoHolderContent.add(panelInfoHolderContentInfo,
+				BorderLayout.CENTER);
+		panelInfoHolderContent.add(panelInfoHolderContentButtons,
+				BorderLayout.SOUTH);
+		
+		panelInfoHolder.add(panelInfoHolderContent);
+		
+		return panelInfoHolder;
 	}
 
 	@Override
-	public void populateTable() {
-		customers = customerJpaServiceImpl.getAll();
+	public JPanel createPanelTableHolder() {
+		panelTableHolder = new JPanel();
+		panelTableHolder.setLayout(new BorderLayout());
 
-		int i = 0;
+		panelTableHolderContent = new JPanel();
+		panelTableHolderContent.setLayout(new BorderLayout());
+		panelTableHolderContent.setPreferredSize(new Dimension(400, 600));
 
-		defaultTableModel.setRowCount(0);
+		panelTableHolderContentTable = new JPanel();
+		panelTableHolderContentTable.setLayout(new BorderLayout());
+		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 
-		for (Customer customer : customers) {
-			defaultTableModel.addRow(new String[] { Integer.toString(++i),
-					customer.getCustomerId().toString(),
-					customer.getCustomerName(), customer.getCustomerAddress(),
-					customer.getCustomerPhoneNumber(),
-					customer.getCustomerEmail(),
-					customer.getCustomerAdditionalInfo() });
-		}
-
-		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
-		}
-
-	}
-
-	@Override
-	public JTable createTable() {
+		panelTableHolderContentButtons = new JPanel();
+		panelTableHolderContentButtons.setLayout(new FlowLayout());
+		panelTableHolderContentButtons.setPreferredSize(new Dimension(400, 50));
+		
 		defaultTableModel = new DefaultTableModel();
 		table = new JTable();
 
-		defaultTableModel.setColumnIdentifiers(getTableColumnNames());
+		defaultTableModel.setColumnIdentifiers(getTableCustomerColumnNames());
 		table.setModel(defaultTableModel);
-		TableUtil.hideColumns(table, getTableHiddenColumns());
+		TableUtil.hideColumns(table, getTableCustomerHiddenColumns());
 		TableUtil.allignCells(table, SwingConstants.CENTER);
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
 
-		populateTable();
+		populateTableCustomer();
+		
+		scrollPaneTable = new JScrollPane(table);
+		
+		buttonNew = new JButton("Креирај");
+		buttonNew.setPreferredSize(new Dimension(100, 25));
+		buttonNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getDialog().initDialog();
+			}
+		});
 
-		return table;
+		buttonEdit = new JButton("Измени");
+		buttonEdit.setPreferredSize(new Dimension(100, 25));
+
+		buttonDelete = new JButton("Избриши");
+		buttonDelete.setPreferredSize(new Dimension(100, 25));
+		
+		panelTableHolderContentTable.add(scrollPaneTable);
+		
+		panelTableHolderContentButtons.add(buttonDelete);
+		panelTableHolderContentButtons.add(buttonEdit);
+		panelTableHolderContentButtons.add(buttonNew);
+
+		panelTableHolderContent.add(panelTableHolderContentTable,
+				BorderLayout.CENTER);
+		panelTableHolderContent.add(panelTableHolderContentButtons,
+				BorderLayout.SOUTH);
+
+		panelTableHolder.add(panelTableHolderContent);
+		
+		return panelTableHolder;
 	}
 
 	@Override
-	public String[] getTableColumnNames() {
+	public String[] getTableCustomerColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Адреса",
 				"Телефонски број", "Email", "Забелешки" };
 	}
 
 	@Override
-	public int[] getTableHiddenColumns() {
+	public int[] getTableCustomerHiddenColumns() {
 		return new int[] { 1, 3, 5, 6 };
 	}
 

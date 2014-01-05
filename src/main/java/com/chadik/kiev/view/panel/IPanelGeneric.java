@@ -7,10 +7,4 @@ public interface IPanelGeneric<T> {
 	
 	public JPanel initPanel();
 	
-	public JTable createTable();
-	
-	public void populateTable();
-	
-	public JPanel createPanelInfoHolderContentInfo();
-
 }
