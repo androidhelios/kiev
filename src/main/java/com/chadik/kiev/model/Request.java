@@ -8,146 +8,95 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author ivan.chadikovski
- */
 @Entity
 public class Request implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Integer orderId;
-    @ManyToOne
-    @JoinColumn(name = "product")
-    @NotNull
-    private Product product;
-    @ManyToOne
-    @JoinColumn(name = "invoice")
-    @NotNull
-    private Invoice invoice;
-    @NotNull(message = "Полето број на нарачки за продуктот не е пополнето")
-    private String orderProductQuantity;
-    @NotNull
-    private String orderProductPrice;
-    @NotNull
-    private String orderQuantityTax;
-    @NotNull
-    private String orderQuantityPriceTax;
-    private String orderAdditionalInfo;
+	@Id
+	@GeneratedValue
+	private Integer orderId;
+	@ManyToOne
+	@JoinColumn(name = "product")
+	@NotNull
+	private Product product;
+	@ManyToOne
+	@JoinColumn(name = "invoice")
+	@NotNull
+	private Invoice invoice;
+	@NotNull(message = "Полето број на нарачки за продуктот не е пополнето")
+	private String orderProductQuantity;
+	@NotNull
+	private String orderProductPrice;
+	@NotNull
+	private String orderQuantityTax;
+	@NotNull
+	private String orderQuantityPriceTax;
+	private String orderAdditionalInfo;
 
-    public Request() {
-    }
+	public Request() {
 
-    /**
-     * @return the orderId
-     */
-    public Integer getOrderId() {
-        return orderId;
-    }
+	}
 
-    /**
-     * @param orderId the orderId to set
-     */
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
+	public Integer getOrderId() {
+		return orderId;
+	}
 
-    /**
-     * @return the product
-     */
-    public Product getProduct() {
-        return product;
-    }
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
 
-    /**
-     * @param product the product to set
-     */
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+	public Product getProduct() {
+		return product;
+	}
 
-    /**
-     * @return the invoice
-     */
-    public Invoice getInvoice() {
-        return invoice;
-    }
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 
-    /**
-     * @param invoice the invoice to set
-     */
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
+	public Invoice getInvoice() {
+		return invoice;
+	}
 
-    /**
-     * @return the orderProductQuantity
-     */
-    public String getOrderProductQuantity() {
-        return orderProductQuantity;
-    }
+	public void setInvoice(Invoice invoice) {
+		this.invoice = invoice;
+	}
 
-    /**
-     * @param orderProductQuantity the orderProductQuantity to set
-     */
-    public void setOrderProductQuantity(String orderProductQuantity) {
-        this.orderProductQuantity = orderProductQuantity;
-    }
+	public String getOrderProductQuantity() {
+		return orderProductQuantity;
+	}
 
-    /**
-     * @return the orderProductPrice
-     */
-    public String getOrderProductPrice() {
-        return orderProductPrice;
-    }
+	public void setOrderProductQuantity(String orderProductQuantity) {
+		this.orderProductQuantity = orderProductQuantity;
+	}
 
-    /**
-     * @param orderProductPrice the orderProductPrice to set
-     */
-    public void setOrderProductPrice(String orderProductPrice) {
-        this.orderProductPrice = orderProductPrice;
-    }
+	public String getOrderProductPrice() {
+		return orderProductPrice;
+	}
 
-    /**
-     * @return the orderQuantityTax
-     */
-    public String getOrderQuantityTax() {
-        return orderQuantityTax;
-    }
+	public void setOrderProductPrice(String orderProductPrice) {
+		this.orderProductPrice = orderProductPrice;
+	}
 
-    /**
-     * @param orderQuantityTax the orderQuantityTax to set
-     */
-    public void setOrderQuantityTax(String orderQuantityTax) {
-        this.orderQuantityTax = orderQuantityTax;
-    }
+	public String getOrderQuantityTax() {
+		return orderQuantityTax;
+	}
 
-    /**
-     * @return the orderQuantityPriceTax
-     */
-    public String getOrderQuantityPriceTax() {
-        return orderQuantityPriceTax;
-    }
+	public void setOrderQuantityTax(String orderQuantityTax) {
+		this.orderQuantityTax = orderQuantityTax;
+	}
 
-    /**
-     * @param orderQuantityPriceTax the orderQuantityPriceTax to set
-     */
-    public void setOrderQuantityPriceTax(String orderQuantityPriceTax) {
-        this.orderQuantityPriceTax = orderQuantityPriceTax;
-    }
+	public String getOrderQuantityPriceTax() {
+		return orderQuantityPriceTax;
+	}
 
-    /**
-     * @return the orderAdditionalInfo
-     */
-    public String getOrderAdditionalInfo() {
-        return orderAdditionalInfo;
-    }
+	public void setOrderQuantityPriceTax(String orderQuantityPriceTax) {
+		this.orderQuantityPriceTax = orderQuantityPriceTax;
+	}
 
-    /**
-     * @param orderAdditionalInfo the orderAdditionalInfo to set
-     */
-    public void setOrderAdditionalInfo(String orderAdditionalInfo) {
-        this.orderAdditionalInfo = orderAdditionalInfo;
-    }
+	public String getOrderAdditionalInfo() {
+		return orderAdditionalInfo;
+	}
+
+	public void setOrderAdditionalInfo(String orderAdditionalInfo) {
+		this.orderAdditionalInfo = orderAdditionalInfo;
+	}
 }

@@ -3,6 +3,7 @@ package com.chadik.kiev.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,174 +12,110 @@ import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author ivan.chadikovski
- */
 @Entity
 public class Trader implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Integer traderId;
-    @NotNull(message = "Полето име на компанијата не е пополнето")
-    private String traderName;
-    @NotNull(message = "Полето регистарски број на компанијата не е пополнето")
-    private String traderRegistryNumber;
-    @NotNull(message = "Полето име на банка за компанијата не е пополнето")
-    private String traderBankName;
-    @NotNull(message = "Полето банкарска сметка на компанијата не е пополнето")
-    private String traderBankAccount;
-    @NotNull(message = "Полето адреса на компанијата не е пополнето")
-    private String traderAddress;
-    private String traderPhoneNumber;
-    private String traderEmail;
-    private String traderAdditionalInfo;
-    @OneToMany(mappedBy = "trader",
-            cascade = CascadeType.ALL)
-    @Valid
-    private List<Invoice> invoices = new ArrayList<Invoice>();
+	@Id
+	@GeneratedValue
+	private Integer traderId;
+	@NotNull(message = "Полето име на компанијата не е пополнето")
+	private String traderName;
+	@NotNull(message = "Полето регистарски број на компанијата не е пополнето")
+	private String traderRegistryNumber;
+	@NotNull(message = "Полето име на банка за компанијата не е пополнето")
+	private String traderBankName;
+	@NotNull(message = "Полето банкарска сметка на компанијата не е пополнето")
+	private String traderBankAccount;
+	@NotNull(message = "Полето адреса на компанијата не е пополнето")
+	private String traderAddress;
+	private String traderPhoneNumber;
+	private String traderEmail;
+	private String traderAdditionalInfo;
+	@OneToMany(mappedBy = "trader", cascade = CascadeType.ALL)
+	@Valid
+	private List<Invoice> invoices = new ArrayList<Invoice>();
 
-    public Trader() {
-    }
+	public Trader() {
 
-    /**
-     * @return the traderId
-     */
-    public Integer getTraderId() {
-        return traderId;
-    }
+	}
 
-    /**
-     * @param traderId the traderId to set
-     */
-    public void setTraderId(Integer traderId) {
-        this.traderId = traderId;
-    }
+	public Integer getTraderId() {
+		return traderId;
+	}
 
-    /**
-     * @return the traderName
-     */
-    public String getTraderName() {
-        return traderName;
-    }
+	public void setTraderId(Integer traderId) {
+		this.traderId = traderId;
+	}
 
-    /**
-     * @param traderName the traderName to set
-     */
-    public void setTraderName(String traderName) {
-        this.traderName = traderName;
-    }
+	public String getTraderName() {
+		return traderName;
+	}
 
-    /**
-     * @return the traderRegistryNumber
-     */
-    public String getTraderRegistryNumber() {
-        return traderRegistryNumber;
-    }
+	public void setTraderName(String traderName) {
+		this.traderName = traderName;
+	}
 
-    /**
-     * @param traderRegistryNumber the traderRegistryNumber to set
-     */
-    public void setTraderRegistryNumber(String traderRegistryNumber) {
-        this.traderRegistryNumber = traderRegistryNumber;
-    }
+	public String getTraderRegistryNumber() {
+		return traderRegistryNumber;
+	}
 
-    /**
-     * @return the traderBankName
-     */
-    public String getTraderBankName() {
-        return traderBankName;
-    }
+	public void setTraderRegistryNumber(String traderRegistryNumber) {
+		this.traderRegistryNumber = traderRegistryNumber;
+	}
 
-    /**
-     * @param traderBankName the traderBankName to set
-     */
-    public void setTraderBankName(String traderBankName) {
-        this.traderBankName = traderBankName;
-    }
+	public String getTraderBankName() {
+		return traderBankName;
+	}
 
-    /**
-     * @return the traderBankAccount
-     */
-    public String getTraderBankAccount() {
-        return traderBankAccount;
-    }
+	public void setTraderBankName(String traderBankName) {
+		this.traderBankName = traderBankName;
+	}
 
-    /**
-     * @param traderBankAccount the traderBankAccount to set
-     */
-    public void setTraderBankAccount(String traderBankAccount) {
-        this.traderBankAccount = traderBankAccount;
-    }
+	public String getTraderBankAccount() {
+		return traderBankAccount;
+	}
 
-    /**
-     * @return the traderAddress
-     */
-    public String getTraderAddress() {
-        return traderAddress;
-    }
+	public void setTraderBankAccount(String traderBankAccount) {
+		this.traderBankAccount = traderBankAccount;
+	}
 
-    /**
-     * @param traderAddress the traderAddress to set
-     */
-    public void setTraderAddress(String traderAddress) {
-        this.traderAddress = traderAddress;
-    }
+	public String getTraderAddress() {
+		return traderAddress;
+	}
 
-    /**
-     * @return the traderPhoneNumber
-     */
-    public String getTraderPhoneNumber() {
-        return traderPhoneNumber;
-    }
+	public void setTraderAddress(String traderAddress) {
+		this.traderAddress = traderAddress;
+	}
 
-    /**
-     * @param traderPhoneNumber the traderPhoneNumber to set
-     */
-    public void setTraderPhoneNumber(String traderPhoneNumber) {
-        this.traderPhoneNumber = traderPhoneNumber;
-    }
+	public String getTraderPhoneNumber() {
+		return traderPhoneNumber;
+	}
 
-    /**
-     * @return the traderEmail
-     */
-    public String getTraderEmail() {
-        return traderEmail;
-    }
+	public void setTraderPhoneNumber(String traderPhoneNumber) {
+		this.traderPhoneNumber = traderPhoneNumber;
+	}
 
-    /**
-     * @param traderEmail the traderEmail to set
-     */
-    public void setTraderEmail(String traderEmail) {
-        this.traderEmail = traderEmail;
-    }
+	public String getTraderEmail() {
+		return traderEmail;
+	}
 
-    /**
-     * @return the traderAdditionalInfo
-     */
-    public String getTraderAdditionalInfo() {
-        return traderAdditionalInfo;
-    }
+	public void setTraderEmail(String traderEmail) {
+		this.traderEmail = traderEmail;
+	}
 
-    /**
-     * @param traderAdditionalInfo the traderAdditionalInfo to set
-     */
-    public void setTraderAdditionalInfo(String traderAdditionalInfo) {
-        this.traderAdditionalInfo = traderAdditionalInfo;
-    }
+	public String getTraderAdditionalInfo() {
+		return traderAdditionalInfo;
+	}
 
-    /**
-     * @return the invoices
-     */
-    public List<Invoice> getInvoices() {
-        return invoices;
-    }
+	public void setTraderAdditionalInfo(String traderAdditionalInfo) {
+		this.traderAdditionalInfo = traderAdditionalInfo;
+	}
 
-    /**
-     * @param invoices the invoices to set
-     */
-    public void setInvoices(List<Invoice> invoices) {
-        this.invoices = invoices;
-    }
+	public List<Invoice> getInvoices() {
+		return invoices;
+	}
+
+	public void setInvoices(List<Invoice> invoices) {
+		this.invoices = invoices;
+	}
 }
