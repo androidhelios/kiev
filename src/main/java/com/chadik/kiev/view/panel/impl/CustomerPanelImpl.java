@@ -5,14 +5,19 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -41,6 +46,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	private JPanel panelInfoHolderContentButtons;
 
 	private JScrollPane scrollPaneTable;
+	private JScrollBar verticalScrollBar;
 
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
@@ -107,18 +113,36 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		defaultTableModel = new DefaultTableModel();
-		table = new JTable();
-
+		defaultTableModel = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		defaultTableModel.setColumnIdentifiers(getTableCustomerColumnNames());
+
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowCustomerId = (String) table
+						.getValueAt(row, 1);
+				Customer customer = getCustomerFromTraderTable(selectedRowCustomerId);
+				populateCustomerFields(customer);
+			}
+		});
+
 		table.setModel(defaultTableModel);
+
 		TableUtil.hideColumns(table, getTableCustomerHiddenColumns());
+
 		TableUtil.allignCells(table, SwingConstants.CENTER);
+
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
 
-		populateCustomerTable();
-
 		scrollPaneTable = new JScrollPane(table);
+
+		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -239,11 +263,14 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
+		populateCustomerTable();
+
 		return panelAll;
 	}
 
 	@Override
 	public void populateCustomerTable() {
+		String selectedRowCustomerId = "";
 		customers = customerServiceImpl.findAllCustomers();
 
 		int i = 0;
@@ -262,7 +289,15 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(table.getRowCount() - 1,
 					table.getRowCount() - 1);
+
+			selectedRowCustomerId = (String) table.getValueAt(
+					table.getRowCount() - 1, 1);
+			Customer customer = getCustomerFromTraderTable(selectedRowCustomerId);
+			populateCustomerFields(customer);
 		}
+
+		scrollPaneTable.validate();
+		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 	}
 
@@ -273,6 +308,21 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 	public int[] getTableCustomerHiddenColumns() {
 		return new int[] { 1, 3, 5, 6 };
+	}
+
+	public Customer getCustomerFromTraderTable(String selectedRowCustomerId) {
+		BigDecimal customerId = new BigDecimal(selectedRowCustomerId);
+		return customerServiceImpl.findCustomerById(customerId);
+	}
+
+	public void populateCustomerFields(Customer customer) {
+		textFieldCustomerId.setText(customer.getCustomerId().toString());
+		textFieldCustomerName.setText(customer.getCustomerName());
+		textFieldCustomerAddress.setText(customer.getCustomerAddress());
+		textFieldCustomerPhoneNumber.setText(customer.getCustomerPhoneNumber());
+		textFieldCustomerEmail.setText(customer.getCustomerEmail());
+		textFieldCustomerAdditionalInfo.setText(customer
+				.getCustomerAdditionalInfo());
 	}
 
 }

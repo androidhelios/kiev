@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -45,6 +46,7 @@ public class TraderPanelImpl implements ITraderPanel {
 	private JPanel panelInfoHolderContentButtons;
 
 	private JScrollPane scrollPaneTable;
+	private JScrollBar verticalScrollBar;
 
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
@@ -122,6 +124,7 @@ public class TraderPanelImpl implements ITraderPanel {
 				return false;
 			}
 		};
+		defaultTableModel.setColumnIdentifiers(getTableTraderColumnNames());
 
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -134,15 +137,17 @@ public class TraderPanelImpl implements ITraderPanel {
 			}
 		});
 
-		defaultTableModel.setColumnIdentifiers(getTableTraderColumnNames());
 		table.setModel(defaultTableModel);
+
 		TableUtil.hideColumns(table, getTableTraderHiddenColumns());
+
 		TableUtil.allignCells(table, SwingConstants.CENTER);
+
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
 
-		populateTraderTable();
-
 		scrollPaneTable = new JScrollPane(table);
+
+		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -298,11 +303,13 @@ public class TraderPanelImpl implements ITraderPanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
+		populateTraderTable();
+
 		return panelAll;
 	}
 
 	public void populateTraderTable() {
-
+		String selectedRowTraderId = "";
 		traders = traderServiceImpl.findAllTraders();
 
 		int i = 0;
@@ -326,7 +333,15 @@ public class TraderPanelImpl implements ITraderPanel {
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(table.getRowCount() - 1,
 					table.getRowCount() - 1);
+
+			selectedRowTraderId = (String) table.getValueAt(
+					table.getRowCount() - 1, 1);
+			Trader trader = getTraderFromTraderTable(selectedRowTraderId);
+			populateTraderFields(trader);
 		}
+
+		scrollPaneTable.validate();
+		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 	}
 
@@ -339,12 +354,12 @@ public class TraderPanelImpl implements ITraderPanel {
 				"Банка", "Банкарска Сметка", "Адреса", "Телефонски број",
 				"Email", "Забелешки" };
 	}
-	
+
 	public Trader getTraderFromTraderTable(String selectedRowTraderId) {
-		BigDecimal traderId = new BigDecimal(selectedRowTraderId);		
+		BigDecimal traderId = new BigDecimal(selectedRowTraderId);
 		return traderServiceImpl.findTraderById(traderId);
 	}
-	
+
 	public void populateTraderFields(Trader trader) {
 		textFieldTraderId.setText(trader.getTraderId().toString());
 		textFieldTraderName.setText(trader.getTraderName());

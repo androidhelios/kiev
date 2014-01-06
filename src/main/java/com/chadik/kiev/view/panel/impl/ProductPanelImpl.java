@@ -5,14 +5,19 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -41,6 +46,7 @@ public class ProductPanelImpl implements IProductPanel {
 	private JPanel panelInfoHolderContentButtons;
 
 	private JScrollPane scrollPaneTable;
+	private JScrollBar verticalScrollBar;
 
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
@@ -107,18 +113,35 @@ public class ProductPanelImpl implements IProductPanel {
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		defaultTableModel = new DefaultTableModel();
-		table = new JTable();
-
+		defaultTableModel = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		defaultTableModel.setColumnIdentifiers(getTableProductColumnNames());
+
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowProductId = (String) table.getValueAt(row, 1);
+				Product product = getProductFromTraderTable(selectedRowProductId);
+				populateProductFields(product);
+			}
+		});
+
 		table.setModel(defaultTableModel);
+
 		TableUtil.hideColumns(table, getTableProductHiddenColumns());
+
 		TableUtil.allignCells(table, SwingConstants.CENTER);
+
 		table.getColumnModel().getColumn(0).setMaxWidth(100);
 
-		populateProductTable();
-
 		scrollPaneTable = new JScrollPane(table);
+
+		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -237,11 +260,14 @@ public class ProductPanelImpl implements IProductPanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
+		populateProductTable();
+
 		return panelAll;
 	}
 
 	@Override
 	public void populateProductTable() {
+		String selectedRowProductId = "";
 		products = productServiceImpl.findAllProducts();
 
 		int i = 0;
@@ -259,7 +285,15 @@ public class ProductPanelImpl implements IProductPanel {
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(table.getRowCount() - 1,
 					table.getRowCount() - 1);
+
+			selectedRowProductId = (String) table.getValueAt(
+					table.getRowCount() - 1, 1);
+			Product product = getProductFromTraderTable(selectedRowProductId);
+			populateProductFields(product);
 		}
+
+		scrollPaneTable.validate();
+		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 	}
 
@@ -270,6 +304,21 @@ public class ProductPanelImpl implements IProductPanel {
 
 	public int[] getTableProductHiddenColumns() {
 		return new int[] { 1, 4, 5, 6 };
+	}
+
+	public Product getProductFromTraderTable(String selectedRowProductId) {
+		BigDecimal productId = new BigDecimal(selectedRowProductId);
+		return productServiceImpl.findProductById(productId);
+	}
+
+	public void populateProductFields(Product product) {
+		textFieldProductId.setText(product.getProductId().toString());
+		textFieldProductName.setText(product.getProductName());
+		textFieldProductMeasurement.setText(product.getProductMeasurement());
+		textFieldProductTax.setText(product.getProductTax());
+		textFieldProductPrice.setText(product.getProductPrice());
+		textFieldProductAdditionalInfo.setText(product
+				.getProductAdditionalInfo());
 	}
 
 }
