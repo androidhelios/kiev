@@ -1,6 +1,7 @@
 package com.chadik.kiev.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class Customer implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private Integer customerId;
+	private BigDecimal customerId;
 	@NotNull(message = "Името на клиентот не е пополнето")
 	private String customerName;
 	@NotNull(message = "Адресата на клиентот не е пополнета")
@@ -30,15 +31,11 @@ public class Customer implements Serializable {
 	@Valid
 	private List<Invoice> invoices = new ArrayList<Invoice>();
 
-	public Customer() {
-		
-	}
-
-	public Integer getCustomerId() {
+	public BigDecimal getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Integer customerId) {
+	public void setCustomerId(BigDecimal customerId) {
 		this.customerId = customerId;
 	}
 

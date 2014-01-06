@@ -1,6 +1,7 @@
 package com.chadik.kiev.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Invoice implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private Integer invoiceId;
+	private BigDecimal invoiceId;
 	@ManyToOne
 	@JoinColumn(name = "customer")
 	@NotNull
@@ -47,15 +48,11 @@ public class Invoice implements Serializable {
 	@Valid
 	private List<Request> requests = new ArrayList<Request>();
 
-	public Invoice() {
-		
-	}
-
-	public Integer getInvoiceId() {
+	public BigDecimal getInvoiceId() {
 		return invoiceId;
 	}
 
-	public void setInvoiceId(Integer invoiceId) {
+	public void setInvoiceId(BigDecimal invoiceId) {
 		this.invoiceId = invoiceId;
 	}
 

@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -113,8 +117,22 @@ public class TraderPanelImpl implements ITraderPanel {
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
 
-		defaultTableModel = new DefaultTableModel();
+		defaultTableModel = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowTraderId = (String) table.getValueAt(row, 1);
+				Trader trader = getTraderFromTraderTable(selectedRowTraderId);
+				populateTraderFields(trader);
+			}
+		});
 
 		defaultTableModel.setColumnIdentifiers(getTableTraderColumnNames());
 		table.setModel(defaultTableModel);
@@ -320,6 +338,23 @@ public class TraderPanelImpl implements ITraderPanel {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Регистарски Број",
 				"Банка", "Банкарска Сметка", "Адреса", "Телефонски број",
 				"Email", "Забелешки" };
+	}
+	
+	public Trader getTraderFromTraderTable(String selectedRowTraderId) {
+		BigDecimal traderId = new BigDecimal(selectedRowTraderId);		
+		return traderServiceImpl.findTraderById(traderId);
+	}
+	
+	public void populateTraderFields(Trader trader) {
+		textFieldTraderId.setText(trader.getTraderId().toString());
+		textFieldTraderName.setText(trader.getTraderName());
+		textFieldTraderRegistryNumber.setText(trader.getTraderRegistryNumber());
+		textFieldTraderBankName.setText(trader.getTraderBankName());
+		textFieldTraderBankAccount.setText(trader.getTraderBankAccount());
+		textFieldTraderAddress.setText(trader.getTraderAddress());
+		textFieldTraderPhoneNumber.setText(trader.getTraderPhoneNumber());
+		textFieldTraderEmail.setText(trader.getTraderEmail());
+		textFieldTraderAdditionalInfo.setText(trader.getTraderAdditionalInfo());
 	}
 
 }

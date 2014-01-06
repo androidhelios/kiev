@@ -1,6 +1,7 @@
 package com.chadik.kiev.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ public class Product implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private Integer productId;
+	private BigDecimal productId;
 	@NotNull(message = "Полето име на продуктот не е пополнето")
 	private String productName;
 	@NotNull(message = "Полето единица мерка на продуктот не е пополнето")
@@ -29,15 +30,11 @@ public class Product implements Serializable {
 	@Valid
 	private List<Request> requests = new ArrayList<Request>(0);
 
-	public Product() {
-		
-	}
-
-	public Integer getProductId() {
+	public BigDecimal getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Integer productId) {
+	public void setProductId(BigDecimal productId) {
 		this.productId = productId;
 	}
 

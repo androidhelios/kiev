@@ -1,6 +1,8 @@
 package com.chadik.kiev.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,7 +15,7 @@ public class Request implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private Integer orderId;
+	private BigDecimal orderId;
 	@ManyToOne
 	@JoinColumn(name = "product")
 	@NotNull
@@ -32,15 +34,11 @@ public class Request implements Serializable {
 	private String orderQuantityPriceTax;
 	private String orderAdditionalInfo;
 
-	public Request() {
-
-	}
-
-	public Integer getOrderId() {
+	public BigDecimal getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(Integer orderId) {
+	public void setOrderId(BigDecimal orderId) {
 		this.orderId = orderId;
 	}
 
