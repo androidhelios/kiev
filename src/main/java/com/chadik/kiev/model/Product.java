@@ -28,7 +28,7 @@ public class Product implements Serializable {
 	private String productAdditionalInfo;
 	@OneToMany(mappedBy = "product")
 	@Valid
-	private List<Request> requests = new ArrayList<Request>(0);
+	private List<OrderItem> orderItems = new ArrayList<OrderItem>(0);
 
 	public BigDecimal getProductId() {
 		return productId;
@@ -78,11 +78,11 @@ public class Product implements Serializable {
 		this.productAdditionalInfo = productAdditionalInfo;
 	}
 
-	public List<Request> getRequests() {
-		return requests;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 
-	public void setRequests(List<Request> requests) {
-		this.requests = requests;
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 }

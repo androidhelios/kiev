@@ -8,22 +8,22 @@ import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chadik.kiev.dao.ITraderDao;
-import com.chadik.kiev.model.Trader;
-import com.chadik.kiev.service.ITraderService;
+import com.chadik.kiev.dao.IOrderItemDao;
+import com.chadik.kiev.model.OrderItem;
+import com.chadik.kiev.service.IOrderItemService;
 import com.chadik.kiev.util.HibernateUtil;
 
 @Service
-public class TraderServiceImpl implements ITraderService {
+public class OrderItemServiceImpl implements IOrderItemService {
 
 	@Autowired
-	private ITraderDao traderDaoImpl;
+	private IOrderItemDao orderItemDaoImpl;
 
 	@Override
-	public void saveTrader(Trader trader) {
+	public void saveOrderItem(OrderItem orderItem) {
 		try {
 			HibernateUtil.beginTransaction();
-			traderDaoImpl.saveTrader(trader);
+			orderItemDaoImpl.saveOrderItem(orderItem);
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
@@ -32,10 +32,10 @@ public class TraderServiceImpl implements ITraderService {
 	}
 
 	@Override
-	public void deleteTrader(Trader trader) {
+	public void deleteOrderItem(OrderItem orderItem) {
 		try {
 			HibernateUtil.beginTransaction();
-			traderDaoImpl.deleteTrader(trader);
+			orderItemDaoImpl.deleteOrderItem(orderItem);
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
@@ -44,29 +44,29 @@ public class TraderServiceImpl implements ITraderService {
 	}
 
 	@Override
-	public List<Trader> findAllTraders() {
-		List<Trader> traders = new ArrayList<Trader>();
+	public List<OrderItem> findAllOrderItems() {
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
 		try {
 			HibernateUtil.beginTransaction();
-			traders = traderDaoImpl.findAllTraders();
+			orderItems = orderItemDaoImpl.findAllOrderItems();
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
 		}
-		return traders;
+		return orderItems;
 	}
 
 	@Override
-	public Trader findTraderById(BigDecimal id) {
-		Trader trader = null;
+	public OrderItem findOrderItemById(BigDecimal id) {
+		OrderItem orderItem = null;
 		try {
 			HibernateUtil.beginTransaction();
-			trader = (Trader) traderDaoImpl.findTraderById(id);
+			orderItem = (OrderItem) orderItemDaoImpl.findOrderItemById(id);
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
 		}
-		return trader;
+		return orderItem;
 	}
 
 }

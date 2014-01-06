@@ -26,9 +26,9 @@ public class Invoice implements Serializable {
 	@NotNull
 	private Customer customer;
 	@ManyToOne
-	@JoinColumn(name = "trader")
+	@JoinColumn(name = "supplier")
 	@NotNull
-	private Trader trader;
+	private Supplier supplier;
 	@NotNull(message = "Полето број на фактурата не е пополнето")
 	private String invoiceNumber;
 	@NotNull(message = "Полето дата на фактурата не е пополнето")
@@ -46,7 +46,7 @@ public class Invoice implements Serializable {
 	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
 	@NotNull
 	@Valid
-	private List<Request> requests = new ArrayList<Request>();
+	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	public BigDecimal getInvoiceId() {
 		return invoiceId;
@@ -64,12 +64,12 @@ public class Invoice implements Serializable {
 		this.customer = customer;
 	}
 
-	public Trader getTrader() {
-		return trader;
+	public Supplier getSupplier() {
+		return supplier;
 	}
 
-	public void setTrader(Trader trader) {
-		this.trader = trader;
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
 	}
 
 	public String getInvoiceNumber() {
@@ -144,11 +144,11 @@ public class Invoice implements Serializable {
 		this.invoiceAdditionalInfo = invoiceAdditionalInfo;
 	}
 
-	public List<Request> getRequests() {
-		return requests;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 
-	public void setRequests(List<Request> requests) {
-		this.requests = requests;
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 }

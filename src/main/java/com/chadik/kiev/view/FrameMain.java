@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.util.PanelUtil;
-import com.chadik.kiev.view.dialog.ITraderDialog;
+import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ICustomerPanel;
 import com.chadik.kiev.view.panel.IProductPanel;
-import com.chadik.kiev.view.panel.ITraderPanel;
+import com.chadik.kiev.view.panel.ISupplierPanel;
 
 @Component
 public class FrameMain {
@@ -28,13 +28,13 @@ public class FrameMain {
 	private JMenuBar menuBar;
 	
 	private JMenu menuFile;
-	private JMenu menuTrader;
+	private JMenu menuSupplier;
 	private JMenu menuProduct;
 	private JMenu menuCustomer;
 	
 	private JMenuItem menuItemExit;
-	private JMenuItem menuItemTrader;
-	private JMenuItem menuItemTraderNew;
+	private JMenuItem menuItemSupplier;
+	private JMenuItem menuItemSupplierNew;
 	private JMenuItem menuItemProduct;
 	private JMenuItem menuItemProductNew;
 	private JMenuItem menuItemCustomer;
@@ -43,14 +43,14 @@ public class FrameMain {
 	private JPanel contentPane;
 	
 	@Autowired
-	private ITraderPanel panelTraderImpl;	
+	private ISupplierPanel panelSupplierImpl;	
 	@Autowired
 	private ICustomerPanel panelCustomerImpl;	
 	@Autowired
 	private IProductPanel panelProductImpl;
 	
 	@Autowired
-	private ITraderDialog dialogTraderImpl;
+	private ISupplierDialog supplierDialogImpl;
 	
 	public JFrame initFrame() {
 		mainFrame = new JFrame();
@@ -69,12 +69,12 @@ public class FrameMain {
 		mainFrame.setJMenuBar(menuBar);
 		
 		menuFile = new JMenu("Датотека");
-		menuTrader = new JMenu("Корисник");
+		menuSupplier = new JMenu("Корисник");
 		menuProduct = new JMenu("Продукт");
 		menuCustomer = new JMenu("Клиент");
 		
 		menuBar.add(menuFile);
-		menuBar.add(menuTrader);
+		menuBar.add(menuSupplier);
 		menuBar.add(menuProduct);
 		menuBar.add(menuCustomer);
 		
@@ -85,18 +85,18 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemTrader = new JMenuItem("Прегледај корисници");
-		menuItemTrader.addActionListener(new ActionListener() {
+		menuItemSupplier = new JMenuItem("Прегледај корисници");
+		menuItemSupplier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelTraderImpl.initTraderPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, panelSupplierImpl.initSupplierPanel(), BorderLayout.CENTER);
 				
 			}
 		});
 		
-		menuItemTraderNew = new JMenuItem("Нов корисник");
-		menuItemTraderNew.addActionListener(new ActionListener() {
+		menuItemSupplierNew = new JMenuItem("Нов корисник");
+		menuItemSupplierNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dialogTraderImpl.initTraderDialog();
+				supplierDialogImpl.initSupplierDialog();
 			}
 		});
 		
@@ -111,7 +111,7 @@ public class FrameMain {
 		menuItemProductNew = new JMenuItem("Нов продукт");
 		menuItemProductNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dialogTraderImpl.initTraderDialog();
+				supplierDialogImpl.initSupplierDialog();
 			}
 		});
 		
@@ -127,14 +127,14 @@ public class FrameMain {
 		
 		menuFile.add(menuItemExit);
 		
-		menuTrader.add(menuItemTrader);
-		menuTrader.add(menuItemTraderNew);	
+		menuSupplier.add(menuItemSupplier);
+		menuSupplier.add(menuItemSupplierNew);	
 		menuCustomer.add(menuItemCustomer);
 		menuCustomer.add(menuItemCustomerNew);
 		menuProduct.add(menuItemProduct);
 		menuProduct.add(menuItemProductNew);
 		
-		panelTraderImpl.initTraderPanel();
+		panelSupplierImpl.initSupplierPanel();
 		panelCustomerImpl.initCustomerPanel();
 		panelProductImpl.initProductPanel();	
         

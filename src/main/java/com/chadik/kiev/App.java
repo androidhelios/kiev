@@ -1,8 +1,8 @@
 package com.chadik.kiev;
 
-import com.chadik.kiev.model.Trader;
-import com.chadik.kiev.service.ITraderService;
-import com.chadik.kiev.service.impl.TraderServiceImpl;
+import com.chadik.kiev.model.Supplier;
+import com.chadik.kiev.service.ISupplierService;
+import com.chadik.kiev.service.impl.SupplierServiceImpl;
 import com.chadik.kiev.view.FrameMain;
 
 
@@ -19,34 +19,34 @@ public class App {
         ApplicationContext appContext = 
     	  new ClassPathXmlApplicationContext("applicationContext.xml");
  
-    	TraderServiceImpl traderServiceImpl = (TraderServiceImpl) appContext.getBean("traderServiceImpl");
-        System.out.println("hello traderServiceImpl");
+    	SupplierServiceImpl supplierServiceImpl = (SupplierServiceImpl) appContext.getBean("supplierServiceImpl");
+        System.out.println("hello supplierServiceImpl");
         
-        Trader trader = new Trader();
-        trader.setTraderName("ivan1");
-        trader.setTraderAddress("ivan2");
-        trader.setTraderBankAccount("ivan3");
-        trader.setTraderBankName("ivan4");
-        trader.setTraderRegistryNumber("pile5");        
+        Supplier supplier = new Supplier();
+        supplier.setSupplierName("ivan1");
+        supplier.setSupplierAddress("ivan2");
+        supplier.setSupplierBankAccount("ivan3");
+        supplier.setSupplierBankName("ivan4");
+        supplier.setSupplierRegistryNumber("pile5");        
         
-        traderServiceImpl.saveTrader(trader);
+        supplierServiceImpl.saveSupplier(supplier);
         
-        trader.setTraderRegistryNumber("чадиковски");        
+        supplier.setSupplierRegistryNumber("чадиковски");        
         
-        traderServiceImpl.saveTrader(trader);        
+        supplierServiceImpl.saveSupplier(supplier);        
 
-        System.out.println("bye " + trader.getTraderName());
+        System.out.println("bye " + supplier.getSupplierName());
         
         FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
         frameMain.initFrame(); 
         
-        List<Trader> traderNo = new ArrayList<Trader>();
-        traderNo = traderServiceImpl.findAllTraders();
+        List<Supplier> suppliersNo = new ArrayList<Supplier>();
+        suppliersNo = supplierServiceImpl.findAllSuppliers();
         
-        Trader trader0 = traderNo.get(0);
-        System.out.println("ovovjv:" + trader0.getTraderBankName());
+        Supplier supplierSecond = suppliersNo.get(0);
+        System.out.println("ovovjv:" + supplierSecond.getSupplierBankName());
         
-        System.out.println("no " + traderNo.size());
+        System.out.println("no " + suppliersNo.size());
         
    	
     }

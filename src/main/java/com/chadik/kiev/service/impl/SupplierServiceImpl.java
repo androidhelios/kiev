@@ -8,22 +8,22 @@ import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chadik.kiev.dao.IRequestDao;
-import com.chadik.kiev.model.Request;
-import com.chadik.kiev.service.IRequestService;
+import com.chadik.kiev.dao.ISupplierDao;
+import com.chadik.kiev.model.Supplier;
+import com.chadik.kiev.service.ISupplierService;
 import com.chadik.kiev.util.HibernateUtil;
 
 @Service
-public class RequestServiceImpl implements IRequestService {
+public class SupplierServiceImpl implements ISupplierService {
 
 	@Autowired
-	private IRequestDao requestDaoImpl;
+	private ISupplierDao supplierDaoImpl;
 
 	@Override
-	public void saveRequest(Request request) {
+	public void saveSupplier(Supplier supplier) {
 		try {
 			HibernateUtil.beginTransaction();
-			requestDaoImpl.saveRequest(request);
+			supplierDaoImpl.saveSupplier(supplier);
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
@@ -32,10 +32,10 @@ public class RequestServiceImpl implements IRequestService {
 	}
 
 	@Override
-	public void deleteRequest(Request request) {
+	public void deleteSupplier(Supplier supplier) {
 		try {
 			HibernateUtil.beginTransaction();
-			requestDaoImpl.deleteRequest(request);
+			supplierDaoImpl.deleteSupplier(supplier);
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
@@ -44,29 +44,29 @@ public class RequestServiceImpl implements IRequestService {
 	}
 
 	@Override
-	public List<Request> findAllRequests() {
-		List<Request> requests = new ArrayList<Request>();
+	public List<Supplier> findAllSuppliers() {
+		List<Supplier> suppliers = new ArrayList<Supplier>();
 		try {
 			HibernateUtil.beginTransaction();
-			requests = requestDaoImpl.findAllRequests();
+			suppliers = supplierDaoImpl.findAllSuppliers();
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
 		}
-		return requests;
+		return suppliers;
 	}
 
 	@Override
-	public Request findRequestById(BigDecimal id) {
-		Request request = null;
+	public Supplier findSupplierById(BigDecimal id) {
+		Supplier supplier = null;
 		try {
 			HibernateUtil.beginTransaction();
-			request = (Request) requestDaoImpl.findRequestById(id);
+			supplier = (Supplier) supplierDaoImpl.findSupplierById(id);
 			HibernateUtil.commitTransaction();
 		} catch (HibernateException ex) {
 			System.out.println("Handle your error here");
 		}
-		return request;
+		return supplier;
 	}
 
 }

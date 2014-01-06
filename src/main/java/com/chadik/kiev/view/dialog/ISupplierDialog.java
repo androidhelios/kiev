@@ -2,8 +2,8 @@ package com.chadik.kiev.view.dialog;
 
 import javax.swing.JDialog;
 
-public interface IRequestDialog {
+public interface ISupplierDialog {
 	
-	public JDialog initRequestDialog();
+	public JDialog initSupplierDialog();
 
 }

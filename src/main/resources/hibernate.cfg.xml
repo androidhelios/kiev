@@ -15,8 +15,8 @@
     <property name="hbm2ddl.auto">create</property>
     <mapping class="com.chadik.kiev.model.Customer" />
     <mapping class="com.chadik.kiev.model.Invoice" />
-    <mapping class="com.chadik.kiev.model.Request" />
+    <mapping class="com.chadik.kiev.model.OrderItem" />
     <mapping class="com.chadik.kiev.model.Product" />
-    <mapping class="com.chadik.kiev.model.Trader" />
+    <mapping class="com.chadik.kiev.model.Supplier" />
 </session-factory>
 </hibernate-configuration>

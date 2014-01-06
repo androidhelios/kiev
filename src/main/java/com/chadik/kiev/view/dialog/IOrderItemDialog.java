@@ -2,8 +2,8 @@ package com.chadik.kiev.view.dialog;
 
 import javax.swing.JDialog;
 
-public interface ITraderDialog {
+public interface IOrderItemDialog {
 	
-	public JDialog initTraderDialog();
+	public JDialog initOrderItemDialog();
 
 }

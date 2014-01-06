@@ -126,7 +126,7 @@ public class ProductPanelImpl implements IProductPanel {
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
 				String selectedRowProductId = (String) table.getValueAt(row, 1);
-				Product product = getProductFromTraderTable(selectedRowProductId);
+				Product product = getProductFromProductTable(selectedRowProductId);
 				populateProductFields(product);
 			}
 		});
@@ -288,7 +288,7 @@ public class ProductPanelImpl implements IProductPanel {
 
 			selectedRowProductId = (String) table.getValueAt(
 					table.getRowCount() - 1, 1);
-			Product product = getProductFromTraderTable(selectedRowProductId);
+			Product product = getProductFromProductTable(selectedRowProductId);
 			populateProductFields(product);
 		}
 
@@ -306,7 +306,7 @@ public class ProductPanelImpl implements IProductPanel {
 		return new int[] { 1, 4, 5, 6 };
 	}
 
-	public Product getProductFromTraderTable(String selectedRowProductId) {
+	public Product getProductFromProductTable(String selectedRowProductId) {
 		BigDecimal productId = new BigDecimal(selectedRowProductId);
 		return productServiceImpl.findProductById(productId);
 	}

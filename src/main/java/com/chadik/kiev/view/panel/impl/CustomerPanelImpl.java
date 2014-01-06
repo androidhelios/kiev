@@ -127,7 +127,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 				int row = table.getSelectedRow();
 				String selectedRowCustomerId = (String) table
 						.getValueAt(row, 1);
-				Customer customer = getCustomerFromTraderTable(selectedRowCustomerId);
+				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 				populateCustomerFields(customer);
 			}
 		});
@@ -292,7 +292,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 			selectedRowCustomerId = (String) table.getValueAt(
 					table.getRowCount() - 1, 1);
-			Customer customer = getCustomerFromTraderTable(selectedRowCustomerId);
+			Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 			populateCustomerFields(customer);
 		}
 
@@ -310,7 +310,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		return new int[] { 1, 3, 5, 6 };
 	}
 
-	public Customer getCustomerFromTraderTable(String selectedRowCustomerId) {
+	public Customer getCustomerFromCustomerTable(String selectedRowCustomerId) {
 		BigDecimal customerId = new BigDecimal(selectedRowCustomerId);
 		return customerServiceImpl.findCustomerById(customerId);
 	}
