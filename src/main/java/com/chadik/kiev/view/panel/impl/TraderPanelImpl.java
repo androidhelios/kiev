@@ -1,8 +1,10 @@
 package com.chadik.kiev.view.panel.impl;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -342,6 +344,8 @@ public class TraderPanelImpl implements ITraderPanel {
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+		
+		setFieldsNonEditable();
 
 	}
 
@@ -370,6 +374,28 @@ public class TraderPanelImpl implements ITraderPanel {
 		textFieldTraderPhoneNumber.setText(trader.getTraderPhoneNumber());
 		textFieldTraderEmail.setText(trader.getTraderEmail());
 		textFieldTraderAdditionalInfo.setText(trader.getTraderAdditionalInfo());
+	}
+	
+	public void setFieldsNonEditable() {
+		textFieldTraderId.setEditable(false);
+		textFieldTraderId.setBackground(new Color(255, 255, 153));
+		textFieldTraderName.setEditable(false);
+		textFieldTraderName.setBackground(new Color(255, 255, 204));
+		textFieldTraderName.setMargin(new Insets(2, 2, 2, 2));
+		textFieldTraderRegistryNumber.setEditable(false);
+		textFieldTraderRegistryNumber.setBackground(new Color(255, 255, 204));
+		textFieldTraderBankName.setEditable(false);
+		textFieldTraderBankName.setBackground(new Color(255, 255, 204));
+		textFieldTraderBankAccount.setEditable(false);
+		textFieldTraderBankAccount.setBackground(new Color(255, 255, 204));
+		textFieldTraderAddress.setEditable(false);
+		textFieldTraderAddress.setBackground(new Color(255, 255, 204));
+		textFieldTraderPhoneNumber.setEditable(false);
+		textFieldTraderPhoneNumber.setBackground(new Color(255, 255, 204));
+		textFieldTraderEmail.setEditable(false);
+		textFieldTraderEmail.setBackground(new Color(255, 255, 204));
+		textFieldTraderAdditionalInfo.setEditable(false);
+		textFieldTraderAdditionalInfo.setBackground(new Color(255, 255, 204));
 	}
 
 }
