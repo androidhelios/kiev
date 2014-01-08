@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ICustomerPanel;
+import com.chadik.kiev.view.panel.IInvoicePanel;
 import com.chadik.kiev.view.panel.IProductPanel;
 import com.chadik.kiev.view.panel.ISupplierPanel;
 
@@ -43,17 +44,20 @@ public class FrameMain {
 	private JPanel contentPane;
 	
 	@Autowired
-	private ISupplierPanel panelSupplierImpl;	
+	private ISupplierPanel supplierPanelImpl;	
 	@Autowired
-	private ICustomerPanel panelCustomerImpl;	
+	private ICustomerPanel customerPanelImpl;	
 	@Autowired
-	private IProductPanel panelProductImpl;
+	private IProductPanel productPanelImpl;
+	@Autowired
+	private IInvoicePanel invoicePanelImpl;
 	
 	@Autowired
 	private ISupplierDialog supplierDialogImpl;
 	
 	public JFrame initFrame() {
 		mainFrame = new JFrame();
+		mainFrame.setMinimumSize(new Dimension(800, 600));
 		
 		menuBar = new JMenuBar();
 		
@@ -88,7 +92,7 @@ public class FrameMain {
 		menuItemSupplier = new JMenuItem("Прегледај корисници");
 		menuItemSupplier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelSupplierImpl.initSupplierPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, invoicePanelImpl.initInvoicePanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -103,7 +107,7 @@ public class FrameMain {
 		menuItemProduct = new JMenuItem("Прегледај продукти");
 		menuItemProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelProductImpl.initProductPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, productPanelImpl.initProductPanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -118,7 +122,7 @@ public class FrameMain {
 		menuItemCustomer = new JMenuItem("Прегледај клиенти");
 		menuItemCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, panelCustomerImpl.initCustomerPanel(), BorderLayout.CENTER);
+				PanelUtil.switchPanel(mainFrame, contentPane, customerPanelImpl.initCustomerPanel(), BorderLayout.CENTER);
 				
 			}
 		});
@@ -134,9 +138,9 @@ public class FrameMain {
 		menuProduct.add(menuItemProduct);
 		menuProduct.add(menuItemProductNew);
 		
-		panelSupplierImpl.initSupplierPanel();
-		panelCustomerImpl.initCustomerPanel();
-		panelProductImpl.initProductPanel();	
+		supplierPanelImpl.initSupplierPanel();
+		customerPanelImpl.initCustomerPanel();
+		productPanelImpl.initProductPanel();	
         
 		mainFrame.pack();
 		mainFrame.setVisible(true);

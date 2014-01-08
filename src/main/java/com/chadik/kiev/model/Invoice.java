@@ -31,17 +31,17 @@ public class Invoice implements Serializable {
 	private Supplier supplier;
 	@NotNull(message = "Полето број на фактурата не е пополнето")
 	private String invoiceNumber;
+	private String invoiceSerialNumber;
 	@NotNull(message = "Полето дата на фактурата не е пополнето")
 	private String invoiceDate;
-	private String invoiceSerialNumber;
 	private String invoiceDeliveryDate;
 	private String invoiceDeliveryNumber;
 	@NotNull(message = "Полето вкупен износ на продуктите не е пополнето")
-	private String invoceTotalPrice;
+	private String invoiceTotalPrice;
 	@NotNull(message = "Полето вкупен износ на данок на продуктите не е пополнето")
 	private String invoiceTotalTax;
 	@NotNull(message = "Полето вкупен износ со данок на продуктите не е пополнето")
-	private String invoceTotalPriceTax;
+	private String invoiceTotalPriceTax;
 	private String invoiceAdditionalInfo;
 	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
 	@NotNull
@@ -80,20 +80,20 @@ public class Invoice implements Serializable {
 		this.invoiceNumber = invoiceNumber;
 	}
 
-	public String getInvoiceDate() {
-		return invoiceDate;
-	}
-
-	public void setInvoiceDate(String invoiceDate) {
-		this.invoiceDate = invoiceDate;
-	}
-
 	public String getInvoiceSerialNumber() {
 		return invoiceSerialNumber;
 	}
 
 	public void setInvoiceSerialNumber(String invoiceSerialNumber) {
 		this.invoiceSerialNumber = invoiceSerialNumber;
+	}
+
+	public String getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(String invoiceDate) {
+		this.invoiceDate = invoiceDate;
 	}
 
 	public String getInvoiceDeliveryDate() {
@@ -112,12 +112,12 @@ public class Invoice implements Serializable {
 		this.invoiceDeliveryNumber = invoiceDeliveryNumber;
 	}
 
-	public String getInvoceTotalPrice() {
-		return invoceTotalPrice;
+	public String getInvoiceTotalPrice() {
+		return invoiceTotalPrice;
 	}
 
-	public void setInvoceTotalPrice(String invoceTotalPrice) {
-		this.invoceTotalPrice = invoceTotalPrice;
+	public void setInvoiceTotalPrice(String invoiceTotalPrice) {
+		this.invoiceTotalPrice = invoiceTotalPrice;
 	}
 
 	public String getInvoiceTotalTax() {
@@ -128,12 +128,12 @@ public class Invoice implements Serializable {
 		this.invoiceTotalTax = invoiceTotalTax;
 	}
 
-	public String getInvoceTotalPriceTax() {
-		return invoceTotalPriceTax;
+	public String getInvoiceTotalPriceTax() {
+		return invoiceTotalPriceTax;
 	}
 
-	public void setInvoceTotalPriceTax(String invoceTotalPriceTax) {
-		this.invoceTotalPriceTax = invoceTotalPriceTax;
+	public void setInvoiceTotalPriceTax(String invoiceTotalPriceTax) {
+		this.invoiceTotalPriceTax = invoiceTotalPriceTax;
 	}
 
 	public String getInvoiceAdditionalInfo() {
@@ -151,4 +151,5 @@ public class Invoice implements Serializable {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+
 }

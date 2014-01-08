@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 public interface IInvoicePanel {
 
 	public JPanel initInvoicePanel();
-
+	
 	public void populateInvoiceTable();
 
 }
