@@ -194,6 +194,108 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		
+		int spacing = 5;
+		int weightLabel = 125;
+		int height = 25;
+		int weightTextField = 250;
+		int xLabel = 10;
+		int xTextField = xLabel + weightLabel + spacing;
+		int y = 25;
+		
+		labelInvoiceSupplierName = new JLabel("Име:");
+		labelInvoiceSupplierName.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceSupplierName = new JTextField();
+		textFieldInvoiceSupplierName.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceCustomerName = new JLabel("Име:");
+		labelInvoiceCustomerName.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceCustomerName = new JTextField();
+		textFieldInvoiceCustomerName.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceNumber = new JLabel("Име:");
+		labelInvoiceNumber.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceNumber = new JTextField();
+		textFieldInvoiceNumber.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceSerialNumber = new JLabel("Име:");
+		labelInvoiceSerialNumber.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceSerialNumber = new JTextField();
+		textFieldInvoiceSerialNumber.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceDate = new JLabel("Име:");
+		labelInvoiceDate.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceDate = new JTextField();
+		textFieldInvoiceDate.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceDeliveryDate = new JLabel("Име:");
+		labelInvoiceDeliveryDate.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceDeliveryDate = new JTextField();
+		textFieldInvoiceDeliveryDate.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceDeliveryNumber = new JLabel("Име:");
+		labelInvoiceDeliveryNumber.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceDeliveryNumber = new JTextField();
+		textFieldInvoiceDeliveryNumber.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceTotalPrice = new JLabel("Име:");
+		labelInvoiceTotalPrice.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceTotalPrice = new JTextField();
+		textFieldInvoiceTotalPrice.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceTotalTax = new JLabel("Име:");
+		labelInvoiceTotalTax.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceTotalTax = new JTextField();
+		textFieldInvoiceTotalTax.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceTotalPriceTax = new JLabel("Име:");
+		labelInvoiceTotalPriceTax.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceTotalPriceTax = new JTextField();
+		textFieldInvoiceTotalPriceTax.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceAdditionalInfo = new JLabel("Име:");
+		labelInvoiceAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceAdditionalInfo = new JTextField();
+		textFieldInvoiceAdditionalInfo.setBounds(xTextField, y, weightTextField, height);
+		
+		y = y + height + spacing;
+		
+		labelInvoiceId = new JLabel("Име:");
+		labelInvoiceId.setBounds(xLabel, y, weightLabel, height);
+		
+		textFieldInvoiceId = new JTextField();
+		textFieldInvoiceId.setBounds(xTextField, y, weightTextField, height);
+		
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		
@@ -229,8 +331,38 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 		
-		panelInfoHolderContentInfo.add(panelInfoHolderContentInfoFields, BorderLayout.CENTER);
-		panelInfoHolderContentInfo.add(panelInfoHolderContentInfoTable, BorderLayout.SOUTH);
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierName);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierName);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerName);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerName);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceNumber);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceNumber);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceSerialNumber);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSerialNumber);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceDate);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceDate);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceDeliveryDate);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceDeliveryDate);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceDeliveryNumber);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceDeliveryNumber);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceTotalPrice);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalPrice);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceTotalTax);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalTax);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceTotalPriceTax);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalPriceTax);
+		
+		panelInfoHolderContentInfoFields.add(labelInvoiceAdditionalInfo);
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceAdditionalInfo);
 		
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
@@ -239,6 +371,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentButtons.add(buttonDeleteProduct);
 		panelInfoHolderContentButtons.add(PanelUtil.createJSeparator());
 		panelInfoHolderContentButtons.add(buttonPrint);
+		
+		panelInfoHolderContentInfo.add(panelInfoHolderContentInfoFields, BorderLayout.CENTER);
+		panelInfoHolderContentInfo.add(panelInfoHolderContentInfoTable, BorderLayout.SOUTH);
 		
 		panelInfoHolderContent.add(panelInfoHolderContentInfo,
 				BorderLayout.CENTER);
