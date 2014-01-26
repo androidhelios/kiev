@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -28,10 +30,12 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.Invoice;
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.IInvoiceService;
+import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.IInvoicePanel;
 import com.chadik.kiev.view.panel.IOrderItemPanel;
+import com.sun.org.apache.regexp.internal.recompile;
 
 @Component
 public class InvoicePanelImpl implements IInvoicePanel {
@@ -45,10 +49,10 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	private JPanel panelInfoHolder;
 	private JPanel panelInfoHolderContent;
-	private JPanel panelInfoHolderContentFields;
-	private JPanel panelInfoHolderContentFieldsInfo;
-	private JPanel panelInfoHolderContentFieldsButtons;
-	private JPanel panelInfoHolderContentTable;
+	private JPanel panelInfoHolderContentInfo;
+	private JPanel panelInfoHolderContentInfoFields;
+	private JPanel panelInfoHolderContentInfoTable;
+	private JPanel panelInfoHolderContentButtons;
 
 	private JScrollPane scrollPaneTable;
 	private JScrollBar verticalScrollBar;
@@ -87,6 +91,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
+	private JButton buttonAddProduct;
+	private JButton buttonDeleteProduct;
+	private JButton buttonPrint;
 	
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
@@ -118,7 +125,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
 		panelTableHolderContentButtons.setPreferredSize(new Dimension(400, 50));
-		panelTableHolderContentButtons.setBackground(Color.cyan);
 
 		panelInfoHolder = new JPanel();
 		panelInfoHolder.setLayout(new BorderLayout());
@@ -126,25 +132,19 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContent = new JPanel();
 		panelInfoHolderContent.setLayout(new BorderLayout());
 		
-		panelInfoHolderContentFields = new JPanel();
-		panelInfoHolderContentFields.setLayout(new BorderLayout());
-
-		panelInfoHolderContentFieldsInfo = new JPanel();
-		panelInfoHolderContentFieldsInfo.setLayout(null);
-		panelInfoHolderContentFieldsInfo.setPreferredSize(new Dimension(400, 250));
-		panelInfoHolderContentFieldsInfo.setBackground(Color.YELLOW);
-
-		panelInfoHolderContentFieldsButtons = new JPanel();
-		panelInfoHolderContentFieldsButtons.setLayout(new FlowLayout());
-		panelInfoHolderContentFieldsButtons.setPreferredSize(new Dimension(400, 50));
-		panelInfoHolderContentFieldsButtons.setBackground(Color.CYAN);
+		panelInfoHolderContentInfo = new JPanel();
+		panelInfoHolderContentInfo.setLayout(new BorderLayout());
 		
-		panelInfoHolderContentTable = orderItemPanelImpl.initOrderItemPanel();
-//		panelInfoHolderContentTable = new JPanel();
-//		panelInfoHolderContentTable.setLayout(new FlowLayout());
-//		panelInfoHolderContentTable.setPreferredSize(new Dimension(400, 300));
-//		panelInfoHolderContentTable.setBackground(Color.BLUE);
+		panelInfoHolderContentInfoFields = new JPanel();
+		panelInfoHolderContentInfoFields.setLayout(null);
+		panelInfoHolderContentInfoFields.setPreferredSize(new Dimension(400, 300));
 		
+		panelInfoHolderContentInfoTable = orderItemPanelImpl.initOrderItemPanel();
+		
+		panelInfoHolderContentButtons = new JPanel();
+		panelInfoHolderContentButtons.setLayout(new FlowLayout());
+		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
+
 		defaultTableModel = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -190,9 +190,31 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				setFieldsEditable();
 			}
 		});
-
+		
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
+		
+		buttonSave = new JButton("Зачувај");
+		buttonSave.setPreferredSize(new Dimension(100, 25));
+		
+		buttonCancel = new JButton("Откажи");
+		buttonCancel.setPreferredSize(new Dimension(100, 25));		
+		
+		buttonAddProduct = new JButton("Додади");
+		buttonAddProduct.setBackground(new Color(224, 224, 224));
+		buttonAddProduct.setPreferredSize(new Dimension(100, 25));
+		buttonAddProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				supplierDialogImpl.initSupplierDialog();
+			}
+		});
+		
+		buttonDeleteProduct = new JButton("Одземи");
+		buttonDeleteProduct.setBackground(new Color(224, 224, 224));
+		buttonDeleteProduct.setPreferredSize(new Dimension(100, 25));
+		
+		buttonPrint = new JButton("Испечати");
+		buttonPrint.setPreferredSize(new Dimension(100, 25));
 		
 		panelTableHolderContentTable.add(scrollPaneTable);
 		
@@ -207,15 +229,21 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 		
-		panelInfoHolderContentFields.add(panelInfoHolderContentFieldsInfo,
-				BorderLayout.CENTER);
-		panelInfoHolderContentFields.add(panelInfoHolderContentFieldsButtons,
-				BorderLayout.SOUTH);
+		panelInfoHolderContentInfo.add(panelInfoHolderContentInfoFields, BorderLayout.CENTER);
+		panelInfoHolderContentInfo.add(panelInfoHolderContentInfoTable, BorderLayout.SOUTH);
 		
-		panelInfoHolderContent.add(panelInfoHolderContentFields,
-				BorderLayout.NORTH);
-		panelInfoHolderContent.add(panelInfoHolderContentTable,
+		panelInfoHolderContentButtons.add(buttonSave);
+		panelInfoHolderContentButtons.add(buttonCancel);
+		panelInfoHolderContentButtons.add(PanelUtil.createJSeparator());
+		panelInfoHolderContentButtons.add(buttonAddProduct);
+		panelInfoHolderContentButtons.add(buttonDeleteProduct);
+		panelInfoHolderContentButtons.add(PanelUtil.createJSeparator());
+		panelInfoHolderContentButtons.add(buttonPrint);
+		
+		panelInfoHolderContent.add(panelInfoHolderContentInfo,
 				BorderLayout.CENTER);
+		panelInfoHolderContent.add(panelInfoHolderContentButtons,
+				BorderLayout.SOUTH);
 
 		panelInfoHolder.add(panelInfoHolderContent, BorderLayout.CENTER);
 

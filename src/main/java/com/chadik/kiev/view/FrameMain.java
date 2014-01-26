@@ -47,18 +47,15 @@ public class FrameMain {
 	@Autowired
 	private IInvoicePanel invoicePanelImpl;
 	
-	@Autowired
-	private ISupplierDialog supplierDialogImpl;
-	
 	public JFrame initFrame() {
 		mainFrame = new JFrame();
-		mainFrame.setMinimumSize(new Dimension(800, 600));
+		mainFrame.setMinimumSize(new Dimension(1000, 600));
 		
 		menuBar = new JMenuBar();
 		
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
-		contentPane.setPreferredSize(new Dimension(800, 600));
+		contentPane.setPreferredSize(new Dimension(1000, 600));
 		
 		mainFrame.setTitle("kiev");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -127,7 +124,6 @@ public class FrameMain {
 		
 		return mainFrame;
 		
-	}
-	
+	}	
 
 }

@@ -1,7 +1,11 @@
 package com.chadik.kiev.util;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 public final class PanelUtil {
 
@@ -16,6 +20,14 @@ public final class PanelUtil {
 		panelHolder.add(switchPanel, panelAlligment);
 		frameHolder.validate();
 
+	}
+	
+	public static JSeparator createJSeparator() {
+		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);  
+	    Dimension dimension = separator.getPreferredSize();  
+	    dimension.height = 25;  
+	    separator.setPreferredSize(dimension);
+    	return separator;
 	}
 
 }
