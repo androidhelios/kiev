@@ -29,17 +29,12 @@ public class FrameMain {
 	private JMenuBar menuBar;
 	
 	private JMenu menuFile;
-	private JMenu menuSupplier;
-	private JMenu menuProduct;
-	private JMenu menuCustomer;
 	
-	private JMenuItem menuItemExit;
+	private JMenuItem menuItemInvoice;
 	private JMenuItem menuItemSupplier;
-	private JMenuItem menuItemSupplierNew;
 	private JMenuItem menuItemProduct;
-	private JMenuItem menuItemProductNew;
 	private JMenuItem menuItemCustomer;
-	private JMenuItem menuItemCustomerNew;
+	private JMenuItem menuItemExit;
 	
 	private JPanel contentPane;
 	
@@ -73,14 +68,40 @@ public class FrameMain {
 		mainFrame.setJMenuBar(menuBar);
 		
 		menuFile = new JMenu("Датотека");
-		menuSupplier = new JMenu("Корисник");
-		menuProduct = new JMenu("Продукт");
-		menuCustomer = new JMenu("Клиент");
 		
 		menuBar.add(menuFile);
-		menuBar.add(menuSupplier);
-		menuBar.add(menuProduct);
-		menuBar.add(menuCustomer);
+		
+		menuItemInvoice = new JMenuItem("Фактури");
+		menuItemInvoice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, invoicePanelImpl.initInvoicePanel(), BorderLayout.CENTER);
+				
+			}
+		});
+		
+		menuItemSupplier = new JMenuItem("Корисници");
+		menuItemSupplier.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, supplierPanelImpl.initSupplierPanel(), BorderLayout.CENTER);
+				
+			}
+		});
+		
+		menuItemProduct = new JMenuItem("Продукти");
+		menuItemProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, productPanelImpl.initProductPanel(), BorderLayout.CENTER);
+				
+			}
+		});
+		
+		menuItemCustomer = new JMenuItem("Клиенти");
+		menuItemCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PanelUtil.switchPanel(mainFrame, contentPane, customerPanelImpl.initCustomerPanel(), BorderLayout.CENTER);
+				
+			}
+		});
 		
 		menuItemExit = new JMenuItem("Излез");
 		menuItemExit.addActionListener(new ActionListener() {
@@ -89,54 +110,12 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemSupplier = new JMenuItem("Прегледај корисници");
-		menuItemSupplier.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, invoicePanelImpl.initInvoicePanel(), BorderLayout.CENTER);
-				
-			}
-		});
-		
-		menuItemSupplierNew = new JMenuItem("Нов корисник");
-		menuItemSupplierNew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				supplierDialogImpl.initSupplierDialog();
-			}
-		});
-		
-		menuItemProduct = new JMenuItem("Прегледај продукти");
-		menuItemProduct.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, productPanelImpl.initProductPanel(), BorderLayout.CENTER);
-				
-			}
-		});
-		
-		menuItemProductNew = new JMenuItem("Нов продукт");
-		menuItemProductNew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				supplierDialogImpl.initSupplierDialog();
-			}
-		});
-		
-		menuItemCustomer = new JMenuItem("Прегледај клиенти");
-		menuItemCustomer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PanelUtil.switchPanel(mainFrame, contentPane, customerPanelImpl.initCustomerPanel(), BorderLayout.CENTER);
-				
-			}
-		});
-		
-		menuItemCustomerNew = new JMenuItem("Нов клиент");
-		
+		menuFile.add(menuItemInvoice);
+		menuFile.add(menuItemSupplier);
+		menuFile.add(menuItemProduct);
+		menuFile.add(menuItemCustomer);
+		menuFile.addSeparator();
 		menuFile.add(menuItemExit);
-		
-		menuSupplier.add(menuItemSupplier);
-		menuSupplier.add(menuItemSupplierNew);	
-		menuCustomer.add(menuItemCustomer);
-		menuCustomer.add(menuItemCustomerNew);
-		menuProduct.add(menuItemProduct);
-		menuProduct.add(menuItemProductNew);
 		
 		supplierPanelImpl.initSupplierPanel();
 		customerPanelImpl.initCustomerPanel();

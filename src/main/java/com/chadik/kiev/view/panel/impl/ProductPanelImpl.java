@@ -88,7 +88,6 @@ public class ProductPanelImpl implements IProductPanel {
 
 		panelTableHolderContent = new JPanel();
 		panelTableHolderContent.setLayout(new BorderLayout());
-		panelTableHolderContent.setPreferredSize(new Dimension(400, 600));
 
 		panelTableHolderContentTable = new JPanel();
 		panelTableHolderContentTable.setLayout(new BorderLayout());
@@ -103,7 +102,6 @@ public class ProductPanelImpl implements IProductPanel {
 
 		panelInfoHolderContent = new JPanel();
 		panelInfoHolderContent.setLayout(new BorderLayout());
-		panelInfoHolderContent.setPreferredSize(new Dimension(400, 600));
 
 		panelInfoHolderContentInfo = new JPanel();
 		panelInfoHolderContentInfo.setLayout(null);

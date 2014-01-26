@@ -82,10 +82,10 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		panelButtons = new JPanel();
 		panelButtons.setLayout(new BorderLayout());
-		panelButtons.setPreferredSize(new Dimension(400, 50));
 
 		panelButtonsContent = new JPanel();
 		panelButtonsContent.setLayout(new FlowLayout());
+		panelButtonsContent.setPreferredSize(new Dimension(400, 50));
 
 		int spacing = 5;
 		int weightLabel = 125;
