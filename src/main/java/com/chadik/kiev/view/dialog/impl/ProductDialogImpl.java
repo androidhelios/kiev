@@ -61,6 +61,7 @@ public class ProductDialogImpl implements IProductDialog {
 		dialog.setResizable(false);
 
 		contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout());
 
 		dialog.setContentPane(contentPane);
 

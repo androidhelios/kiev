@@ -253,7 +253,7 @@ public class ProductPanelImpl implements IProductPanel {
 		panelInfoHolderContent.add(panelInfoHolderContentButtons,
 				BorderLayout.SOUTH);
 
-		panelInfoHolder.add(panelInfoHolderContent);
+		panelInfoHolder.add(panelInfoHolderContent, BorderLayout.CENTER);
 
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
