@@ -79,7 +79,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
-	
+
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
 
@@ -105,7 +105,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelTableHolderContentTable.setLayout(new BorderLayout());
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
-		panelTableHolderContentTable.setBorder(new TitledBorder("Листа на продукти"));
+		panelTableHolderContentTable.setBorder(new TitledBorder(
+				"Листа на продукти"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
@@ -200,7 +201,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerName = new JTextField();
 		textFieldCustomerName.setBounds(xTextField, y, weightTextField, height);
 		textFieldCustomerName.setMargin(new Insets(2, 2, 2, 2));
-		
+
 		originalTextFieldColor = textFieldCustomerName.getBackground();
 
 		y = y + height + spacing;
@@ -280,20 +281,29 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 
-		panelInfoHolderContentInfo.add(labelCustomerName, firstLabelConstrains());
-		panelInfoHolderContentInfo.add(textFieldCustomerName, textFieldConstraints());
+		panelInfoHolderContentInfo.add(labelCustomerName,
+				firstLabelConstrains());
+		panelInfoHolderContentInfo.add(textFieldCustomerName,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelCustomerAddress, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerAddress, textFieldConstraints());
+		panelInfoHolderContentInfo
+				.add(labelCustomerAddress, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldCustomerAddress,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelCustomerPhoneNumber, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerPhoneNumber, textFieldConstraints());
+		panelInfoHolderContentInfo.add(labelCustomerPhoneNumber,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldCustomerPhoneNumber,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelCustomerEmail, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerEmail, textFieldConstraints());
+		panelInfoHolderContentInfo.add(textFieldCustomerEmail,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelCustomerAdditionalInfo, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerAdditionalInfo, lastComponentConstrains());
+		panelInfoHolderContentInfo.add(labelCustomerAdditionalInfo,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldCustomerAdditionalInfo,
+				lastComponentConstrains());
 
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
@@ -339,14 +349,14 @@ public class CustomerPanelImpl implements ICustomerPanel {
 					table.getRowCount() - 1, 1);
 			Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 			populateCustomerFields(customer);
-			
+
 			setTableButtonsEnabled();
-			
+
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-		
+
 		setFieldsNonEditable();
 
 	}
@@ -374,21 +384,21 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerAdditionalInfo.setText(customer
 				.getCustomerAdditionalInfo());
 	}
-	
+
 	public void setFieldsNonEditable() {
 		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		textFieldCustomerName.setEditable(false);
 		textFieldCustomerName.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerAddress.setEditable(false);
-		textFieldCustomerAddress
-				.setBackground(nonEditableTextFieldColor);
+		textFieldCustomerAddress.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerPhoneNumber.setEditable(false);
 		textFieldCustomerPhoneNumber.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerEmail.setEditable(false);
 		textFieldCustomerEmail.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerAdditionalInfo.setEditable(false);
-		textFieldCustomerAdditionalInfo.setBackground(nonEditableTextFieldColor);
+		textFieldCustomerAdditionalInfo
+				.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerId.setEditable(false);
 		textFieldCustomerId.setBackground(nonEditableTextFieldColor);
 	}
@@ -407,7 +417,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerId.setEditable(true);
 		textFieldCustomerId.setBackground(originalTextFieldColor);
 	}
-	
+
 	public GridBagConstraints newConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
@@ -457,22 +467,22 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		return c;
 	}
-	
+
 	public void setTableButtonsEnabled() {
 		buttonEdit.setEnabled(true);
 		buttonDelete.setEnabled(true);
 	}
-	
+
 	public void setTableButtonsDisabled() {
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
 	}
-	
+
 	public void setEditButtonsEnabled() {
 		buttonSave.setEnabled(true);
 		buttonCancel.setEnabled(true);
 	}
-	
+
 	public void setEditButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);

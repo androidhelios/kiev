@@ -79,7 +79,7 @@ public class ProductPanelImpl implements IProductPanel {
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
-	
+
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
 
@@ -105,7 +105,8 @@ public class ProductPanelImpl implements IProductPanel {
 		panelTableHolderContentTable.setLayout(new BorderLayout());
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
-		panelTableHolderContentTable.setBorder(new TitledBorder("Листа на продукти"));
+		panelTableHolderContentTable.setBorder(new TitledBorder(
+				"Листа на продукти"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
@@ -200,7 +201,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductName = new JTextField();
 		textFieldProductName.setBounds(xTextField, y, weightTextField, height);
 		textFieldProductName.setMargin(new Insets(2, 2, 2, 2));
-		
+
 		originalTextFieldColor = textFieldProductName.getBackground();
 
 		y = y + height + spacing;
@@ -278,20 +279,28 @@ public class ProductPanelImpl implements IProductPanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 
-		panelInfoHolderContentInfo.add(labelProductName, firstLabelConstrains());
-		panelInfoHolderContentInfo.add(textFieldProductName, textFieldConstraints());
+		panelInfoHolderContentInfo
+				.add(labelProductName, firstLabelConstrains());
+		panelInfoHolderContentInfo.add(textFieldProductName,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelProductMeasurement, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldProductMeasurement, textFieldConstraints());
+		panelInfoHolderContentInfo.add(labelProductMeasurement,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldProductMeasurement,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelProductTax, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldProductTax, textFieldConstraints());
+		panelInfoHolderContentInfo.add(textFieldProductTax,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelProductPrice, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldProductPrice, textFieldConstraints());
+		panelInfoHolderContentInfo.add(textFieldProductPrice,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelProductAdditionalInfo, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldProductAdditionalInfo, lastComponentConstrains());
+		panelInfoHolderContentInfo.add(labelProductAdditionalInfo,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldProductAdditionalInfo,
+				lastComponentConstrains());
 
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
@@ -336,14 +345,14 @@ public class ProductPanelImpl implements IProductPanel {
 					table.getRowCount() - 1, 1);
 			Product product = getProductFromProductTable(selectedRowProductId);
 			populateProductFields(product);
-			
+
 			setTableButtonsEnabled();
-			
+
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-		
+
 		setFieldsNonEditable();
 
 	}
@@ -371,15 +380,14 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductAdditionalInfo.setText(product
 				.getProductAdditionalInfo());
 	}
-	
+
 	public void setFieldsNonEditable() {
 		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		textFieldProductName.setEditable(false);
 		textFieldProductName.setBackground(nonEditableTextFieldColor);
 		textFieldProductMeasurement.setEditable(false);
-		textFieldProductMeasurement
-				.setBackground(nonEditableTextFieldColor);
+		textFieldProductMeasurement.setBackground(nonEditableTextFieldColor);
 		textFieldProductTax.setEditable(false);
 		textFieldProductTax.setBackground(nonEditableTextFieldColor);
 		textFieldProductPrice.setEditable(false);
@@ -404,7 +412,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setEditable(true);
 		textFieldProductId.setBackground(originalTextFieldColor);
 	}
-	
+
 	public GridBagConstraints newConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
@@ -454,22 +462,22 @@ public class ProductPanelImpl implements IProductPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		return c;
 	}
-	
+
 	public void setTableButtonsEnabled() {
 		buttonEdit.setEnabled(true);
 		buttonDelete.setEnabled(true);
 	}
-	
+
 	public void setTableButtonsDisabled() {
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
 	}
-	
+
 	public void setEditButtonsEnabled() {
 		buttonSave.setEnabled(true);
 		buttonCancel.setEnabled(true);
 	}
-	
+
 	public void setEditButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
