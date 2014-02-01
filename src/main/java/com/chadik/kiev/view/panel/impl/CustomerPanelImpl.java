@@ -262,6 +262,10 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonCancel.setEnabled(false);
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowCustomerId = (String) table.getValueAt(row, 1);
+				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
+				populateCustomerFields(customer);
 				setFieldsNonEditable();
 				setEditButtonsDisabled();
 			}

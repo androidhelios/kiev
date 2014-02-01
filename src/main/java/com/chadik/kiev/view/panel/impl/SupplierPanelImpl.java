@@ -298,6 +298,10 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonCancel.setEnabled(false);
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowSupplierId = (String) table.getValueAt(row, 1);
+				Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
+				populateSupplierFields(supplier);
 				setFieldsNonEditable();
 				setEditButtonsDisabled();
 			}

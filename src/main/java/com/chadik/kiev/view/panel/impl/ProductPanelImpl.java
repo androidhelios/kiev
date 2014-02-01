@@ -260,6 +260,10 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonCancel.setEnabled(false);
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowProductId = (String) table.getValueAt(row, 1);
+				Product product = getProductFromProductTable(selectedRowProductId);
+				populateProductFields(product);
 				setFieldsNonEditable();
 				setEditButtonsDisabled();
 			}
