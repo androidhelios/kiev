@@ -65,47 +65,53 @@ public class OrderItemImpl implements IOrderItemPanel {
 
 	@Override
 	public void populateOrderItemTable() {
-		String selectedRowInvoiceId = "";
-		orderItems = orderItemServiceImpl.findAllOrderItems();
-
-		int i = 0;
-
-		defaultTableModel.setRowCount(0);
-
-		for (OrderItem orderItem : orderItems) {
-			if (orderItem.getInvoice().getInvoiceId())
-			defaultTableModel
-					.addRow(new String[] { Integer.toString(++i),
-							orderItem.getProduct().getProductName(),
-							orderItem.getProduct().getProductMeasurement(),
-							orderItem.getOrderItemQuantity(),
-							orderItem.getOrderItemQuantityPrice(),
-							orderItem.getOrderItemQuantityPriceWithoutTax(),
-							orderItem.getOrderItemTax(),
-							orderItem.getOrderItemQuantityTax(),
-							orderItem.getOrderItemQuantityTaxPrice(),
-							orderItem.getOrderAdditionalInfo() });
-		}
-
-		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
-
-			selectedRowInvoiceId = (String) table.getValueAt(
-					table.getRowCount() - 1, 1);
-			OrderItem orderItem = getSupplierFromSupplierTable(selectedRowInvoiceId);
-			populateSupplierFields(supplier);
-		}
-
-		scrollPaneTable.validate();
-		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+		// TODO Auto-generated method stub
 		
-		setFieldsNonEditable();
 	}
+
+//	@Override
+//	public void populateOrderItemTable() {
+//		String selectedRowInvoiceId = "";
+//		orderItems = orderItemServiceImpl.findAllOrderItems();
+//
+//		int i = 0;
+//
+//		defaultTableModel.setRowCount(0);
+//
+//		for (OrderItem orderItem : orderItems) {
+//			if (orderItem.getInvoice().getInvoiceId())
+//			defaultTableModel
+//					.addRow(new String[] { Integer.toString(++i),
+//							orderItem.getProduct().getProductName(),
+//							orderItem.getProduct().getProductMeasurement(),
+//							orderItem.getOrderItemQuantity(),
+//							orderItem.getOrderItemQuantityPrice(),
+//							orderItem.getOrderItemQuantityPriceWithoutTax(),
+//							orderItem.getOrderItemTax(),
+//							orderItem.getOrderItemQuantityTax(),
+//							orderItem.getOrderItemQuantityTaxPrice(),
+//							orderItem.getOrderAdditionalInfo() });
+//		}
+//
+//		if (table.getRowCount() > 0) {
+//			table.setRowSelectionInterval(table.getRowCount() - 1,
+//					table.getRowCount() - 1);
+//
+//			selectedRowInvoiceId = (String) table.getValueAt(
+//					table.getRowCount() - 1, 1);
+//			OrderItem orderItem = getSupplierFromSupplierTable(selectedRowInvoiceId);
+//			populateSupplierFields(supplier);
+//		}
+//
+//		scrollPaneTable.validate();
+//		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+//		
+//		setFieldsNonEditable();
+//	}
 	
-	public OrderItem getOrderItemFromInvoiceTable(String selectedRowInvoiceId) {
-		BigDecimal invoiceId = new BigDecimal(selectedRowInvoiceId);
-		return invoiceItemServiceImpl.findInvoiceById(invoiceId);
-	}
+//	public OrderItem getOrderItemFromInvoiceTable(String selectedRowInvoiceId) {
+//		BigDecimal invoiceId = new BigDecimal(selectedRowInvoiceId);
+//		return invoiceItemServiceImpl.findInvoiceById(invoiceId);
+//	}
 
 }

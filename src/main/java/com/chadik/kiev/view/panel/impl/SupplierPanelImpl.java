@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.ISupplierService;
+import com.chadik.kiev.util.SpringUtilities;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ISupplierPanel;
@@ -115,7 +120,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelInfoHolderContent.setLayout(new BorderLayout());
 
 		panelInfoHolderContentInfo = new JPanel();
-		panelInfoHolderContentInfo.setLayout(null);
+		panelInfoHolderContentInfo.setLayout(new GridBagLayout());
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
 
 		panelInfoHolderContentButtons = new JPanel();
@@ -285,29 +290,29 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 
-		panelInfoHolderContentInfo.add(labelSupplierName);
-		panelInfoHolderContentInfo.add(labelSupplierRegistryNumber);
+		panelInfoHolderContentInfo.add(labelSupplierName, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierName, newTextFieldConstraints());
+		
+		panelInfoHolderContentInfo.add(labelSupplierRegistryNumber, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierRegistryNumber, newTextFieldConstraints());
 
-		panelInfoHolderContentInfo.add(textFieldSupplierName);
-		panelInfoHolderContentInfo.add(textFieldSupplierRegistryNumber);
+		panelInfoHolderContentInfo.add(labelSupplierBankName, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierBankName, newTextFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierBankName);
-		panelInfoHolderContentInfo.add(textFieldSupplierBankName);
+		panelInfoHolderContentInfo.add(labelSupplierBankAccount, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierBankAccount, newTextFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierBankAccount);
-		panelInfoHolderContentInfo.add(textFieldSupplierBankAccount);
+		panelInfoHolderContentInfo.add(labelSupplierAddress, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierAddress, newTextFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierAddress);
-		panelInfoHolderContentInfo.add(textFieldSupplierAddress);
+		panelInfoHolderContentInfo.add(labelSupplierPhoneNumber, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierPhoneNumber, newTextFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierPhoneNumber);
-		panelInfoHolderContentInfo.add(textFieldSupplierPhoneNumber);
+		panelInfoHolderContentInfo.add(labelSupplierEmail, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierEmail, newTextFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierEmail);
-		panelInfoHolderContentInfo.add(textFieldSupplierEmail);
-
-		panelInfoHolderContentInfo.add(labelSupplierAdditionalInfo);
-		panelInfoHolderContentInfo.add(textFieldSupplierAdditionalInfo);
+		panelInfoHolderContentInfo.add(labelSupplierAdditionalInfo, newLabelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierAdditionalInfo, newTextFieldConstraints());
 
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
@@ -436,5 +441,27 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierId.setEditable(true);
 		textFieldSupplierId.setBackground(originalTextFieldColor);
 	}
+	
+    private GridBagConstraints newConstraints() {
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(2, 2, 2, 2);
+        return c;
+    }
+
+    private GridBagConstraints newLabelConstraints() {
+        GridBagConstraints c = newConstraints();
+        c.anchor = GridBagConstraints.BASELINE_LEADING;
+        c.weightx = 0.0;
+        return c;
+    }
+
+    private GridBagConstraints newTextFieldConstraints() {
+        GridBagConstraints c = newConstraints();
+        c.anchor = GridBagConstraints.BASELINE;
+        c.weightx=1.0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        return c;
+    }
 
 }
