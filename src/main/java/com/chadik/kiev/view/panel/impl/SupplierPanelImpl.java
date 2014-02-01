@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,8 +23,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.ISupplierService;
-import com.chadik.kiev.util.SpringUtilities;
+import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ISupplierPanel;
@@ -83,7 +85,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	private JButton buttonDelete;
 	private JButton buttonSave;
 	private JButton buttonCancel;
-	
+
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
 
@@ -108,13 +110,17 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelTableHolderContentTable = new JPanel();
 		panelTableHolderContentTable.setLayout(new BorderLayout());
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
+		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
+		panelTableHolderContentTable.setBorder(new TitledBorder("Листа на корисници"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
 		panelTableHolderContentButtons.setPreferredSize(new Dimension(400, 50));
+		panelTableHolderContentButtons.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		panelInfoHolder = new JPanel();
 		panelInfoHolder.setLayout(new BorderLayout());
+		panelInfoHolder.setBackground(new Color(224, 224, 224));
 
 		panelInfoHolderContent = new JPanel();
 		panelInfoHolderContent.setLayout(new BorderLayout());
@@ -122,10 +128,15 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelInfoHolderContentInfo = new JPanel();
 		panelInfoHolderContentInfo.setLayout(new GridBagLayout());
 		panelInfoHolderContentInfo.setPreferredSize(new Dimension(400, 550));
+		panelInfoHolderContentInfo.setBackground(new Color(192, 192, 192));
+		panelInfoHolderContentInfo.setBorder(BorderFactory
+				.createCompoundBorder(new EmptyBorder(10, 10, 10, 10),
+						new EtchedBorder()));
 
 		panelInfoHolderContentButtons = new JPanel();
 		panelInfoHolderContentButtons.setLayout(new FlowLayout());
 		panelInfoHolderContentButtons.setPreferredSize(new Dimension(400, 50));
+		panelInfoHolderContentButtons.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		defaultTableModel = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
@@ -139,9 +150,11 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
-				String selectedRowSupplierId = (String) table.getValueAt(row, 1);
+				String selectedRowSupplierId = (String) table
+						.getValueAt(row, 1);
 				Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 				populateSupplierFields(supplier);
+				setEditButtonsDisabled();
 			}
 		});
 
@@ -162,19 +175,23 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				supplierDialogImpl.initSupplierDialog();
+				setEditButtonsDisabled();
 			}
 		});
 
 		buttonEdit = new JButton("Измени");
 		buttonEdit.setPreferredSize(new Dimension(100, 25));
+		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setFieldsEditable();
+				setEditButtonsEnabled();
 			}
 		});
 
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
+		buttonDelete.setEnabled(false);
 
 		int spacing = 5;
 		int weightLabel = 125;
@@ -190,7 +207,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierName = new JTextField();
 		textFieldSupplierName.setBounds(xTextField, y, weightTextField, height);
 		textFieldSupplierName.setMargin(new Insets(2, 2, 2, 2));
-		
+
 		originalTextFieldColor = textFieldSupplierName.getBackground();
 
 		y = y + height + spacing;
@@ -199,8 +216,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		labelSupplierRegistryNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldSupplierRegistryNumber = new JTextField();
-		textFieldSupplierRegistryNumber.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldSupplierRegistryNumber.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldSupplierRegistryNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -229,8 +246,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		labelSupplierAddress.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldSupplierAddress = new JTextField();
-		textFieldSupplierAddress
-				.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierAddress.setBounds(xTextField, y, weightTextField,
+				height);
 		textFieldSupplierAddress.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -249,7 +266,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		labelSupplierEmail.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldSupplierEmail = new JTextField();
-		textFieldSupplierEmail.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierEmail
+				.setBounds(xTextField, y, weightTextField, height);
 		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -258,8 +276,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		labelSupplierAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldSupplierAdditionalInfo = new JTextField();
-		textFieldSupplierAdditionalInfo.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldSupplierAdditionalInfo.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldSupplierAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -273,15 +291,24 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
+		buttonSave.setEnabled(false);
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
+		buttonCancel.setEnabled(false);
+		buttonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setFieldsNonEditable();
+				setEditButtonsDisabled();
+			}
+		});
 
 		panelTableHolderContentTable.add(scrollPaneTable);
 
-		panelTableHolderContentButtons.add(buttonDelete);
-		panelTableHolderContentButtons.add(buttonEdit);
 		panelTableHolderContentButtons.add(buttonNew);
+		panelTableHolderContentButtons.add(buttonEdit);
+		panelTableHolderContentButtons.add(PanelUtil.createJSeparator());
+		panelTableHolderContentButtons.add(buttonDelete);
 
 		panelTableHolderContent.add(panelTableHolderContentTable,
 				BorderLayout.CENTER);
@@ -290,29 +317,44 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 
-		panelInfoHolderContentInfo.add(labelSupplierName, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierName, newTextFieldConstraints());
-		
-		panelInfoHolderContentInfo.add(labelSupplierRegistryNumber, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierRegistryNumber, newTextFieldConstraints());
+		panelInfoHolderContentInfo.add(labelSupplierName,
+				firstLabelConstrains());
+		panelInfoHolderContentInfo.add(textFieldSupplierName,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierBankName, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierBankName, newTextFieldConstraints());
+		panelInfoHolderContentInfo.add(labelSupplierRegistryNumber,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierRegistryNumber,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierBankAccount, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierBankAccount, newTextFieldConstraints());
+		panelInfoHolderContentInfo.add(labelSupplierBankName,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierBankName,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierAddress, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierAddress, newTextFieldConstraints());
+		panelInfoHolderContentInfo.add(labelSupplierBankAccount,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierBankAccount,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierPhoneNumber, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierPhoneNumber, newTextFieldConstraints());
+		panelInfoHolderContentInfo
+				.add(labelSupplierAddress, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierAddress,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierEmail, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierEmail, newTextFieldConstraints());
+		panelInfoHolderContentInfo.add(labelSupplierPhoneNumber,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierPhoneNumber,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelSupplierAdditionalInfo, newLabelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierAdditionalInfo, newTextFieldConstraints());
+		panelInfoHolderContentInfo.add(labelSupplierEmail, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierEmail,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfo.add(labelSupplierAdditionalInfo,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierAdditionalInfo,
+				lastComponentConstrains());
 
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
@@ -341,17 +383,16 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		defaultTableModel.setRowCount(0);
 
 		for (Supplier supplier : suppliers) {
-			defaultTableModel
-					.addRow(new String[] { Integer.toString(++i),
-							supplier.getSupplierId().toString(),
-							supplier.getSupplierName(),
-							supplier.getSupplierRegistryNumber(),
-							supplier.getSupplierBankName(),
-							supplier.getSupplierBankAccount(),
-							supplier.getSupplierAddress(),
-							supplier.getSupplierPhoneNumber(),
-							supplier.getSupplierEmail(),
-							supplier.getSupplierAdditionalInfo() });
+			defaultTableModel.addRow(new String[] { Integer.toString(++i),
+					supplier.getSupplierId().toString(),
+					supplier.getSupplierName(),
+					supplier.getSupplierRegistryNumber(),
+					supplier.getSupplierBankName(),
+					supplier.getSupplierBankAccount(),
+					supplier.getSupplierAddress(),
+					supplier.getSupplierPhoneNumber(),
+					supplier.getSupplierEmail(),
+					supplier.getSupplierAdditionalInfo() });
 		}
 
 		if (table.getRowCount() > 0) {
@@ -362,11 +403,14 @@ public class SupplierPanelImpl implements ISupplierPanel {
 					table.getRowCount() - 1, 1);
 			Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 			populateSupplierFields(supplier);
+			
+			setTableButtonsEnabled();
+			
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-		
+
 		setFieldsNonEditable();
 
 	}
@@ -389,22 +433,25 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	public void populateSupplierFields(Supplier supplier) {
 		textFieldSupplierId.setText(supplier.getSupplierId().toString());
 		textFieldSupplierName.setText(supplier.getSupplierName());
-		textFieldSupplierRegistryNumber.setText(supplier.getSupplierRegistryNumber());
+		textFieldSupplierRegistryNumber.setText(supplier
+				.getSupplierRegistryNumber());
 		textFieldSupplierBankName.setText(supplier.getSupplierBankName());
 		textFieldSupplierBankAccount.setText(supplier.getSupplierBankAccount());
 		textFieldSupplierAddress.setText(supplier.getSupplierAddress());
 		textFieldSupplierPhoneNumber.setText(supplier.getSupplierPhoneNumber());
 		textFieldSupplierEmail.setText(supplier.getSupplierEmail());
-		textFieldSupplierAdditionalInfo.setText(supplier.getSupplierAdditionalInfo());
+		textFieldSupplierAdditionalInfo.setText(supplier
+				.getSupplierAdditionalInfo());
 	}
-	
+
 	public void setFieldsNonEditable() {
 		nonEditableTextFieldColor = new Color(255, 255, 204);
-		
+
 		textFieldSupplierName.setEditable(false);
 		textFieldSupplierName.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierRegistryNumber.setEditable(false);
-		textFieldSupplierRegistryNumber.setBackground(nonEditableTextFieldColor);
+		textFieldSupplierRegistryNumber
+				.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierBankName.setEditable(false);
 		textFieldSupplierBankName.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierBankAccount.setEditable(false);
@@ -416,11 +463,12 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierEmail.setEditable(false);
 		textFieldSupplierEmail.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierAdditionalInfo.setEditable(false);
-		textFieldSupplierAdditionalInfo.setBackground(nonEditableTextFieldColor);
+		textFieldSupplierAdditionalInfo
+				.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierId.setEditable(false);
 		textFieldSupplierId.setBackground(nonEditableTextFieldColor);
 	}
-	
+
 	public void setFieldsEditable() {
 		textFieldSupplierName.setEditable(true);
 		textFieldSupplierName.setBackground(originalTextFieldColor);
@@ -441,27 +489,75 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierId.setEditable(true);
 		textFieldSupplierId.setBackground(originalTextFieldColor);
 	}
+
+	public GridBagConstraints newConstraints() {
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(4, 10, 4, 10);
+		return c;
+	}
+
+	public GridBagConstraints labelConstraints() {
+		GridBagConstraints c = newConstraints();
+		c.anchor = GridBagConstraints.BASELINE_LEADING;
+		c.weightx = 0.0;
+		return c;
+	}
+
+	public GridBagConstraints textFieldConstraints() {
+		GridBagConstraints c = newConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		return c;
+	}
+
+	public GridBagConstraints lastComponentConstrains() {
+		GridBagConstraints c = newConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weighty = 1.0;
+		return c;
+	}
+
+	public GridBagConstraints firstLabelConstrains() {
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(15, 10, 0, 0);
+		c.anchor = GridBagConstraints.BASELINE_LEADING;
+		c.weightx = 0.0;
+		return c;
+	}
+
+	public GridBagConstraints firstTextFieldConstrains() {
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(10, 4, 4, 4);
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		return c;
+	}
 	
-    private GridBagConstraints newConstraints() {
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(2, 2, 2, 2);
-        return c;
-    }
-
-    private GridBagConstraints newLabelConstraints() {
-        GridBagConstraints c = newConstraints();
-        c.anchor = GridBagConstraints.BASELINE_LEADING;
-        c.weightx = 0.0;
-        return c;
-    }
-
-    private GridBagConstraints newTextFieldConstraints() {
-        GridBagConstraints c = newConstraints();
-        c.anchor = GridBagConstraints.BASELINE;
-        c.weightx=1.0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        return c;
-    }
+	public void setTableButtonsEnabled() {
+		buttonEdit.setEnabled(true);
+		buttonDelete.setEnabled(true);
+	}
+	
+	public void setTableButtonsDisabled() {
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+	}
+	
+	public void setEditButtonsEnabled() {
+		buttonSave.setEnabled(true);
+		buttonCancel.setEnabled(true);
+	}
+	
+	public void setEditButtonsDisabled() {
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+	}
 
 }

@@ -68,7 +68,7 @@ public class FrameMain {
 		
 		menuBar.add(menuFile);
 		
-		menuItemInvoice = new JMenuItem("Фактури");
+		menuItemInvoice = new JMenuItem("Увид на фактури");
 		menuItemInvoice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane, invoicePanelImpl.initInvoicePanel(), BorderLayout.CENTER);
@@ -76,7 +76,7 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemSupplier = new JMenuItem("Корисници");
+		menuItemSupplier = new JMenuItem("Увид на корисници");
 		menuItemSupplier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane, supplierPanelImpl.initSupplierPanel(), BorderLayout.CENTER);
@@ -84,7 +84,7 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemProduct = new JMenuItem("Продукти");
+		menuItemProduct = new JMenuItem("Увид на продукти");
 		menuItemProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane, productPanelImpl.initProductPanel(), BorderLayout.CENTER);
@@ -92,7 +92,7 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemCustomer = new JMenuItem("Клиенти");
+		menuItemCustomer = new JMenuItem("Увид на клиенти");
 		menuItemCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane, customerPanelImpl.initCustomerPanel(), BorderLayout.CENTER);
