@@ -264,7 +264,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceNumber = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceNumber = new JLabel("Број на фактура:");
 		labelInvoiceNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceNumber = new JTextField();
@@ -273,7 +273,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceSerialNumber = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceSerialNumber = new JLabel("Сериски број на фактура:");
 		labelInvoiceSerialNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceSerialNumber = new JTextField();
@@ -282,7 +282,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceDate = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceDate = new JLabel("Датум на фактура:");
 		labelInvoiceDate.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDate = new JTextField();
@@ -291,7 +291,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceDeliveryDate = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceDeliveryDate = new JLabel("Delivery date:");
 		labelInvoiceDeliveryDate.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryDate = new JTextField();
@@ -300,7 +300,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceDeliveryNumber = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceDeliveryNumber = new JLabel("Delivery number:");
 		labelInvoiceDeliveryNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryNumber = new JTextField();
@@ -309,7 +309,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceTotalPrice = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceTotalPrice = new JLabel("Нејасно 3:");
 		labelInvoiceTotalPrice.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceTotalPrice = new JTextField();
@@ -318,7 +318,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceTotalTax = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceTotalTax = new JLabel("Нејасно 2:");
 		labelInvoiceTotalTax.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceTotalTax = new JTextField();
@@ -327,7 +327,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceTotalPriceTax = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceTotalPriceTax = new JLabel("Нејасно 1:");
 		labelInvoiceTotalPriceTax.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceTotalPriceTax = new JTextField();
@@ -336,7 +336,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceAdditionalInfo = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceAdditionalInfo = new JLabel("Дополнителни информации фактура:");
 		labelInvoiceAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceAdditionalInfo = new JTextField();
@@ -345,7 +345,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;	
 		
-		labelInvoiceCustomerId = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceCustomerId = new JLabel("Клиент ID:");
 		labelInvoiceCustomerId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceCustomerId = new JTextField();
@@ -354,7 +354,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 		
-		labelInvoiceSupplierId = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceSupplierId = new JLabel("Корисник ID:");
 		labelInvoiceSupplierId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceSupplierId = new JTextField();
@@ -363,7 +363,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;		
 		
-		labelInvoiceId = new JLabel("Дополнителни информации за клиент:");
+		labelInvoiceId = new JLabel("Фактура ID:");
 		labelInvoiceId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceId = new JTextField();
