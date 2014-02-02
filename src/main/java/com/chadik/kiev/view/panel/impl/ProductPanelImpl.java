@@ -367,7 +367,7 @@ public class ProductPanelImpl implements IProductPanel {
 	}
 
 	public String[] getTableProductColumnNames() {
-		return new String[] { "Реден Бр.", "Id", "Назив", "Единица Мерка",
+		return new String[] { "Реден Бр.", "Id", "Назив", "Мерна Единица",
 				"Данок", "Цена", "Забелешки" };
 	}
 
