@@ -29,6 +29,7 @@ import com.chadik.kiev.model.Invoice;
 import com.chadik.kiev.service.IInvoiceService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
+import com.chadik.kiev.view.dialog.IInvoiceDialog;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.IInvoicePanel;
 import com.chadik.kiev.view.panel.IOrderItemPanel;
@@ -100,7 +101,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	@Autowired
 	private IInvoiceService invoiceServiceImpl;
 	@Autowired
-	private ISupplierDialog supplierDialogImpl;
+	private IInvoiceDialog invoiceDialogImpl;
 	@Autowired
 	private IOrderItemPanel orderItemPanelImpl;
 
@@ -181,7 +182,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonNew.setPreferredSize(new Dimension(100, 25));
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				supplierDialogImpl.initSupplierDialog();
+				invoiceDialogImpl.initInvoiceDialog();
 			}
 		});
 
@@ -319,7 +320,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonAddProduct.setPreferredSize(new Dimension(100, 25));
 		buttonAddProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				supplierDialogImpl.initSupplierDialog();
+				invoiceDialogImpl.initInvoiceDialog();
 			}
 		});
 
