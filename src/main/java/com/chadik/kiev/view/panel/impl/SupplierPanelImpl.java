@@ -111,7 +111,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelTableHolderContentTable.setLayout(new BorderLayout());
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
-		panelTableHolderContentTable.setBorder(new TitledBorder("Листа на корисници"));
+		panelTableHolderContentTable.setBorder(new TitledBorder(
+				"Листа на корисници"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
@@ -292,6 +293,11 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.setEnabled(false);
+		buttonSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveSupplier();
+			}
+		});
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
@@ -299,7 +305,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
-				String selectedRowSupplierId = (String) table.getValueAt(row, 1);
+				String selectedRowSupplierId = (String) table
+						.getValueAt(row, 1);
 				Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 				populateSupplierFields(supplier);
 				setFieldsNonEditable();
@@ -407,9 +414,9 @@ public class SupplierPanelImpl implements ISupplierPanel {
 					table.getRowCount() - 1, 1);
 			Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 			populateSupplierFields(supplier);
-			
+
 			setTableButtonsEnabled();
-			
+
 		}
 
 		scrollPaneTable.validate();
@@ -432,6 +439,24 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	public Supplier getSupplierFromSupplierTable(String selectedRowSupplierId) {
 		BigDecimal supplierId = new BigDecimal(selectedRowSupplierId);
 		return supplierServiceImpl.findSupplierById(supplierId);
+	}
+
+	public Supplier getSupplierFromSupplierFields() {
+		int row = table.getSelectedRow();
+		String selectedRowSupplierId = (String) table.getValueAt(row, 1);
+		Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
+		supplier.setSupplierName(textFieldSupplierName.getText());
+		supplier.setSupplierRegistryNumber(textFieldSupplierRegistryNumber
+				.getText());
+		supplier.setSupplierBankName(textFieldSupplierBankName.getText());
+		supplier.setSupplierBankAccount(textFieldSupplierBankAccount.getText());
+		supplier.setSupplierAddress(textFieldSupplierAddress.getText());
+		supplier.setSupplierPhoneNumber(textFieldSupplierPhoneNumber.getText());
+		supplier.setSupplierEmail(textFieldSupplierEmail.getText());
+		supplier.setSupplierAdditionalInfo(textFieldSupplierAdditionalInfo
+				.getText());
+
+		return supplier;
 	}
 
 	public void populateSupplierFields(Supplier supplier) {
@@ -494,6 +519,13 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierId.setBackground(originalTextFieldColor);
 	}
 
+	public void saveSupplier() {
+		Supplier supplier = getSupplierFromSupplierFields();
+		supplierServiceImpl.saveSupplier(supplier);
+		setFieldsNonEditable();
+		setEditButtonsDisabled();
+	}
+
 	public GridBagConstraints newConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
@@ -543,22 +575,22 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		return c;
 	}
-	
+
 	public void setTableButtonsEnabled() {
 		buttonEdit.setEnabled(true);
 		buttonDelete.setEnabled(true);
 	}
-	
+
 	public void setTableButtonsDisabled() {
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
 	}
-	
+
 	public void setEditButtonsEnabled() {
 		buttonSave.setEnabled(true);
 		buttonCancel.setEnabled(true);
 	}
-	
+
 	public void setEditButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);

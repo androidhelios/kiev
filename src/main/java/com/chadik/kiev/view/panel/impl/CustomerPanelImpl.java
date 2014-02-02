@@ -256,6 +256,11 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.setEnabled(false);
+		buttonSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveCustomer();
+			}
+		});
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
@@ -263,7 +268,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
-				String selectedRowCustomerId = (String) table.getValueAt(row, 1);
+				String selectedRowCustomerId = (String) table
+						.getValueAt(row, 1);
 				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 				populateCustomerFields(customer);
 				setFieldsNonEditable();
@@ -379,6 +385,20 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		return customerServiceImpl.findCustomerById(customerId);
 	}
 
+	public Customer getCustomerFromCustomerFields() {
+		int row = table.getSelectedRow();
+		String selectedRowCustomerId = (String) table.getValueAt(row, 1);
+		Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
+		customer.setCustomerName(textFieldCustomerName.getText());
+		customer.setCustomerAddress(textFieldCustomerAddress.getText());
+		customer.setCustomerPhoneNumber(textFieldCustomerPhoneNumber.getText());
+		customer.setCustomerEmail(textFieldCustomerEmail.getText());
+		customer.setCustomerAdditionalInfo(textFieldCustomerAdditionalInfo
+				.getText());
+
+		return customer;
+	}
+
 	public void populateCustomerFields(Customer customer) {
 		textFieldCustomerId.setText(customer.getCustomerId().toString());
 		textFieldCustomerName.setText(customer.getCustomerName());
@@ -420,6 +440,13 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerAdditionalInfo.setBackground(originalTextFieldColor);
 		textFieldCustomerId.setEditable(true);
 		textFieldCustomerId.setBackground(originalTextFieldColor);
+	}
+
+	public void saveCustomer() {
+		Customer customer = getCustomerFromCustomerFields();
+		customerServiceImpl.saveCustomer(customer);
+		setFieldsNonEditable();
+		setEditButtonsDisabled();
 	}
 
 	public GridBagConstraints newConstraints() {

@@ -1,16 +1,20 @@
 package com.chadik.kiev.view.dialog.impl;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,9 +80,13 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		panelFields = new JPanel();
 		panelFields.setLayout(new BorderLayout());
+		panelFields.setBorder(BorderFactory
+				.createCompoundBorder(new EmptyBorder(10, 10, 10, 10),
+						new EtchedBorder()));
 
 		panelFieldsContent = new JPanel();
 		panelFieldsContent.setLayout(null);
+		panelFieldsContent.setBackground(new Color(192, 192, 192));
 		panelFieldsContent.setPreferredSize(new Dimension(400, 300));
 
 		panelButtons = new JPanel();
@@ -231,7 +239,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		return dialog;
 	}
 
-	public Supplier getSupplierFromFields() {
+	public Supplier getSupplierFromSupplierFields() {
 		Supplier supplier = new Supplier();
 		supplier.setSupplierName(textFieldSupplierName.getText());
 		supplier.setSupplierRegistryNumber(textFieldSupplierRegistryNumber.getText());
@@ -246,7 +254,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 	}
 
 	public void saveSupplierAndDispose() {
-		Supplier supplier = getSupplierFromFields();
+		Supplier supplier = getSupplierFromSupplierFields();
 		supplierServiceImpl.saveSupplier(supplier);
 		dialog.dispose();
 		supplierPanelImpl.populateSupplierTable();

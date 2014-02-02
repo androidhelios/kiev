@@ -254,6 +254,11 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.setEnabled(false);
+		buttonSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveProduct();
+			}
+		});
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
@@ -375,6 +380,20 @@ public class ProductPanelImpl implements IProductPanel {
 		return productServiceImpl.findProductById(productId);
 	}
 
+	public Product getProductFromProductFields() {
+		int row = table.getSelectedRow();
+		String selectedRowProductId = (String) table.getValueAt(row, 1);
+		Product product = getProductFromProductTable(selectedRowProductId);
+		product.setProductName(textFieldProductName.getText());
+		product.setProductMeasurement(textFieldProductMeasurement.getText());
+		product.setProductTax(textFieldProductTax.getText());
+		product.setProductPrice(textFieldProductPrice.getText());
+		product.setProductAdditionalInfo(textFieldProductAdditionalInfo
+				.getText());
+
+		return product;
+	}
+
 	public void populateProductFields(Product product) {
 		textFieldProductId.setText(product.getProductId().toString());
 		textFieldProductName.setText(product.getProductName());
@@ -415,6 +434,13 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductAdditionalInfo.setBackground(originalTextFieldColor);
 		textFieldProductId.setEditable(true);
 		textFieldProductId.setBackground(originalTextFieldColor);
+	}
+
+	public void saveProduct() {
+		Product product = getProductFromProductFields();
+		productServiceImpl.saveProduct(product);
+		setFieldsNonEditable();
+		setEditButtonsDisabled();
 	}
 
 	public GridBagConstraints newConstraints() {
