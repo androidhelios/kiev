@@ -106,7 +106,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
 		panelTableHolderContentTable.setBorder(new TitledBorder(
-				"Листа на продукти"));
+				"Листа на клиенти"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
