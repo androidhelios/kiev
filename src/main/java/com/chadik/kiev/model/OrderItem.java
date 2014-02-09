@@ -118,5 +118,6 @@ public class OrderItem implements Serializable {
 	public void setOrderAdditionalInfo(String orderAdditionalInfo) {
 		this.orderAdditionalInfo = orderAdditionalInfo;
 	}
+	
 
 }
