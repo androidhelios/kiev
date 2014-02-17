@@ -41,6 +41,7 @@ public class ProductDialogImpl implements IProductDialog {
 	private JLabel labelProductMeasurement;
 	private JLabel labelProductTax;
 	private JLabel labelProductPrice;
+	private JLabel labelProductTaxPrice;
 	private JLabel labelProductAdditionalInfo;
 
 	private JTextField textFieldProductId;
@@ -48,6 +49,7 @@ public class ProductDialogImpl implements IProductDialog {
 	private JTextField textFieldProductMeasurement;
 	private JTextField textFieldProductTax;
 	private JTextField textFieldProductPrice;
+	private JTextField textFieldProductTaxPrice;
 	private JTextField textFieldProductAdditionalInfo;
 
 	private JButton buttonSave;
@@ -130,6 +132,14 @@ public class ProductDialogImpl implements IProductDialog {
 		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
 
 		y = y + height + spacing;
+		
+		labelProductTaxPrice = new JLabel("Цена со данок:");
+		labelProductTaxPrice.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldProductTaxPrice = new JTextField();
+		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField, height);
+
+		y = y + height + spacing;
 
 		labelProductAdditionalInfo = new JLabel("Забелешки:");
 		labelProductAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
@@ -173,6 +183,9 @@ public class ProductDialogImpl implements IProductDialog {
 
 		panelFieldsContent.add(labelProductPrice);
 		panelFieldsContent.add(textFieldProductPrice);
+		
+		panelFieldsContent.add(labelProductTaxPrice);
+		panelFieldsContent.add(textFieldProductTaxPrice);
 
 		panelFieldsContent.add(labelProductAdditionalInfo);
 		panelFieldsContent.add(textFieldProductAdditionalInfo);
@@ -203,6 +216,7 @@ public class ProductDialogImpl implements IProductDialog {
 		product.setProductMeasurement(textFieldProductMeasurement.getText());
 		product.setProductTax(textFieldProductTax.getText());
 		product.setProductPrice(textFieldProductPrice.getText());
+		product.setProductTaxPrice(textFieldProductTaxPrice.getText());
 		product.setProductAdditionalInfo(textFieldProductAdditionalInfo
 				.getText());
 

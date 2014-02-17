@@ -203,6 +203,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerName.setMargin(new Insets(2, 2, 2, 2));
 
 		originalTextFieldColor = textFieldCustomerName.getBackground();
+		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		y = y + height + spacing;
 
@@ -410,8 +411,6 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	}
 
 	public void setFieldsNonEditable() {
-		nonEditableTextFieldColor = new Color(255, 255, 204);
-
 		textFieldCustomerName.setEditable(false);
 		textFieldCustomerName.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerAddress.setEditable(false);

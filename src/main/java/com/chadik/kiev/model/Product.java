@@ -25,6 +25,8 @@ public class Product implements Serializable {
 	private String productTax;
 	@NotNull(message = "Полето цена на продуктот не е пополнето")
 	private String productPrice;
+	@NotNull(message = "Полето цена на продуктот со данок не е пополнето")
+	private String productTaxPrice;
 	private String productAdditionalInfo;
 	@OneToMany(mappedBy = "product")
 	@Valid
@@ -68,6 +70,14 @@ public class Product implements Serializable {
 
 	public void setProductPrice(String productPrice) {
 		this.productPrice = productPrice;
+	}
+	
+	public String getProductTaxPrice() {
+		return productTaxPrice;
+	}
+
+	public void setProductTaxPrice(String productTaxPrice) {
+		this.productTaxPrice = productTaxPrice;
 	}
 
 	public String getProductAdditionalInfo() {

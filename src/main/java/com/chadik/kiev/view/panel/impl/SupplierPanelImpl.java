@@ -210,6 +210,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierName.setMargin(new Insets(2, 2, 2, 2));
 
 		originalTextFieldColor = textFieldSupplierName.getBackground();
+		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		y = y + height + spacing;
 
@@ -474,8 +475,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	}
 
 	public void setFieldsNonEditable() {
-		nonEditableTextFieldColor = new Color(255, 255, 204);
-
 		textFieldSupplierName.setEditable(false);
 		textFieldSupplierName.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierRegistryNumber.setEditable(false);

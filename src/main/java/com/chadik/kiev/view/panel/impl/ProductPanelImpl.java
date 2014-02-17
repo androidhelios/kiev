@@ -65,6 +65,7 @@ public class ProductPanelImpl implements IProductPanel {
 	private JLabel labelProductMeasurement;
 	private JLabel labelProductTax;
 	private JLabel labelProductPrice;
+	private JLabel labelProductTaxPrice;
 	private JLabel labelProductAdditionalInfo;
 
 	private JTextField textFieldProductId;
@@ -72,6 +73,7 @@ public class ProductPanelImpl implements IProductPanel {
 	private JTextField textFieldProductMeasurement;
 	private JTextField textFieldProductTax;
 	private JTextField textFieldProductPrice;
+	private JTextField textFieldProductTaxPrice;
 	private JTextField textFieldProductAdditionalInfo;
 
 	private JButton buttonNew;
@@ -203,6 +205,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductName.setMargin(new Insets(2, 2, 2, 2));
 
 		originalTextFieldColor = textFieldProductName.getBackground();
+		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		y = y + height + spacing;
 
@@ -225,12 +228,21 @@ public class ProductPanelImpl implements IProductPanel {
 
 		y = y + height + spacing;
 
-		labelProductPrice = new JLabel("Цена:");
+		labelProductPrice = new JLabel("Цена без данок:");
 		labelProductPrice.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldProductPrice = new JTextField();
 		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
 		textFieldProductPrice.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+		
+		labelProductTaxPrice = new JLabel("Цена со данок:");
+		labelProductTaxPrice.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldProductTaxPrice = new JTextField();
+		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTaxPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -305,6 +317,10 @@ public class ProductPanelImpl implements IProductPanel {
 		panelInfoHolderContentInfo.add(labelProductPrice, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldProductPrice,
 				textFieldConstraints());
+		
+		panelInfoHolderContentInfo.add(labelProductTaxPrice, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldProductTaxPrice,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelProductAdditionalInfo,
 				labelConstraints());
@@ -343,6 +359,7 @@ public class ProductPanelImpl implements IProductPanel {
 					product.getProductId().toString(),
 					product.getProductName(), product.getProductMeasurement(),
 					product.getProductTax(), product.getProductPrice(),
+					product.getProductTaxPrice(),
 					product.getProductAdditionalInfo() });
 		}
 
@@ -368,11 +385,11 @@ public class ProductPanelImpl implements IProductPanel {
 
 	public String[] getTableProductColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Мерна Единица",
-				"Данок", "Цена", "Забелешки" };
+				"Данок", "Цена без данок", "Цена со данок", "Забелешки" };
 	}
 
 	public int[] getTableProductHiddenColumns() {
-		return new int[] { 1, 4, 5, 6 };
+		return new int[] { 1, 4, 5, 6, 7 };
 	}
 
 	public Product getProductFromProductTable(String selectedRowProductId) {
@@ -388,6 +405,7 @@ public class ProductPanelImpl implements IProductPanel {
 		product.setProductMeasurement(textFieldProductMeasurement.getText());
 		product.setProductTax(textFieldProductTax.getText());
 		product.setProductPrice(textFieldProductPrice.getText());
+		product.setProductTaxPrice(textFieldProductTaxPrice.getText());
 		product.setProductAdditionalInfo(textFieldProductAdditionalInfo
 				.getText());
 
@@ -400,13 +418,12 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductMeasurement.setText(product.getProductMeasurement());
 		textFieldProductTax.setText(product.getProductTax());
 		textFieldProductPrice.setText(product.getProductPrice());
+		textFieldProductTaxPrice.setText(product.getProductTaxPrice());
 		textFieldProductAdditionalInfo.setText(product
 				.getProductAdditionalInfo());
 	}
 
 	public void setFieldsNonEditable() {
-		nonEditableTextFieldColor = new Color(255, 255, 204);
-
 		textFieldProductName.setEditable(false);
 		textFieldProductName.setBackground(nonEditableTextFieldColor);
 		textFieldProductMeasurement.setEditable(false);
@@ -415,6 +432,8 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductTax.setBackground(nonEditableTextFieldColor);
 		textFieldProductPrice.setEditable(false);
 		textFieldProductPrice.setBackground(nonEditableTextFieldColor);
+		textFieldProductTaxPrice.setEditable(false);
+		textFieldProductTaxPrice.setBackground(nonEditableTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(false);
 		textFieldProductAdditionalInfo.setBackground(nonEditableTextFieldColor);
 		textFieldProductId.setEditable(false);
@@ -430,6 +449,8 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductTax.setBackground(originalTextFieldColor);
 		textFieldProductPrice.setEditable(true);
 		textFieldProductPrice.setBackground(originalTextFieldColor);
+		textFieldProductTaxPrice.setEditable(true);
+		textFieldProductTaxPrice.setBackground(originalTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(true);
 		textFieldProductAdditionalInfo.setBackground(originalTextFieldColor);
 		textFieldProductId.setEditable(true);

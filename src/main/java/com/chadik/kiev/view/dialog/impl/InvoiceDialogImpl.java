@@ -65,6 +65,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	private JLabel labelInvoiceTotalPrice;
 	private JLabel labelInvoiceTotalTax;
 	private JLabel labelInvoiceTotalPriceTax;
+	private JLabel labelInvoicePaymentInfo;
 	private JLabel labelInvoiceAdditionalInfo;
 
 	private JTextField textFieldInvoiceId;
@@ -91,6 +92,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	private JTextField textFieldInvoiceTotalPrice;
 	private JTextField textFieldInvoiceTotalTax;
 	private JTextField textFieldInvoiceTotalPriceTax;
+	private JTextField textFieldInvoicePaymentInfo;
 	private JTextField textFieldInvoiceAdditionalInfo;
 	
 	private JScrollPane scrollPanePanelFieldsContent;
