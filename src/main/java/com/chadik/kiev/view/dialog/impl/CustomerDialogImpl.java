@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,7 +30,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 
 	private JDialog dialog;
 	private JPanel contentPane;
-	
+
 	private JPanel panelAll;
 	private JPanel panelFields;
 	private JPanel panelFieldsContent;
@@ -74,9 +75,8 @@ public class CustomerDialogImpl implements ICustomerDialog {
 
 		panelFields = new JPanel();
 		panelFields.setLayout(new BorderLayout());
-		panelFields.setBorder(BorderFactory
-				.createCompoundBorder(new EmptyBorder(10, 10, 10, 10),
-						new EtchedBorder()));
+		panelFields.setBorder(BorderFactory.createCompoundBorder(
+				new EmptyBorder(10, 10, 10, 10), new EtchedBorder()));
 
 		panelFieldsContent = new JPanel();
 		panelFieldsContent.setLayout(null);
@@ -103,6 +103,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 
 		textFieldCustomerName = new JTextField();
 		textFieldCustomerName.setBounds(xTextField, y, weightTextField, height);
+		textFieldCustomerName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -112,6 +113,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		textFieldCustomerAddress = new JTextField();
 		textFieldCustomerAddress.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldCustomerAddress.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -121,6 +123,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		textFieldCustomerPhoneNumber = new JTextField();
 		textFieldCustomerPhoneNumber.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldCustomerPhoneNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -130,6 +133,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		textFieldCustomerEmail = new JTextField();
 		textFieldCustomerEmail
 				.setBounds(xTextField, y, weightTextField, height);
+		textFieldCustomerEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -139,6 +143,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		textFieldCustomerAdditionalInfo = new JTextField();
 		textFieldCustomerAdditionalInfo.setBounds(xTextField, y,
 				weightTextField, height);
+		textFieldCustomerAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -147,6 +152,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 
 		textFieldCustomerId = new JTextField();
 		textFieldCustomerId.setBounds(xTextField, y, weightTextField, height);
+		textFieldCustomerId.setMargin(new Insets(2, 2, 2, 2));
 
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));

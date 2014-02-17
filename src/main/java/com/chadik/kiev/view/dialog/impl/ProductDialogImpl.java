@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -105,6 +106,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 		textFieldProductName = new JTextField();
 		textFieldProductName.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -114,6 +116,7 @@ public class ProductDialogImpl implements IProductDialog {
 		textFieldProductMeasurement = new JTextField();
 		textFieldProductMeasurement.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldProductMeasurement.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -122,6 +125,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTax.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -130,6 +134,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 		textFieldProductPrice = new JTextField();
 		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 		
@@ -138,6 +143,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 		textFieldProductTaxPrice = new JTextField();
 		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTaxPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -147,6 +153,7 @@ public class ProductDialogImpl implements IProductDialog {
 		textFieldProductAdditionalInfo = new JTextField();
 		textFieldProductAdditionalInfo.setBounds(xTextField, y,
 				weightTextField, height);
+		textFieldProductAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -155,7 +162,8 @@ public class ProductDialogImpl implements IProductDialog {
 
 		textFieldProductId = new JTextField();
 		textFieldProductId.setBounds(xTextField, y, weightTextField, height);
-
+		textFieldProductId.setMargin(new Insets(2, 2, 2, 2));
+		
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.addActionListener(new ActionListener() {

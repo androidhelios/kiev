@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -109,6 +110,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		textFieldSupplierName = new JTextField();
 		textFieldSupplierName.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -118,6 +120,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierRegistryNumber = new JTextField();
 		textFieldSupplierRegistryNumber.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldSupplierRegistryNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -127,6 +130,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierBankName = new JTextField();
 		textFieldSupplierBankName.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldSupplierBankName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -136,6 +140,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierBankAccount = new JTextField();
 		textFieldSupplierBankAccount.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldSupplierBankAccount.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -145,6 +150,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierAddress = new JTextField();
 		textFieldSupplierAddress
 				.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierAddress.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -154,6 +160,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierPhoneNumber = new JTextField();
 		textFieldSupplierPhoneNumber.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldSupplierPhoneNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -162,6 +169,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		textFieldSupplierEmail = new JTextField();
 		textFieldSupplierEmail.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -171,6 +179,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierAdditionalInfo = new JTextField();
 		textFieldSupplierAdditionalInfo.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldSupplierAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -179,6 +188,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		textFieldSupplierId = new JTextField();
 		textFieldSupplierId.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierId.setMargin(new Insets(2, 2, 2, 2));
 
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
