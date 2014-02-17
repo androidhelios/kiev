@@ -6,9 +6,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,8 +27,10 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Invoice;
+import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.ICustomerService;
 import com.chadik.kiev.service.IInvoiceService;
+import com.chadik.kiev.service.ISupplierService;
 import com.chadik.kiev.view.dialog.IInvoiceDialog;
 import com.chadik.kiev.view.panel.ICustomerPanel;
 import com.chadik.kiev.view.panel.IInvoicePanel;
@@ -70,7 +76,6 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 	private JTextField textFieldInvoiceId;
 	private JTextField textFieldInvoiceSupplierId;
-	private JTextField textFieldInvoiceSupplierName;
 	private JTextField textFieldInvoiceSupplierAddress;
 	private JTextField textFieldInvoiceSupplierPhone;
 	private JTextField textFieldInvoiceSupplierEmail;
@@ -79,7 +84,6 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	private JTextField textFieldInvoiceSupplierBankAccount;
 	private JTextField textFieldInvoiceSupplierAdditionalInfo;
 	private JTextField textFieldInvoiceCustomerId;
-	private JTextField textFieldInvoiceCustomerName;
 	private JTextField textFieldInvoiceCustomerAddress;
 	private JTextField textFieldInvoiceCustomerPhoneNumber;
 	private JTextField textFieldInvoiceCustomerEmail;
@@ -95,15 +99,25 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	private JTextField textFieldInvoicePaymentInfo;
 	private JTextField textFieldInvoiceAdditionalInfo;
 	
+	private JComboBox comboBoxInvoiceSupplierName;
+	private JComboBox comboBoxInvoiceCustomerName;
+	
 	private JScrollPane scrollPanePanelFieldsContent;
 
 	private JButton buttonSave;
 	private JButton buttonCancel;
+	
+	private Map<Integer, Supplier> mapSupplierValues;
+	private Map<Integer, Customer> mapCustomerValues;
 
 	@Autowired
 	private IInvoiceService invoiceServiceImpl;
 	@Autowired
 	private IInvoicePanel invoicePanelImpl;
+	@Autowired
+	private ISupplierService supplierServiceImpl;
+	@Autowired
+	private ICustomerService customerServiceImpl;
 
 	@Override
 	public JDialog initInvoiceDialog() {
@@ -152,9 +166,20 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		
 		labelInvoiceSupplierName = new JLabel("Име на корисник:");
 		labelInvoiceSupplierName.setBounds(xLabel, y, weightLabel, height);
-
-		textFieldInvoiceSupplierName = new JTextField();
-		textFieldInvoiceSupplierName.setBounds(xTextField, y, weightTextField, height);
+		
+		comboBoxInvoiceSupplierName = new JComboBox();
+		comboBoxInvoiceSupplierName.setBounds(xTextField, y, weightTextField, height);
+		fillSupplierComboBoxMap();
+		comboBoxInvoiceSupplierName.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox comboBox = (JComboBox) e.getSource();
+				int selectedIndex = comboBox.getSelectedIndex() + 1;
+				Supplier supplier = mapSupplierValues.get(selectedIndex);
+				System.out.println("izborot e:" + supplier.getSupplierName());
+			}
+		});
+		comboBoxInvoiceSupplierName.setEnabled(false);
 
 		y = y + height + spacing;
 		
@@ -223,10 +248,19 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		
 		labelInvoiceCustomerName = new JLabel("Име на клиент:");
 		labelInvoiceCustomerName.setBounds(xLabel, y, weightLabel, height);
-
-		textFieldInvoiceCustomerName = new JTextField();
-		textFieldInvoiceCustomerName.setBounds(xTextField, y, weightTextField,
-				height);
+		
+		comboBoxInvoiceCustomerName = new JComboBox();
+		comboBoxInvoiceCustomerName.setBounds(xTextField, y, weightTextField, height);
+		fillCustomerComboBoxMap();
+		comboBoxInvoiceCustomerName.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox comboBox = (JComboBox) e.getSource();
+				int selectedIndex = comboBox.getSelectedIndex() + 1;
+				Customer customer = mapCustomerValues.get(selectedIndex);
+				System.out.println("izborot e:" + customer.getCustomerName());
+			}
+		});
 
 		y = y + height + spacing;
 		
@@ -335,6 +369,15 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		textFieldInvoiceTotalPriceTax = new JTextField();
 		textFieldInvoiceTotalPriceTax.setBounds(xTextField, y, weightTextField,
 				height);
+		
+		y = y + height + spacing;
+		
+		labelInvoicePaymentInfo = new JLabel("Дополнителни информации фактура:");
+		labelInvoicePaymentInfo.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldInvoicePaymentInfo = new JTextField();
+		textFieldInvoicePaymentInfo.setBounds(xTextField, y, weightTextField,
+				height);
 
 		y = y + height + spacing;
 		
@@ -391,7 +434,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		});
 		
 		panelFieldsContent.add(labelInvoiceSupplierName);
-		panelFieldsContent.add(textFieldInvoiceSupplierName);
+		panelFieldsContent.add(comboBoxInvoiceSupplierName);
 		
 		panelFieldsContent.add(labelInvoiceSupplierAddress);
 		panelFieldsContent.add(textFieldInvoiceSupplierAddress);
@@ -415,7 +458,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		panelFieldsContent.add(textFieldInvoiceSupplierAdditionalInfo);
 		
 		panelFieldsContent.add(labelInvoiceCustomerName);
-		panelFieldsContent.add(textFieldInvoiceCustomerName);
+		panelFieldsContent.add(comboBoxInvoiceCustomerName);
 		
 		panelFieldsContent.add(labelInvoiceCustomerAddress);
 		panelFieldsContent.add(textFieldInvoiceCustomerAddress);
@@ -453,6 +496,9 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		panelFieldsContent.add(labelInvoiceTotalPriceTax);
 		panelFieldsContent.add(textFieldInvoiceTotalPriceTax);
 		
+		panelFieldsContent.add(labelInvoicePaymentInfo);
+		panelFieldsContent.add(textFieldInvoicePaymentInfo);
+		
 		panelFieldsContent.add(labelInvoiceAdditionalInfo);
 		panelFieldsContent.add(textFieldInvoiceAdditionalInfo);
 		
@@ -473,6 +519,30 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		dialog.setLocationRelativeTo(null);
 
 		return dialog;
+	}
+	
+	public void fillSupplierComboBoxMap() {
+		mapSupplierValues = new HashMap<Integer, Supplier>();
+		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
+		int i = 0;
+		
+		for (Supplier supplier : suppliers) {
+			String supplierName = supplier.getSupplierName();
+			mapSupplierValues.put(++i, supplier);
+			comboBoxInvoiceSupplierName.addItem(supplierName);
+		}
+	}
+	
+	public void fillCustomerComboBoxMap() {
+		mapCustomerValues = new HashMap<Integer, Customer>();
+		List<Customer> customers = customerServiceImpl.findAllCustomers();
+		int i = 0;
+		
+		for (Customer customer : customers) {
+			String customerName = customer.getCustomerName();
+			mapCustomerValues.put(++i, customer);
+			comboBoxInvoiceCustomerName.addItem(customerName);
+		}
 	}
 	
 	public Invoice getInvoiceFromFields() {
