@@ -687,13 +687,13 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	}
 
 	public int[] getTableInvoiceHiddenColumns() {
-		return new int[] { 1, 3, 4, 5, 6, 8, 9 };
+		return new int[] { 1, 5, 7, 8, 9, 10, 11, 12, 13 };
 	}
 
 	public String[] getTableInvoiceColumnNames() {
-		return new String[] { "Реден Бр.", "Id", "Назив", "Регистарски Број",
-				"Банка", "Банкарска Сметка", "Адреса", "Телефонски број",
-				"Email", "Забелешки" };
+		return new String[] { "Реден Бр.", "Id", "Корисник", "Клиент",
+				"Број на фактура", "Сериски број на фактура", "Дата", "Датум на достава",
+				"Број на достава", "Непознато 1", "Непознато 2", "Непознато 3", "Исплата на фактура", "Дополнителни информации" };
 	}
 
 	public Invoice getInvoiceFromInvoiceTable(String selectedRowInvoiceId) {
