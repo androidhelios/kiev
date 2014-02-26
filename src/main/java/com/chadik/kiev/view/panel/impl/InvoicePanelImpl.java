@@ -665,7 +665,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 					invoice.getInvoiceTotalPrice(),
 					invoice.getInvoiceTotalTax(),
 					invoice.getInvoiceTotalPriceTax(),
-					Integer.toString(invoice.getInvoicePaymentInfo()),
+					invoice.getInvoicePaymentInfo(),
 					invoice.getInvoiceAdditionalInfo() });
 		}
 
@@ -724,7 +724,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalPrice.setText(invoice.getInvoiceTotalPrice());
 		textFieldInvoiceTotalTax.setText(invoice.getInvoiceTotalTax());
 		textFieldInvoiceTotalPriceTax.setText(invoice.getInvoiceTotalPriceTax());
-		textFieldInvoicePaymentInfo.setText(Integer.toString(invoice.getInvoicePaymentInfo()));
+		textFieldInvoicePaymentInfo.setText(invoice.getInvoicePaymentInfo());
 		textFieldInvoiceAdditionalInfo.setText(invoice.getInvoiceAdditionalInfo());
 	}
 

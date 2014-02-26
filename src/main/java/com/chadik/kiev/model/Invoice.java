@@ -43,7 +43,7 @@ public class Invoice implements Serializable {
 	@NotNull(message = "Полето вкупен износ со данок на продуктите не е пополнето")
 	private String invoiceTotalPriceTax;
 	@NotNull(message = "Полето податок за исплата на фактурата не е пополнето")
-	private int invoicePaymentInfo;
+	private String invoicePaymentInfo;
 	private String invoiceAdditionalInfo;
 	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
 	@NotNull
@@ -138,11 +138,11 @@ public class Invoice implements Serializable {
 		this.invoiceTotalPriceTax = invoiceTotalPriceTax;
 	}	
 	
-	public int getInvoicePaymentInfo() {
+	public String getInvoicePaymentInfo() {
 		return invoicePaymentInfo;
 	}
 
-	public void setInvoicePaymentInfo(int invoicePaymentInfo) {
+	public void setInvoicePaymentInfo(String invoicePaymentInfo) {
 		this.invoicePaymentInfo = invoicePaymentInfo;
 	}
 

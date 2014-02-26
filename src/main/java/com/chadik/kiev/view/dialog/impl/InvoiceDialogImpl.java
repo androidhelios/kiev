@@ -599,8 +599,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		contentPane.add(panelAll);
 
-		int selectedIndex = comboBoxInvoiceSupplierName.getSelectedIndex() + 1;
-		Supplier supplier = mapSupplierValues.get(selectedIndex);
+		Supplier supplier = getSelectedSupplier();
 		fillSupplierFields(supplier);
 
 		dialog.pack();
@@ -608,6 +607,28 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		dialog.setLocationRelativeTo(null);
 
 		return dialog;
+	}
+	
+	public Supplier getSelectedSupplier() {
+		Supplier supplier;
+		int selectedIndex = comboBoxInvoiceSupplierName.getSelectedIndex() + 1;
+		supplier = mapSupplierValues.get(selectedIndex);
+		return supplier;
+	}
+	
+	public Customer getSelectedCustomer() {
+		Customer customer;
+		int selectedIndex = comboBoxInvoiceCustomerName.getSelectedIndex();
+		customer = mapCustomerValues.get(selectedIndex);
+		return customer;
+	}
+	
+	public String getSelectedPaymentInfo() {
+		String paymentInfo;
+		comboBoxInvoicePaymentInfo.setSelectedIndex(1);
+		int selectedIndex = comboBoxInvoicePaymentInfo.getSelectedIndex();
+		paymentInfo = mapPaymentInfo.get(selectedIndex);
+		return paymentInfo;
 	}
 
 	public void fillSupplierFields(Supplier supplier) {
@@ -675,7 +696,19 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 	public Invoice getInvoiceFromFields() {
 		Invoice invoice = new Invoice();
-		// TODO
+		invoice.setCustomer(getSelectedCustomer());
+		invoice.setSupplier(getSelectedSupplier());
+		invoice.setInvoiceNumber(textFieldInvoiceNumber.getText());
+		invoice.setInvoiceSerialNumber(textFieldInvoiceSerialNumber.getText());
+		invoice.setInvoiceDate(textFieldInvoiceDate.getText());
+		invoice.setInvoiceDeliveryDate(textFieldInvoiceDeliveryDate.getText());
+		invoice.setInvoiceDeliveryNumber(textFieldInvoiceDeliveryNumber.getText());
+		invoice.setInvoiceTotalPrice(textFieldInvoiceTotalPrice.getText());
+		invoice.setInvoiceTotalTax(textFieldInvoiceTotalTax.getText());
+		invoice.setInvoiceTotalPriceTax(textFieldInvoiceTotalPriceTax.getText());
+		invoice.setInvoicePaymentInfo(getSelectedPaymentInfo());
+		invoice.setInvoiceAdditionalInfo(textFieldInvoiceAdditionalInfo.getText());
+		
 		return invoice;
 	}
 
