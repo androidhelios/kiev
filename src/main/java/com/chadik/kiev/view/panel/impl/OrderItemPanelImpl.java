@@ -20,7 +20,7 @@ import com.chadik.kiev.service.ISupplierService;
 import com.chadik.kiev.view.panel.IOrderItemPanel;
 
 @Component
-public class OrderItemImpl implements IOrderItemPanel {
+public class OrderItemPanelImpl implements IOrderItemPanel {
 
 	private JPanel panelAll;
 

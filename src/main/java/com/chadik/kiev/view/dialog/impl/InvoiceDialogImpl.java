@@ -717,8 +717,6 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		
 		invoiceServiceImpl.saveInvoice(invoice);
 		dialog.dispose();
-		invoicePanelImpl.setSelectedComboBoxCustomer(comboBoxInvoiceCustomerName.getSelectedIndex());
-		invoicePanelImpl.setSelectedComboBoxPaymentInfo(comboBoxInvoicePaymentInfo.getSelectedIndex());
 		invoicePanelImpl.populateInvoiceTable();
 	}
 

@@ -44,7 +44,6 @@ import com.chadik.kiev.service.ISupplierService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.IInvoiceDialog;
-import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.IInvoicePanel;
 import com.chadik.kiev.view.panel.IOrderItemPanel;
 
@@ -122,7 +121,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private JTextField textFieldInvoiceTotalTax;
 	private JTextField textFieldInvoiceTotalPriceTax;
 	private JTextField textFieldInvoiceAdditionalInfo;
-	
+
 	private JComboBox comboBoxInvoiceSupplierName;
 	private JComboBox comboBoxInvoiceCustomerName;
 	private JComboBox comboBoxInvoicePaymentInfo;
@@ -138,15 +137,12 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
-	
-	private Map<Integer, Supplier> mapSupplierValues;
-	private Map<Integer, Customer> mapCustomerValues;
+
+	private Map<Integer, Integer> mapSupplierValues;
+	private Map<Integer, Integer> mapCustomerValues;
 	private Map<Integer, String> mapPaymentInfo;
 
 	private List<Invoice> invoices;
-	
-	private int selectedCustomerIndex;
-	private int selectedPaymentInfoIndex;
 
 	@Autowired
 	private IInvoiceService invoiceServiceImpl;
@@ -158,7 +154,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private ICustomerService customerServiceImpl;
 	@Autowired
 	private IOrderItemPanel orderItemPanelImpl;
-	
+
 	@Override
 	public JPanel initInvoicePanel() {
 		panelAll = new JPanel();
@@ -196,7 +192,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentInfoFields.setLayout(new GridBagLayout());
 		panelInfoHolderContentInfoFields.setPreferredSize(new Dimension(400,
 				800));
-		panelInfoHolderContentInfoFields.setBackground(new Color(192, 192, 192));
+		panelInfoHolderContentInfoFields
+				.setBackground(new Color(192, 192, 192));
 		panelInfoHolderContentInfoFields.setBorder(BorderFactory
 				.createCompoundBorder(new EmptyBorder(10, 10, 10, 10),
 						new EtchedBorder()));
@@ -268,7 +265,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
-		
+
 		labelInvoiceSupplierName = new JLabel("Име на корисник:");
 		labelInvoiceSupplierName.setBounds(xLabel, y, weightLabel, height);
 
@@ -281,14 +278,20 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
-				int selectedIndex = comboBox.getSelectedIndex();
-				Supplier supplier = mapSupplierValues.get(selectedIndex);
+				int selectedComboBoxSuplierIndex = comboBox.getSelectedIndex();
+				Integer selectedComboBoxSupplierId = mapSupplierValues
+						.get(selectedComboBoxSuplierIndex);
+				int intSelectedComboBoxSupplerId = selectedComboBoxSupplierId
+						.intValue();
+				Supplier supplier = supplierServiceImpl
+						.findSupplierById(new BigDecimal(
+								intSelectedComboBoxSupplerId));
 				fillSupplierFields(supplier);
 			}
 		});
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceCustomerName = new JLabel("Име на клиент:");
 		labelInvoiceCustomerName.setBounds(xLabel, y, weightLabel, height);
 
@@ -301,29 +304,34 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
-				int selectedIndex = comboBox.getSelectedIndex();
-				if (selectedIndex > 0) {
-					Customer customer = mapCustomerValues.get(selectedIndex);
-					fillCustomerFields(customer);
-				}
+				int selectedComboBoxCustomerIndex = comboBox.getSelectedIndex();
+				Integer selectedComboBoxCustomerId = mapCustomerValues
+						.get(selectedComboBoxCustomerIndex);
+				int intSelectedComboBoxCustomerId = selectedComboBoxCustomerId
+						.intValue();
+				Customer customer = customerServiceImpl
+						.findCustomerById(new BigDecimal(
+								intSelectedComboBoxCustomerId));
+				fillCustomerFields(customer);
 			}
 		});
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierAddress = new JLabel("Адреса на корисник:");
 		labelInvoiceSupplierAddress.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceSupplierAddress = new JTextField();
-		textFieldInvoiceSupplierAddress.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceSupplierAddress.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceSupplierAddress.setMargin(new Insets(2, 2, 2, 2));
-		
-		originalTextFieldColor = textFieldInvoiceSupplierAddress.getBackground();
+
+		originalTextFieldColor = textFieldInvoiceSupplierAddress
+				.getBackground();
 		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierPhone = new JLabel("Телефон на корисник:");
 		labelInvoiceSupplierPhone.setBounds(xLabel, y, weightLabel, height);
 
@@ -333,7 +341,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceSupplierPhone.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierEmail = new JLabel("Email на корисник:");
 		labelInvoiceSupplierEmail.setBounds(xLabel, y, weightLabel, height);
 
@@ -343,67 +351,75 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierRegistryNumber = new JLabel("Регистарски број:");
-		labelInvoiceSupplierRegistryNumber.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceSupplierRegistryNumber.setBounds(xLabel, y, weightLabel,
+				height);
 
 		textFieldInvoiceSupplierRegistryNumber = new JTextField();
-		textFieldInvoiceSupplierRegistryNumber.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldInvoiceSupplierRegistryNumber.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceSupplierRegistryNumber.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceSupplierRegistryNumber
+				.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierBankName = new JLabel("Банка:");
 		labelInvoiceSupplierBankName.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceSupplierBankName = new JTextField();
-		textFieldInvoiceSupplierBankName.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceSupplierBankName.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceSupplierBankName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierBankAccount = new JLabel("Банкарска сметка:");
-		labelInvoiceSupplierBankAccount.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceSupplierBankAccount.setBounds(xLabel, y, weightLabel,
+				height);
 
 		textFieldInvoiceSupplierBankAccount = new JTextField();
-		textFieldInvoiceSupplierBankAccount.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceSupplierBankAccount.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceSupplierBankAccount.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
-		labelInvoiceSupplierAdditionalInfo = new JLabel("Забелешки за корисник:");
-		labelInvoiceSupplierAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
+
+		labelInvoiceSupplierAdditionalInfo = new JLabel(
+				"Забелешки за корисник:");
+		labelInvoiceSupplierAdditionalInfo.setBounds(xLabel, y, weightLabel,
+				height);
 
 		textFieldInvoiceSupplierAdditionalInfo = new JTextField();
-		textFieldInvoiceSupplierAdditionalInfo.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldInvoiceSupplierAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceSupplierAdditionalInfo.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceSupplierAdditionalInfo
+				.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceCustomerAddress = new JLabel("Адреса на клиент:");
 		labelInvoiceCustomerAddress.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceCustomerAddress = new JTextField();
-		textFieldInvoiceCustomerAddress.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceCustomerAddress.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceCustomerAddress.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
-		labelInvoiceCustomerPhoneNumber = new JLabel("Телефонски број на клиент:");
-		labelInvoiceCustomerPhoneNumber.setBounds(xLabel, y, weightLabel, height);
+
+		labelInvoiceCustomerPhoneNumber = new JLabel(
+				"Телефонски број на клиент:");
+		labelInvoiceCustomerPhoneNumber.setBounds(xLabel, y, weightLabel,
+				height);
 
 		textFieldInvoiceCustomerPhoneNumber = new JTextField();
-		textFieldInvoiceCustomerPhoneNumber.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceCustomerPhoneNumber.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceCustomerPhoneNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceCustomerEmail = new JLabel("Email на клиент:");
 		labelInvoiceCustomerEmail.setBounds(xLabel, y, weightLabel, height);
 
@@ -413,27 +429,29 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceCustomerEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceCustomerAdditionalInfo = new JLabel("Забелешки за клиент:");
-		labelInvoiceCustomerAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceCustomerAdditionalInfo.setBounds(xLabel, y, weightLabel,
+				height);
 
 		textFieldInvoiceCustomerAdditionalInfo = new JTextField();
-		textFieldInvoiceCustomerAdditionalInfo.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldInvoiceCustomerAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceCustomerAdditionalInfo.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceCustomerAdditionalInfo
+				.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceNumber = new JLabel("Број на фактура:");
 		labelInvoiceNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceNumber = new JTextField();
-		textFieldInvoiceNumber.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceNumber
+				.setBounds(xTextField, y, weightTextField, height);
 		textFieldInvoiceNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSerialNumber = new JLabel("Сериски број на фактура:");
 		labelInvoiceSerialNumber.setBounds(xLabel, y, weightLabel, height);
 
@@ -443,17 +461,16 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceSerialNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceDate = new JLabel("Датум на фактура:");
 		labelInvoiceDate.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDate = new JTextField();
-		textFieldInvoiceDate.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceDate.setBounds(xTextField, y, weightTextField, height);
 		textFieldInvoiceDate.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceDeliveryDate = new JLabel("Delivery date:");
 		labelInvoiceDeliveryDate.setBounds(xLabel, y, weightLabel, height);
 
@@ -463,17 +480,17 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceDeliveryDate.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceDeliveryNumber = new JLabel("Delivery number:");
 		labelInvoiceDeliveryNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryNumber = new JTextField();
-		textFieldInvoiceDeliveryNumber.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceDeliveryNumber.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceDeliveryNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceTotalPrice = new JLabel("Нејасно 3:");
 		labelInvoiceTotalPrice.setBounds(xLabel, y, weightLabel, height);
 
@@ -483,7 +500,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceTotalTax = new JLabel("Нејасно 2:");
 		labelInvoiceTotalTax.setBounds(xLabel, y, weightLabel, height);
 
@@ -493,7 +510,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalTax.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceTotalPriceTax = new JLabel("Нејасно 1:");
 		labelInvoiceTotalPriceTax.setBounds(xLabel, y, weightLabel, height);
 
@@ -501,9 +518,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalPriceTax.setBounds(xTextField, y, weightTextField,
 				height);
 		textFieldInvoiceTotalPriceTax.setMargin(new Insets(2, 2, 2, 2));
-		
+
 		y = y + height + spacing;
-		
+
 		labelInvoicePaymentInfo = new JLabel("Исплата на фактура:");
 		labelInvoicePaymentInfo.setBounds(xLabel, y, weightLabel, height);
 
@@ -520,17 +537,17 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		});
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceAdditionalInfo = new JLabel("Забелешки:");
 		labelInvoiceAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceAdditionalInfo = new JTextField();
-		textFieldInvoiceAdditionalInfo.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceAdditionalInfo.setBounds(xTextField, y,
+				weightTextField, height);
 		textFieldInvoiceAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
 
-		y = y + height + spacing;	
-		
+		y = y + height + spacing;
+
 		labelInvoiceCustomerId = new JLabel("Клиент ID:");
 		labelInvoiceCustomerId.setBounds(xLabel, y, weightLabel, height);
 
@@ -540,7 +557,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceCustomerId.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelInvoiceSupplierId = new JLabel("Корисник ID:");
 		labelInvoiceSupplierId.setBounds(xLabel, y, weightLabel, height);
 
@@ -549,20 +566,24 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				height);
 		textFieldInvoiceSupplierId.setMargin(new Insets(2, 2, 2, 2));
 
-		y = y + height + spacing;		
-		
+		y = y + height + spacing;
+
 		labelInvoiceId = new JLabel("Фактура ID:");
 		labelInvoiceId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceId = new JTextField();
-		textFieldInvoiceId.setBounds(xTextField, y, weightTextField,
-				height);
+		textFieldInvoiceId.setBounds(xTextField, y, weightTextField, height);
 		textFieldInvoiceId.setMargin(new Insets(2, 2, 2, 2));
 
-		y = y + height + spacing;	
+		y = y + height + spacing;
 
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
+		buttonSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveInvoice();
+			}
+		});
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
@@ -597,74 +618,120 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierName, firstLabelConstrains());
-		panelInfoHolderContentInfoFields.add(comboBoxInvoiceSupplierName, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerName, labelConstraints());
-		panelInfoHolderContentInfoFields.add(comboBoxInvoiceCustomerName, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierAddress, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierAddress, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierPhone, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierPhone, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierEmail, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierEmail, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierRegistryNumber, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierRegistryNumber, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierBankName, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierBankName, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierBankAccount, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierBankAccount, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierAdditionalInfo, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierAdditionalInfo, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerAddress, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerAddress, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerPhoneNumber, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerPhoneNumber, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerEmail, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerEmail, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerAdditionalInfo, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerAdditionalInfo, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceNumber, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceNumber, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceSerialNumber, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceSerialNumber, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceDate, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceDate, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceDeliveryDate, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceDeliveryDate, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceDeliveryNumber, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceDeliveryNumber, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceTotalPrice, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalPrice, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceTotalTax, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalTax, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoiceTotalPriceTax, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalPriceTax, textFieldConstraints());
-		
-		panelInfoHolderContentInfoFields.add(labelInvoicePaymentInfo, labelConstraints());
-		panelInfoHolderContentInfoFields.add(comboBoxInvoicePaymentInfo, textFieldConstraints());
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierName,
+				firstLabelConstrains());
+		panelInfoHolderContentInfoFields.add(comboBoxInvoiceSupplierName,
+				textFieldConstraints());
 
-		panelInfoHolderContentInfoFields.add(labelInvoiceAdditionalInfo, labelConstraints());
-		panelInfoHolderContentInfoFields.add(textFieldInvoiceAdditionalInfo, lastComponentConstrains());
+		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerName,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(comboBoxInvoiceCustomerName,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierAddress,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierAddress,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierPhone,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierPhone,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierEmail,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierEmail,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(
+				labelInvoiceSupplierRegistryNumber, labelConstraints());
+		panelInfoHolderContentInfoFields.add(
+				textFieldInvoiceSupplierRegistryNumber, textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierBankName,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSupplierBankName,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceSupplierBankAccount,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(
+				textFieldInvoiceSupplierBankAccount, textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(
+				labelInvoiceSupplierAdditionalInfo, labelConstraints());
+		panelInfoHolderContentInfoFields.add(
+				textFieldInvoiceSupplierAdditionalInfo, textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerAddress,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerAddress,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerPhoneNumber,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(
+				textFieldInvoiceCustomerPhoneNumber, textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceCustomerEmail,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceCustomerEmail,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(
+				labelInvoiceCustomerAdditionalInfo, labelConstraints());
+		panelInfoHolderContentInfoFields.add(
+				textFieldInvoiceCustomerAdditionalInfo, textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceNumber,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceNumber,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceSerialNumber,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceSerialNumber,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceDate,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceDate,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceDeliveryDate,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceDeliveryDate,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceDeliveryNumber,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceDeliveryNumber,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceTotalPrice,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalPrice,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceTotalTax,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalTax,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceTotalPriceTax,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceTotalPriceTax,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoicePaymentInfo,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(comboBoxInvoicePaymentInfo,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfoFields.add(labelInvoiceAdditionalInfo,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceAdditionalInfo,
+				lastComponentConstrains());
 
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
@@ -688,7 +755,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
-		
+
 		populateInvoiceTable();
 
 		return panelAll;
@@ -742,8 +809,10 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	public String[] getTableInvoiceColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Корисник", "Клиент",
-				"Број на фактура", "Сериски број на фактура", "Дата", "Датум на достава",
-				"Број на достава", "Непознато 1", "Непознато 2", "Непознато 3", "Исплата на фактура", "Дополнителни информации" };
+				"Број на фактура", "Сериски број на фактура", "Дата",
+				"Датум на достава", "Број на достава", "Непознато 1",
+				"Непознато 2", "Непознато 3", "Исплата на фактура",
+				"Дополнителни информации" };
 	}
 
 	public Invoice getInvoiceFromInvoiceTable(String selectedRowInvoiceId) {
@@ -751,30 +820,66 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		return invoiceServiceImpl.findInvoiceById(invoiceId);
 	}
 
+	public Invoice getInvoiceFromInvoiceFields() {
+		Invoice invoice = new Invoice();
+		invoice.setCustomer(getSelectedComboBoxCustomer());
+		invoice.setSupplier(getSelectedComboBoxSupplier());
+		invoice.setInvoiceNumber(textFieldInvoiceNumber.getText());
+		invoice.setInvoiceSerialNumber(textFieldInvoiceSerialNumber.getText());
+		invoice.setInvoiceDate(textFieldInvoiceDate.getText());
+		invoice.setInvoiceDeliveryDate(textFieldInvoiceDeliveryDate.getText());
+		invoice.setInvoiceDeliveryNumber(textFieldInvoiceDeliveryNumber
+				.getText());
+		invoice.setInvoiceTotalPrice(textFieldInvoiceTotalPrice.getText());
+		invoice.setInvoiceTotalTax(textFieldInvoiceTotalTax.getText());
+		invoice.setInvoiceTotalPriceTax(textFieldInvoiceTotalPriceTax.getText());
+		invoice.setInvoicePaymentInfo(getSelectedComboBoxPaymentInfo());
+		invoice.setInvoiceAdditionalInfo(textFieldInvoiceAdditionalInfo
+				.getText());
+
+		return invoice;
+	}
+
 	public void populateInvoiceFields(Invoice invoice) {
 		comboBoxInvoiceSupplierName.setSelectedIndex(0);
-		comboBoxInvoiceCustomerName.setSelectedIndex(getSelectedComboBoxCustomer());
-		textFieldInvoiceSupplierAddress.setText(invoice.getSupplier().getSupplierAddress());
-		textFieldInvoiceSupplierPhone.setText(invoice.getSupplier().getSupplierPhoneNumber());
-		textFieldInvoiceSupplierEmail.setText(invoice.getSupplier().getSupplierEmail());
-		textFieldInvoiceSupplierRegistryNumber.setText(invoice.getSupplier().getSupplierRegistryNumber());
-		textFieldInvoiceSupplierBankName.setText(invoice.getSupplier().getSupplierBankName());
-		textFieldInvoiceSupplierBankAccount.setText(invoice.getSupplier().getSupplierBankAccount());
-		textFieldInvoiceSupplierAdditionalInfo.setText(invoice.getSupplier().getSupplierAdditionalInfo());
-		textFieldInvoiceCustomerAddress.setText(invoice.getCustomer().getCustomerAddress());
-		textFieldInvoiceCustomerPhoneNumber.setText(invoice.getCustomer().getCustomerPhoneNumber());
-		textFieldInvoiceCustomerEmail.setText(invoice.getCustomer().getCustomerEmail());
-		textFieldInvoiceCustomerAdditionalInfo.setText(invoice.getCustomer().getCustomerAdditionalInfo());
+		comboBoxInvoiceCustomerName
+				.setSelectedIndex(getSelectedInvoiceCustomerComboBoxIndex(invoice));
+		textFieldInvoiceSupplierAddress.setText(invoice.getSupplier()
+				.getSupplierAddress());
+		textFieldInvoiceSupplierPhone.setText(invoice.getSupplier()
+				.getSupplierPhoneNumber());
+		textFieldInvoiceSupplierEmail.setText(invoice.getSupplier()
+				.getSupplierEmail());
+		textFieldInvoiceSupplierRegistryNumber.setText(invoice.getSupplier()
+				.getSupplierRegistryNumber());
+		textFieldInvoiceSupplierBankName.setText(invoice.getSupplier()
+				.getSupplierBankName());
+		textFieldInvoiceSupplierBankAccount.setText(invoice.getSupplier()
+				.getSupplierBankAccount());
+		textFieldInvoiceSupplierAdditionalInfo.setText(invoice.getSupplier()
+				.getSupplierAdditionalInfo());
+		textFieldInvoiceCustomerAddress.setText(invoice.getCustomer()
+				.getCustomerAddress());
+		textFieldInvoiceCustomerPhoneNumber.setText(invoice.getCustomer()
+				.getCustomerPhoneNumber());
+		textFieldInvoiceCustomerEmail.setText(invoice.getCustomer()
+				.getCustomerEmail());
+		textFieldInvoiceCustomerAdditionalInfo.setText(invoice.getCustomer()
+				.getCustomerAdditionalInfo());
 		textFieldInvoiceNumber.setText(invoice.getInvoiceNumber());
 		textFieldInvoiceSerialNumber.setText(invoice.getInvoiceSerialNumber());
 		textFieldInvoiceDate.setText(invoice.getInvoiceDate());
 		textFieldInvoiceDeliveryDate.setText(invoice.getInvoiceDeliveryDate());
-		textFieldInvoiceDeliveryNumber.setText(invoice.getInvoiceDeliveryNumber());
+		textFieldInvoiceDeliveryNumber.setText(invoice
+				.getInvoiceDeliveryNumber());
 		textFieldInvoiceTotalPrice.setText(invoice.getInvoiceTotalPrice());
 		textFieldInvoiceTotalTax.setText(invoice.getInvoiceTotalTax());
-		textFieldInvoiceTotalPriceTax.setText(invoice.getInvoiceTotalPriceTax());
-		comboBoxInvoicePaymentInfo.setSelectedIndex(selectedPaymentInfoIndex);
-		textFieldInvoiceAdditionalInfo.setText(invoice.getInvoiceAdditionalInfo());
+		textFieldInvoiceTotalPriceTax
+				.setText(invoice.getInvoiceTotalPriceTax());
+		comboBoxInvoicePaymentInfo
+				.setSelectedIndex(getSelectedInvoicePaymentInfoComboBoxIndex(invoice));
+		textFieldInvoiceAdditionalInfo.setText(invoice
+				.getInvoiceAdditionalInfo());
 		textFieldInvoiceId.setText(invoice.getInvoiceId().toString());
 	}
 
@@ -783,27 +888,35 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		comboBoxInvoiceSupplierName.setEnabled(false);
 		comboBoxInvoiceCustomerName.setEditable(false);
 		textFieldInvoiceSupplierAddress.setEditable(false);
-		textFieldInvoiceSupplierAddress.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceSupplierAddress
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSupplierPhone.setEditable(false);
 		textFieldInvoiceSupplierPhone.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSupplierEmail.setEditable(false);
 		textFieldInvoiceSupplierEmail.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSupplierRegistryNumber.setEditable(false);
-		textFieldInvoiceSupplierRegistryNumber.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceSupplierRegistryNumber
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSupplierBankName.setEditable(false);
-		textFieldInvoiceSupplierBankName.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceSupplierBankName
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSupplierBankAccount.setEditable(false);
-		textFieldInvoiceSupplierBankAccount.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceSupplierBankAccount
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSupplierAdditionalInfo.setEditable(false);
-		textFieldInvoiceSupplierAdditionalInfo.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceSupplierAdditionalInfo
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceCustomerAddress.setEditable(false);
-		textFieldInvoiceCustomerAddress.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceCustomerAddress
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceCustomerPhoneNumber.setEditable(false);
-		textFieldInvoiceCustomerPhoneNumber.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceCustomerPhoneNumber
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceCustomerEmail.setEditable(false);
 		textFieldInvoiceCustomerEmail.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceCustomerAdditionalInfo.setEditable(false);
-		textFieldInvoiceCustomerAdditionalInfo.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceCustomerAdditionalInfo
+				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceNumber.setEditable(false);
 		textFieldInvoiceNumber.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceSerialNumber.setEditable(false);
@@ -844,27 +957,43 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceId.setEditable(true);
 		textFieldInvoiceId.setBackground(originalTextFieldColor);
 	}
-	
-	
-	public Supplier getSelectedSupplier() {
-		Supplier supplier;
-		int selectedIndex = comboBoxInvoiceSupplierName.getSelectedIndex();
-		supplier = mapSupplierValues.get(selectedIndex);
+
+	public Supplier getSelectedComboBoxSupplier() {
+		int selectedComboBoxSupplierIndex = comboBoxInvoiceSupplierName
+				.getSelectedIndex();
+		Integer selectedComboBoxSupplierId = mapCustomerValues
+				.get(selectedComboBoxSupplierIndex);
+		int intSelectedComboBoxSupplierId = selectedComboBoxSupplierId
+				.intValue();
+		Supplier supplier = supplierServiceImpl
+				.findSupplierById(new BigDecimal(String
+						.valueOf(intSelectedComboBoxSupplierId)));
+
 		return supplier;
 	}
-	
-	public Customer getSelectedCustomer() {
-		Customer customer;
-		int selectedIndex = comboBoxInvoiceCustomerName.getSelectedIndex() + 1;
-		customer = mapCustomerValues.get(selectedIndex);
+
+	public Customer getSelectedComboBoxCustomer() {
+		int selectedComboBoxCustomerIndex = comboBoxInvoiceSupplierName
+				.getSelectedIndex();
+		Integer selectedComboBoxCustomerId = mapCustomerValues
+				.get(selectedComboBoxCustomerIndex);
+		int intSelectedComboBoxCustomerId = selectedComboBoxCustomerId
+				.intValue();
+		Customer customer = customerServiceImpl
+				.findCustomerById(new BigDecimal(String
+						.valueOf(intSelectedComboBoxCustomerId)));
+
 		return customer;
 	}
-	
-	public String getSelectedPaymentInfo() {
+
+	public String getSelectedComboBoxPaymentInfo() {
 		String paymentInfo;
 		comboBoxInvoicePaymentInfo.setSelectedIndex(0);
-		int selectedIndex = comboBoxInvoicePaymentInfo.getSelectedIndex();
-		paymentInfo = mapPaymentInfo.get(selectedIndex);
+		int selectedComboBoxPaymentInfoIndex = comboBoxInvoicePaymentInfo
+				.getSelectedIndex();
+		Integer selectedComboBoxCustomerId = mapCustomerValues
+				.get(selectedComboBoxPaymentInfoIndex);
+		paymentInfo = mapPaymentInfo.get(selectedComboBoxCustomerId);
 		return paymentInfo;
 	}
 
@@ -893,33 +1022,37 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceCustomerAdditionalInfo.setText(customer
 				.getCustomerAdditionalInfo());
 	}
-	
+
 	public void fillSupplierComboBoxMap() {
-		mapSupplierValues = new HashMap<Integer, Supplier>();
-		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();		
+		mapSupplierValues = new HashMap<Integer, Integer>();
+		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
 		int i = 0;
 
 		for (Supplier supplier : suppliers) {
 			String supplierName = supplier.getSupplierName();
-			mapSupplierValues.put(i++, supplier);
+			BigDecimal supplierId = supplier.getSupplierId();
+			Integer integerSupplierId = supplierId.intValue();
+			mapSupplierValues.put(i++, integerSupplierId);
 			comboBoxInvoiceSupplierName.addItem(supplierName);
 		}
 	}
 
 	public void fillCustomerComboBoxMap() {
-		mapCustomerValues = new HashMap<Integer, Customer>();
-		List<Customer> customers = customerServiceImpl.findAllCustomers();		
-		int i = 1;
+		mapCustomerValues = new HashMap<Integer, Integer>();
+		List<Customer> customers = customerServiceImpl.findAllCustomers();
+		int i = 0;
 
 		for (Customer customer : customers) {
 			String customerName = customer.getCustomerName();
-			mapCustomerValues.put(i++, customer);
+			BigDecimal customerId = customer.getCustomerId();
+			Integer integerCustomerId = customerId.intValue();
+			mapCustomerValues.put(i++, integerCustomerId);
 			comboBoxInvoiceCustomerName.addItem(customerName);
 		}
 	}
 
 	public void fillPaymentInfo() {
-		mapPaymentInfo = new HashMap<Integer, String>();		
+		mapPaymentInfo = new HashMap<Integer, String>();
 		mapPaymentInfo.put(0, "Исплатена");
 		mapPaymentInfo.put(1, "Неисплатена");
 		mapPaymentInfo.put(2, "Делумно исплатена");
@@ -929,7 +1062,44 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		}
 	}
 
-	
+	public int getSelectedInvoiceCustomerComboBoxIndex(Invoice invoice) {
+		int selectedIndex;
+		Integer key = null;
+		Customer customer = invoice.getCustomer();
+		BigDecimal customerId = customer.getCustomerId();
+		Integer integerCustomerId = customerId.intValue();
+		for (Map.Entry<Integer, Integer> entry : mapCustomerValues.entrySet()) {
+			if (integerCustomerId != null
+					&& integerCustomerId.equals(entry.getValue())) {
+				key = entry.getKey();
+				break;
+			}
+		}
+		selectedIndex = key.intValue() - 1;
+		return selectedIndex;
+	}
+
+	public int getSelectedInvoicePaymentInfoComboBoxIndex(Invoice invoice) {
+		int selectedIndex;
+		Integer key = null;
+		String paymentInfo = invoice.getInvoicePaymentInfo();
+		for (Map.Entry<Integer, String> entry : mapPaymentInfo.entrySet()) {
+			if (paymentInfo != null && paymentInfo.equals(entry.getValue())) {
+				key = entry.getKey();
+				break;
+			}
+		}
+		selectedIndex = key.intValue();
+		return selectedIndex;
+	}
+
+	public void saveInvoice() {
+		Invoice invoice = getInvoiceFromInvoiceFields();
+		invoiceServiceImpl.saveInvoice(invoice);
+		setFieldsNonEditable();
+		setEditButtonsDisabled();
+	}
+
 	public GridBagConstraints newConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
@@ -998,28 +1168,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void setEditButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
-	}
-
-	@Override
-	public int getSelectedComboBoxCustomer() {
-		return selectedCustomerIndex;
-	}
-
-	@Override
-	public void setSelectedComboBoxCustomer(int selectedComboBoxCustomerIndex) {
-		this.selectedCustomerIndex = selectedComboBoxCustomerIndex;
-	}
-
-	@Override
-	public int getSelectedComboBoxPaymentInfo() {
-		return selectedPaymentInfoIndex;
-	}
-
-	@Override
-	public void setSelectedComboBoxPaymentInfo(
-			int selectedComboBoxPaymentInfoIndex) {
-		this.selectedPaymentInfoIndex = selectedComboBoxPaymentInfoIndex;
-		
 	}
 
 }
