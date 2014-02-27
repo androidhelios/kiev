@@ -178,7 +178,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
-				int selectedIndex = comboBox.getSelectedIndex() + 1;
+				int selectedIndex = comboBox.getSelectedIndex();
 				Supplier supplier = mapSupplierValues.get(selectedIndex);
 				fillSupplierFields(supplier);
 			}
@@ -611,7 +611,8 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	
 	public Supplier getSelectedSupplier() {
 		Supplier supplier;
-		int selectedIndex = comboBoxInvoiceSupplierName.getSelectedIndex() + 1;
+		comboBoxInvoiceSupplierName.setSelectedIndex(0);
+		int selectedIndex = comboBoxInvoiceSupplierName.getSelectedIndex();
 		supplier = mapSupplierValues.get(selectedIndex);
 		return supplier;
 	}
@@ -625,7 +626,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	
 	public String getSelectedPaymentInfo() {
 		String paymentInfo;
-		comboBoxInvoicePaymentInfo.setSelectedIndex(1);
+		comboBoxInvoicePaymentInfo.setSelectedIndex(0);
 		int selectedIndex = comboBoxInvoicePaymentInfo.getSelectedIndex();
 		paymentInfo = mapPaymentInfo.get(selectedIndex);
 		return paymentInfo;
@@ -659,43 +660,42 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 	public void fillSupplierComboBoxMap() {
 		mapSupplierValues = new HashMap<Integer, Supplier>();
-		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
+		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();		
 		int i = 0;
 
 		for (Supplier supplier : suppliers) {
 			String supplierName = supplier.getSupplierName();
-			mapSupplierValues.put(++i, supplier);
+			mapSupplierValues.put(i++, supplier);
 			comboBoxInvoiceSupplierName.addItem(supplierName);
 		}
 	}
 
 	public void fillCustomerComboBoxMap() {
 		mapCustomerValues = new HashMap<Integer, Customer>();
-		List<Customer> customers = customerServiceImpl.findAllCustomers();
-		int i = 0;
-
-		comboBoxInvoiceCustomerName.addItem("");
+		List<Customer> customers = customerServiceImpl.findAllCustomers();		
+		comboBoxInvoiceCustomerName.addItem("");		
+		int i = 1;
 
 		for (Customer customer : customers) {
 			String customerName = customer.getCustomerName();
-			mapCustomerValues.put(++i, customer);
+			mapCustomerValues.put(i++, customer);
 			comboBoxInvoiceCustomerName.addItem(customerName);
 		}
 	}
 
 	public void fillPaymentInfo() {
-		mapPaymentInfo = new HashMap<Integer, String>();
-		mapPaymentInfo.put(1, "Исплатена");
-		mapPaymentInfo.put(3, "Неисплатена");
+		mapPaymentInfo = new HashMap<Integer, String>();		
+		mapPaymentInfo.put(0, "Исплатена");
+		mapPaymentInfo.put(1, "Неисплатена");
 		mapPaymentInfo.put(2, "Делумно исплатена");
 
-		for (Map.Entry entry : mapPaymentInfo.entrySet()) {
+		for (Map.Entry<Integer, String> entry : mapPaymentInfo.entrySet()) {
 			comboBoxInvoicePaymentInfo.addItem(entry.getValue());
 		}
 	}
 
 	public Invoice getInvoiceFromFields() {
-		Invoice invoice = new Invoice();
+		Invoice invoice = new Invoice();		
 		invoice.setCustomer(getSelectedCustomer());
 		invoice.setSupplier(getSelectedSupplier());
 		invoice.setInvoiceNumber(textFieldInvoiceNumber.getText());
@@ -714,8 +714,11 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 	public void saveInvoiceAndDispose() {
 		Invoice invoice = getInvoiceFromFields();
+		
 		invoiceServiceImpl.saveInvoice(invoice);
 		dialog.dispose();
+		invoicePanelImpl.setSelectedComboBoxCustomer(comboBoxInvoiceCustomerName.getSelectedIndex());
+		invoicePanelImpl.setSelectedComboBoxPaymentInfo(comboBoxInvoicePaymentInfo.getSelectedIndex());
 		invoicePanelImpl.populateInvoiceTable();
 	}
 
