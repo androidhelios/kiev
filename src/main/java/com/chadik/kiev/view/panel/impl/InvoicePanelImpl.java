@@ -279,14 +279,16 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int selectedComboBoxSuplierIndex = comboBox.getSelectedIndex();
-				Integer selectedComboBoxSupplierId = mapSupplierValues
-						.get(selectedComboBoxSuplierIndex);
-				int intSelectedComboBoxSupplerId = selectedComboBoxSupplierId
-						.intValue();
-				Supplier supplier = supplierServiceImpl
-						.findSupplierById(new BigDecimal(
-								intSelectedComboBoxSupplerId));
-				fillSupplierFields(supplier);
+				if (selectedComboBoxSuplierIndex != -1) {
+					Integer selectedComboBoxSupplierId = mapSupplierValues
+							.get(selectedComboBoxSuplierIndex);
+					int intSelectedComboBoxSupplerId = selectedComboBoxSupplierId
+							.intValue();
+					Supplier supplier = supplierServiceImpl
+							.findSupplierById(new BigDecimal(
+									intSelectedComboBoxSupplerId));
+					fillSupplierFields(supplier);
+				}
 			}
 		});
 
@@ -305,14 +307,16 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int selectedComboBoxCustomerIndex = comboBox.getSelectedIndex();
-				Integer selectedComboBoxCustomerId = mapCustomerValues
-						.get(selectedComboBoxCustomerIndex);
-				int intSelectedComboBoxCustomerId = selectedComboBoxCustomerId
-						.intValue();
-				Customer customer = customerServiceImpl
-						.findCustomerById(new BigDecimal(
-								intSelectedComboBoxCustomerId));
-				fillCustomerFields(customer);
+				if (selectedComboBoxCustomerIndex != -1) {
+					Integer selectedComboBoxCustomerId = mapCustomerValues
+							.get(selectedComboBoxCustomerIndex);
+					int intSelectedComboBoxCustomerId = selectedComboBoxCustomerId
+							.intValue();
+					Customer customer = customerServiceImpl
+							.findCustomerById(new BigDecimal(
+									intSelectedComboBoxCustomerId));
+					fillCustomerFields(customer);
+				}
 			}
 		});
 
@@ -1075,7 +1079,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				break;
 			}
 		}
-		selectedIndex = key.intValue() - 1;
+		selectedIndex = key.intValue();
 		return selectedIndex;
 	}
 
