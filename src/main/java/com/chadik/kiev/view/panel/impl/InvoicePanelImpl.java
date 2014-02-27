@@ -886,7 +886,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void setFieldsNonEditable() {
 		textFieldInvoiceId.setBackground(nonEditableTextFieldColor);
 		comboBoxInvoiceSupplierName.setEnabled(false);
-		comboBoxInvoiceCustomerName.setEditable(false);
+		comboBoxInvoiceCustomerName.setEnabled(false);
 		textFieldInvoiceSupplierAddress.setEditable(false);
 		textFieldInvoiceSupplierAddress
 				.setBackground(nonEditableTextFieldColor);
@@ -933,7 +933,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalTax.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceTotalPriceTax.setEditable(false);
 		textFieldInvoiceTotalPriceTax.setBackground(nonEditableTextFieldColor);
-		comboBoxInvoicePaymentInfo.setEditable(false);
+		comboBoxInvoicePaymentInfo.setEnabled(false);
 		textFieldInvoiceAdditionalInfo.setEditable(false);
 		textFieldInvoiceAdditionalInfo.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceId.setEditable(false);
