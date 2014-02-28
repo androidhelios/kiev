@@ -276,7 +276,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		comboBoxInvoiceSupplierName.setBounds(xTextField, y, weightTextField,
 				height);
 		comboBoxInvoiceSupplierName.setEnabled(false);
-		fillSupplierComboBoxMap();
 		comboBoxInvoiceSupplierName.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -304,7 +303,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		comboBoxInvoiceCustomerName.setBounds(xTextField, y, weightTextField,
 				height);
 		comboBoxInvoiceCustomerName.setEnabled(false);
-		fillCustomerComboBoxMap();
 		comboBoxInvoiceCustomerName.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -535,7 +533,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		comboBoxInvoicePaymentInfo.setBounds(xTextField, y, weightTextField,
 				height);
 		comboBoxInvoicePaymentInfo.setEnabled(false);
-		fillPaymentInfo();
 		comboBoxInvoicePaymentInfo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -810,6 +807,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		}
 
 		if (table.getRowCount() > 0) {
+			
+			fillComboBoxItems();
+			
 			table.setRowSelectionInterval(table.getRowCount() - 1,
 					table.getRowCount() - 1);
 
@@ -1205,6 +1205,18 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonAddProduct.setEnabled(false);
 		buttonDeleteProduct.setEnabled(false);
 		buttonPrint.setEnabled(false);
+	}
+	
+	public void removeComboBoxItems() {
+		comboBoxInvoiceSupplierName.removeAllItems();
+		comboBoxInvoiceCustomerName.removeAllItems();
+		comboBoxInvoicePaymentInfo.removeAllItems();
+	}
+	
+	public void fillComboBoxItems() {
+		fillSupplierComboBoxMap();
+		fillCustomerComboBoxMap();
+		fillPaymentInfo();
 	}
 
 }
