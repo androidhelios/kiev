@@ -444,6 +444,9 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	public void saveCustomer() {
 		Customer customer = getCustomerFromCustomerFields();
 		customerServiceImpl.saveCustomer(customer);
+		int row = table.getSelectedRow();
+		populateCustomerTable();
+		table.setRowSelectionInterval(row, row);
 		setFieldsNonEditable();
 		setEditButtonsDisabled();
 	}

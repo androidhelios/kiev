@@ -825,9 +825,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	}
 
 	public Invoice getInvoiceFromInvoiceFields() {
-		Invoice invoice = new Invoice();
-		invoice.setCustomer(getSelectedComboBoxCustomer());
+		int row = table.getSelectedRow();
+		String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
+		Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 		invoice.setSupplier(getSelectedComboBoxSupplier());
+		invoice.setCustomer(getSelectedComboBoxCustomer());
 		invoice.setInvoiceNumber(textFieldInvoiceNumber.getText());
 		invoice.setInvoiceSerialNumber(textFieldInvoiceSerialNumber.getText());
 		invoice.setInvoiceDate(textFieldInvoiceDate.getText());
@@ -977,7 +979,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	}
 
 	public Customer getSelectedComboBoxCustomer() {
-		int selectedComboBoxCustomerIndex = comboBoxInvoiceSupplierName
+		int selectedComboBoxCustomerIndex = comboBoxInvoiceCustomerName
 				.getSelectedIndex();
 		Integer selectedComboBoxCustomerId = mapCustomerValues
 				.get(selectedComboBoxCustomerIndex);
@@ -1057,9 +1059,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	public void fillPaymentInfo() {
 		mapPaymentInfo = new HashMap<Integer, String>();
-		mapPaymentInfo.put(0, "Исплатена");
-		mapPaymentInfo.put(1, "Неисплатена");
-		mapPaymentInfo.put(2, "Делумно исплатена");
+		mapPaymentInfo.put(0, "Неисплатена");
+		mapPaymentInfo.put(1, "Делумно исплатена");
+		mapPaymentInfo.put(2, "Исплатена");
 
 		for (Map.Entry<Integer, String> entry : mapPaymentInfo.entrySet()) {
 			comboBoxInvoicePaymentInfo.addItem(entry.getValue());
@@ -1100,6 +1102,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void saveInvoice() {
 		Invoice invoice = getInvoiceFromInvoiceFields();
 		invoiceServiceImpl.saveInvoice(invoice);
+		int row = table.getSelectedRow();
+		populateInvoiceTable();
+		table.setRowSelectionInterval(row, row);
 		setFieldsNonEditable();
 		setEditButtonsDisabled();
 	}

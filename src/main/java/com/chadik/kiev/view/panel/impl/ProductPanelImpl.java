@@ -460,6 +460,9 @@ public class ProductPanelImpl implements IProductPanel {
 	public void saveProduct() {
 		Product product = getProductFromProductFields();
 		productServiceImpl.saveProduct(product);
+		int row = table.getSelectedRow();
+		populateProductTable();
+		table.setRowSelectionInterval(row, row);
 		setFieldsNonEditable();
 		setEditButtonsDisabled();
 	}

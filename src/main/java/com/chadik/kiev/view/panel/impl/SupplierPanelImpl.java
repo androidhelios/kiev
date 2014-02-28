@@ -521,6 +521,9 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	public void saveSupplier() {
 		Supplier supplier = getSupplierFromSupplierFields();
 		supplierServiceImpl.saveSupplier(supplier);
+		int row = table.getSelectedRow();
+		populateSupplierTable();
+		table.setRowSelectionInterval(row, row);
 		setFieldsNonEditable();
 		setEditButtonsDisabled();
 	}
