@@ -685,9 +685,9 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 	public void fillPaymentInfo() {
 		mapPaymentInfo = new HashMap<Integer, String>();		
-		mapPaymentInfo.put(0, "Исплатена");
-		mapPaymentInfo.put(1, "Неисплатена");
-		mapPaymentInfo.put(2, "Делумно исплатена");
+		mapPaymentInfo.put(0, "Неисплатена");
+		mapPaymentInfo.put(1, "Делумно исплатена");
+		mapPaymentInfo.put(2, "Исплатена");
 
 		for (Map.Entry<Integer, String> entry : mapPaymentInfo.entrySet()) {
 			comboBoxInvoicePaymentInfo.addItem(entry.getValue());
