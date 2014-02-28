@@ -249,14 +249,17 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		buttonEdit = new JButton("Измени");
 		buttonEdit.setPreferredSize(new Dimension(100, 25));
+		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setFieldsEditable();
+				setEditButtonsEnabled();
 			}
 		});
 
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
+		buttonDelete.setEnabled(false);
 
 		int spacing = 5;
 		int weightLabel = 125;
@@ -583,6 +586,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
+		buttonSave.setEnabled(false);
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveInvoice();
@@ -591,10 +595,23 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
+		buttonCancel.setEnabled(false);
+		buttonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowInvoiceId = (String) table
+						.getValueAt(row, 1);
+				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
+				populateInvoiceFields(invoice);
+				setFieldsNonEditable();
+				setEditButtonsDisabled();
+			}
+		});
 
 		buttonAddProduct = new JButton("Додади");
 		buttonAddProduct.setBackground(new Color(224, 224, 224));
 		buttonAddProduct.setPreferredSize(new Dimension(100, 25));
+		buttonAddProduct.setEnabled(false);
 		buttonAddProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				invoiceDialogImpl.initInvoiceDialog();
@@ -604,9 +621,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonDeleteProduct = new JButton("Одземи");
 		buttonDeleteProduct.setBackground(new Color(224, 224, 224));
 		buttonDeleteProduct.setPreferredSize(new Dimension(100, 25));
+		buttonDeleteProduct.setEnabled(false);
 
 		buttonPrint = new JButton("Испечати");
 		buttonPrint.setPreferredSize(new Dimension(100, 25));
+		buttonPrint.setEnabled(false);
 
 		panelTableHolderContentTable.add(scrollPaneTable);
 
@@ -798,6 +817,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 					table.getRowCount() - 1, 1);
 			Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 			populateInvoiceFields(invoice);
+			
+			setTableButtonsEnabled();
+			
 		}
 
 		scrollPaneTable.validate();
@@ -1172,11 +1194,17 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void setEditButtonsEnabled() {
 		buttonSave.setEnabled(true);
 		buttonCancel.setEnabled(true);
+		buttonAddProduct.setEnabled(true);
+		buttonDeleteProduct.setEnabled(true);
+		buttonPrint.setEnabled(true);
 	}
 
 	public void setEditButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
+		buttonAddProduct.setEnabled(false);
+		buttonDeleteProduct.setEnabled(false);
+		buttonPrint.setEnabled(false);
 	}
 
 }
