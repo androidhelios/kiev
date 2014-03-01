@@ -150,7 +150,7 @@ public class ProductPanelImpl implements IProductPanel {
 				String selectedRowProductId = (String) table.getValueAt(row, 1);
 				Product product = getProductFromProductTable(selectedRowProductId);
 				populateProductFields(product);
-				setEditButtonsDisabled();
+				setProductInfoButtonsDisabled();
 			}
 		});
 
@@ -171,7 +171,7 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				productDialogImpl.initProductDialog();
-				setEditButtonsDisabled();
+				setProductInfoButtonsDisabled();
 			}
 		});
 
@@ -180,8 +180,8 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setFieldsEditable();
-				setEditButtonsEnabled();
+				setCustomerFieldsEditable();
+				setProductInfoButtonsEnabled();
 			}
 		});
 
@@ -281,8 +281,8 @@ public class ProductPanelImpl implements IProductPanel {
 				String selectedRowProductId = (String) table.getValueAt(row, 1);
 				Product product = getProductFromProductTable(selectedRowProductId);
 				populateProductFields(product);
-				setFieldsNonEditable();
-				setEditButtonsDisabled();
+				setCustomerFieldsNonEditable();
+				setProductInfoButtonsDisabled();
 			}
 		});
 
@@ -372,15 +372,26 @@ public class ProductPanelImpl implements IProductPanel {
 			Product product = getProductFromProductTable(selectedRowProductId);
 			populateProductFields(product);
 
-			setTableButtonsEnabled();
+			setProductTableButtonsEnabled();
 
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
-		setFieldsNonEditable();
+		setCustomerFieldsNonEditable();
 
+	}
+	
+	public void populateProductFields(Product product) {
+		textFieldProductId.setText(product.getProductId().toString());
+		textFieldProductName.setText(product.getProductName());
+		textFieldProductMeasurement.setText(product.getProductMeasurement());
+		textFieldProductTax.setText(product.getProductTax());
+		textFieldProductPrice.setText(product.getProductPrice());
+		textFieldProductTaxPrice.setText(product.getProductTaxPrice());
+		textFieldProductAdditionalInfo.setText(product
+				.getProductAdditionalInfo());
 	}
 
 	public String[] getTableProductColumnNames() {
@@ -412,18 +423,7 @@ public class ProductPanelImpl implements IProductPanel {
 		return product;
 	}
 
-	public void populateProductFields(Product product) {
-		textFieldProductId.setText(product.getProductId().toString());
-		textFieldProductName.setText(product.getProductName());
-		textFieldProductMeasurement.setText(product.getProductMeasurement());
-		textFieldProductTax.setText(product.getProductTax());
-		textFieldProductPrice.setText(product.getProductPrice());
-		textFieldProductTaxPrice.setText(product.getProductTaxPrice());
-		textFieldProductAdditionalInfo.setText(product
-				.getProductAdditionalInfo());
-	}
-
-	public void setFieldsNonEditable() {
+	public void setCustomerFieldsNonEditable() {
 		textFieldProductName.setEditable(false);
 		textFieldProductName.setBackground(nonEditableTextFieldColor);
 		textFieldProductMeasurement.setEditable(false);
@@ -440,7 +440,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setBackground(nonEditableTextFieldColor);
 	}
 
-	public void setFieldsEditable() {
+	public void setCustomerFieldsEditable() {
 		textFieldProductName.setEditable(true);
 		textFieldProductName.setBackground(originalTextFieldColor);
 		textFieldProductMeasurement.setEditable(true);
@@ -456,6 +456,26 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setEditable(true);
 		textFieldProductId.setBackground(originalTextFieldColor);
 	}
+	
+	public void setProductTableButtonsEnabled() {
+		buttonEdit.setEnabled(true);
+		buttonDelete.setEnabled(true);
+	}
+
+	public void setProductTableButtonsDisabled() {
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+	}
+
+	public void setProductInfoButtonsEnabled() {
+		buttonSave.setEnabled(true);
+		buttonCancel.setEnabled(true);
+	}
+
+	public void setProductInfoButtonsDisabled() {
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+	}
 
 	public void saveProduct() {
 		Product product = getProductFromProductFields();
@@ -463,42 +483,16 @@ public class ProductPanelImpl implements IProductPanel {
 		int row = table.getSelectedRow();
 		populateProductTable();
 		table.setRowSelectionInterval(row, row);
-		setFieldsNonEditable();
-		setEditButtonsDisabled();
+		setCustomerFieldsNonEditable();
+		setProductInfoButtonsDisabled();
 	}
 
-	public GridBagConstraints newConstraints() {
+	public GridBagConstraints productPanelConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
 	}
-
-	public GridBagConstraints labelConstraints() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE_LEADING;
-		c.weightx = 0.0;
-		return c;
-	}
-
-	public GridBagConstraints textFieldConstraints() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE;
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		return c;
-	}
-
-	public GridBagConstraints lastComponentConstrains() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE;
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weighty = 1.0;
-		return c;
-	}
-
+	
 	public GridBagConstraints firstLabelConstrains() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(15, 10, 0, 0);
@@ -517,24 +511,30 @@ public class ProductPanelImpl implements IProductPanel {
 		return c;
 	}
 
-	public void setTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+	public GridBagConstraints labelConstraints() {
+		GridBagConstraints c = productPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE_LEADING;
+		c.weightx = 0.0;
+		return c;
 	}
 
-	public void setTableButtonsDisabled() {
-		buttonEdit.setEnabled(false);
-		buttonDelete.setEnabled(false);
+	public GridBagConstraints textFieldConstraints() {
+		GridBagConstraints c = productPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		return c;
 	}
 
-	public void setEditButtonsEnabled() {
-		buttonSave.setEnabled(true);
-		buttonCancel.setEnabled(true);
-	}
-
-	public void setEditButtonsDisabled() {
-		buttonSave.setEnabled(false);
-		buttonCancel.setEnabled(false);
+	public GridBagConstraints lastComponentConstrains() {
+		GridBagConstraints c = productPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weighty = 1.0;
+		return c;
 	}
 
 }

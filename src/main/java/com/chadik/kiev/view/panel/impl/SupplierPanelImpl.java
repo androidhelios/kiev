@@ -155,7 +155,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 						.getValueAt(row, 1);
 				Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 				populateSupplierFields(supplier);
-				setEditButtonsDisabled();
+				setSupplierInfoButtonsDisabled();
 			}
 		});
 
@@ -176,7 +176,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				supplierDialogImpl.initSupplierDialog();
-				setEditButtonsDisabled();
+				setSupplierInfoButtonsDisabled();
 			}
 		});
 
@@ -185,8 +185,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setFieldsEditable();
-				setEditButtonsEnabled();
+				setSupplierFieldsEditable();
+				setSupplierInfoButtonsEnabled();
 			}
 		});
 
@@ -310,8 +310,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 						.getValueAt(row, 1);
 				Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 				populateSupplierFields(supplier);
-				setFieldsNonEditable();
-				setEditButtonsDisabled();
+				setSupplierFieldsNonEditable();
+				setSupplierInfoButtonsDisabled();
 			}
 		});
 
@@ -416,15 +416,29 @@ public class SupplierPanelImpl implements ISupplierPanel {
 			Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 			populateSupplierFields(supplier);
 
-			setTableButtonsEnabled();
+			setSupplierTableButtonsEnabled();
 
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
-		setFieldsNonEditable();
+		setSupplierFieldsNonEditable();
 
+	}
+	
+	public void populateSupplierFields(Supplier supplier) {
+		textFieldSupplierId.setText(supplier.getSupplierId().toString());
+		textFieldSupplierName.setText(supplier.getSupplierName());
+		textFieldSupplierRegistryNumber.setText(supplier
+				.getSupplierRegistryNumber());
+		textFieldSupplierBankName.setText(supplier.getSupplierBankName());
+		textFieldSupplierBankAccount.setText(supplier.getSupplierBankAccount());
+		textFieldSupplierAddress.setText(supplier.getSupplierAddress());
+		textFieldSupplierPhoneNumber.setText(supplier.getSupplierPhoneNumber());
+		textFieldSupplierEmail.setText(supplier.getSupplierEmail());
+		textFieldSupplierAdditionalInfo.setText(supplier
+				.getSupplierAdditionalInfo());
 	}
 
 	public int[] getTableSupplierHiddenColumns() {
@@ -460,21 +474,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		return supplier;
 	}
 
-	public void populateSupplierFields(Supplier supplier) {
-		textFieldSupplierId.setText(supplier.getSupplierId().toString());
-		textFieldSupplierName.setText(supplier.getSupplierName());
-		textFieldSupplierRegistryNumber.setText(supplier
-				.getSupplierRegistryNumber());
-		textFieldSupplierBankName.setText(supplier.getSupplierBankName());
-		textFieldSupplierBankAccount.setText(supplier.getSupplierBankAccount());
-		textFieldSupplierAddress.setText(supplier.getSupplierAddress());
-		textFieldSupplierPhoneNumber.setText(supplier.getSupplierPhoneNumber());
-		textFieldSupplierEmail.setText(supplier.getSupplierEmail());
-		textFieldSupplierAdditionalInfo.setText(supplier
-				.getSupplierAdditionalInfo());
-	}
-
-	public void setFieldsNonEditable() {
+	public void setSupplierFieldsNonEditable() {
 		textFieldSupplierName.setEditable(false);
 		textFieldSupplierName.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierRegistryNumber.setEditable(false);
@@ -497,7 +497,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierId.setBackground(nonEditableTextFieldColor);
 	}
 
-	public void setFieldsEditable() {
+	public void setSupplierFieldsEditable() {
 		textFieldSupplierName.setEditable(true);
 		textFieldSupplierName.setBackground(originalTextFieldColor);
 		textFieldSupplierRegistryNumber.setEditable(true);
@@ -517,6 +517,26 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierId.setEditable(true);
 		textFieldSupplierId.setBackground(originalTextFieldColor);
 	}
+	
+	public void setSupplierTableButtonsEnabled() {
+		buttonEdit.setEnabled(true);
+		buttonDelete.setEnabled(true);
+	}
+
+	public void setSupplierTableButtonsDisabled() {
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+	}
+
+	public void setSupplierInfoButtonsEnabled() {
+		buttonSave.setEnabled(true);
+		buttonCancel.setEnabled(true);
+	}
+
+	public void setSupplierInfoButtonsDisabled() {
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+	}
 
 	public void saveSupplier() {
 		Supplier supplier = getSupplierFromSupplierFields();
@@ -524,42 +544,16 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		int row = table.getSelectedRow();
 		populateSupplierTable();
 		table.setRowSelectionInterval(row, row);
-		setFieldsNonEditable();
-		setEditButtonsDisabled();
+		setSupplierFieldsNonEditable();
+		setSupplierInfoButtonsDisabled();
 	}
 
-	public GridBagConstraints newConstraints() {
+	public GridBagConstraints supplierPanelConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
 	}
-
-	public GridBagConstraints labelConstraints() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE_LEADING;
-		c.weightx = 0.0;
-		return c;
-	}
-
-	public GridBagConstraints textFieldConstraints() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE;
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		return c;
-	}
-
-	public GridBagConstraints lastComponentConstrains() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE;
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weighty = 1.0;
-		return c;
-	}
-
+	
 	public GridBagConstraints firstLabelConstrains() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(15, 10, 0, 0);
@@ -578,24 +572,30 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		return c;
 	}
 
-	public void setTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+	public GridBagConstraints labelConstraints() {
+		GridBagConstraints c = supplierPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE_LEADING;
+		c.weightx = 0.0;
+		return c;
 	}
 
-	public void setTableButtonsDisabled() {
-		buttonEdit.setEnabled(false);
-		buttonDelete.setEnabled(false);
+	public GridBagConstraints textFieldConstraints() {
+		GridBagConstraints c = supplierPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		return c;
 	}
 
-	public void setEditButtonsEnabled() {
-		buttonSave.setEnabled(true);
-		buttonCancel.setEnabled(true);
-	}
-
-	public void setEditButtonsDisabled() {
-		buttonSave.setEnabled(false);
-		buttonCancel.setEnabled(false);
+	public GridBagConstraints lastComponentConstrains() {
+		GridBagConstraints c = supplierPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weighty = 1.0;
+		return c;
 	}
 
 }

@@ -204,7 +204,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		return dialog;
 	}
 
-	public Customer getCustomerFromFields() {
+	public Customer getCustomerFromCustomerFields() {
 		Customer customer = new Customer();
 		customer.setCustomerName(textFieldCustomerName.getText());
 		customer.setCustomerAddress(textFieldCustomerAddress.getText());
@@ -217,7 +217,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 	}
 
 	public void saveCustomerAndDispose() {
-		Customer customer = getCustomerFromFields();
+		Customer customer = getCustomerFromCustomerFields();
 		customerServiceImpl.saveCustomer(customer);
 		dialog.dispose();
 		customerPanelImpl.populateCustomerTable();

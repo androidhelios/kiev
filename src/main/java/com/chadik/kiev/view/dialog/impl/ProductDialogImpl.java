@@ -218,7 +218,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 	}
 
-	public Product getProductFromFields() {
+	public Product getProductFromProductFields() {
 		Product product = new Product();
 		product.setProductName(textFieldProductName.getText());
 		product.setProductMeasurement(textFieldProductMeasurement.getText());
@@ -232,7 +232,7 @@ public class ProductDialogImpl implements IProductDialog {
 	}
 
 	public void saveProductAndDispose() {
-		Product product = getProductFromFields();
+		Product product = getProductFromProductFields();
 		productServiceImpl.saveProduct(product);
 		dialog.dispose();
 		productPanelImpl.populateProductTable();

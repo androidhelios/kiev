@@ -149,7 +149,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 						.getValueAt(row, 1);
 				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 				populateCustomerFields(customer);
-				setEditButtonsDisabled();
+				setCustomerInfoButtonsDisabled();
 			}
 		});
 
@@ -178,8 +178,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setFieldsEditable();
-				setEditButtonsEnabled();
+				setCustomerFieldsEditable();
+				setCustomerInfoButtonsEnabled();
 			}
 		});
 
@@ -273,8 +273,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 						.getValueAt(row, 1);
 				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 				populateCustomerFields(customer);
-				setFieldsNonEditable();
-				setEditButtonsDisabled();
+				setCustomerFieldsNonEditable();
+				setCustomerInfoButtonsDisabled();
 			}
 		});
 
@@ -361,15 +361,25 @@ public class CustomerPanelImpl implements ICustomerPanel {
 			Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 			populateCustomerFields(customer);
 
-			setTableButtonsEnabled();
+			setCustomerTableButtonsEnabled();
 
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
-		setFieldsNonEditable();
+		setCustomerFieldsNonEditable();
 
+	}
+	
+	public void populateCustomerFields(Customer customer) {
+		textFieldCustomerId.setText(customer.getCustomerId().toString());
+		textFieldCustomerName.setText(customer.getCustomerName());
+		textFieldCustomerAddress.setText(customer.getCustomerAddress());
+		textFieldCustomerPhoneNumber.setText(customer.getCustomerPhoneNumber());
+		textFieldCustomerEmail.setText(customer.getCustomerEmail());
+		textFieldCustomerAdditionalInfo.setText(customer
+				.getCustomerAdditionalInfo());
 	}
 
 	public String[] getTableCustomerColumnNames() {
@@ -400,17 +410,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		return customer;
 	}
 
-	public void populateCustomerFields(Customer customer) {
-		textFieldCustomerId.setText(customer.getCustomerId().toString());
-		textFieldCustomerName.setText(customer.getCustomerName());
-		textFieldCustomerAddress.setText(customer.getCustomerAddress());
-		textFieldCustomerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-		textFieldCustomerEmail.setText(customer.getCustomerEmail());
-		textFieldCustomerAdditionalInfo.setText(customer
-				.getCustomerAdditionalInfo());
-	}
-
-	public void setFieldsNonEditable() {
+	public void setCustomerFieldsNonEditable() {
 		textFieldCustomerName.setEditable(false);
 		textFieldCustomerName.setBackground(nonEditableTextFieldColor);
 		textFieldCustomerAddress.setEditable(false);
@@ -426,7 +426,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerId.setBackground(nonEditableTextFieldColor);
 	}
 
-	public void setFieldsEditable() {
+	public void setCustomerFieldsEditable() {
 		textFieldCustomerName.setEditable(true);
 		textFieldCustomerName.setBackground(originalTextFieldColor);
 		textFieldCustomerAddress.setEditable(true);
@@ -440,6 +440,26 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerId.setEditable(true);
 		textFieldCustomerId.setBackground(originalTextFieldColor);
 	}
+	
+	public void setCustomerTableButtonsEnabled() {
+		buttonEdit.setEnabled(true);
+		buttonDelete.setEnabled(true);
+	}
+
+	public void setCustomerTableButtonsDisabled() {
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+	}
+
+	public void setCustomerInfoButtonsEnabled() {
+		buttonSave.setEnabled(true);
+		buttonCancel.setEnabled(true);
+	}
+
+	public void setCustomerInfoButtonsDisabled() {
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+	}
 
 	public void saveCustomer() {
 		Customer customer = getCustomerFromCustomerFields();
@@ -447,42 +467,16 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		int row = table.getSelectedRow();
 		populateCustomerTable();
 		table.setRowSelectionInterval(row, row);
-		setFieldsNonEditable();
-		setEditButtonsDisabled();
+		setCustomerFieldsNonEditable();
+		setCustomerInfoButtonsDisabled();
 	}
 
-	public GridBagConstraints newConstraints() {
+	public GridBagConstraints customerPanelConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
 	}
-
-	public GridBagConstraints labelConstraints() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE_LEADING;
-		c.weightx = 0.0;
-		return c;
-	}
-
-	public GridBagConstraints textFieldConstraints() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE;
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		return c;
-	}
-
-	public GridBagConstraints lastComponentConstrains() {
-		GridBagConstraints c = newConstraints();
-		c.anchor = GridBagConstraints.BASELINE;
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weighty = 1.0;
-		return c;
-	}
-
+	
 	public GridBagConstraints firstLabelConstrains() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(15, 10, 0, 0);
@@ -501,24 +495,30 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		return c;
 	}
 
-	public void setTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+	public GridBagConstraints labelConstraints() {
+		GridBagConstraints c = customerPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE_LEADING;
+		c.weightx = 0.0;
+		return c;
 	}
 
-	public void setTableButtonsDisabled() {
-		buttonEdit.setEnabled(false);
-		buttonDelete.setEnabled(false);
+	public GridBagConstraints textFieldConstraints() {
+		GridBagConstraints c = customerPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		return c;
 	}
-
-	public void setEditButtonsEnabled() {
-		buttonSave.setEnabled(true);
-		buttonCancel.setEnabled(true);
-	}
-
-	public void setEditButtonsDisabled() {
-		buttonSave.setEnabled(false);
-		buttonCancel.setEnabled(false);
+	
+	public GridBagConstraints lastComponentConstrains() {
+		GridBagConstraints c = customerPanelConstraints();
+		c.anchor = GridBagConstraints.BASELINE;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weighty = 1.0;
+		return c;
 	}
 
 }
