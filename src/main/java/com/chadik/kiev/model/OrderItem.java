@@ -31,8 +31,6 @@ public class OrderItem implements Serializable {
 	@NotNull
 	private String orderItemQuantityPriceWithoutTax;
 	@NotNull
-	private String orderItemTax;
-	@NotNull
 	private String orderItemQuantityTax;
 	private String orderAdditionalInfo;
 
@@ -83,14 +81,6 @@ public class OrderItem implements Serializable {
 	public void setOrderItemQuantityPriceWithoutTax(
 			String orderItemQuantityPriceWithoutTax) {
 		this.orderItemQuantityPriceWithoutTax = orderItemQuantityPriceWithoutTax;
-	}
-
-	public String getOrderItemTax() {
-		return orderItemTax;
-	}
-
-	public void setOrderItemTax(String orderItemTax) {
-		this.orderItemTax = orderItemTax;
 	}
 
 	public String getOrderItemQuantityTax() {
