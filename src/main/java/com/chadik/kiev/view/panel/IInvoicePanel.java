@@ -7,5 +7,7 @@ public interface IInvoicePanel {
 	public JPanel initInvoicePanel();
 	
 	public void populateInvoiceTable();
+	
+	public void setProductButtonsEnabled();
 
 }

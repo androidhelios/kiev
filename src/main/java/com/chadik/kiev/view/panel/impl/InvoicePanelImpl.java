@@ -224,6 +224,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 				populateInvoiceFields(invoice);
+				orderItemPanelImpl.setInvoice(invoice);
+				orderItemPanelImpl.populateOrderItemTable();
+				
 			}
 		});
 
@@ -1175,6 +1178,12 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonDeleteProduct.setEnabled(false);
 		buttonPrint.setEnabled(false);
 	}	
+	
+	@Override
+	public void setProductButtonsEnabled() {
+		buttonAddProduct.setEnabled(true);
+		buttonDeleteProduct.setEnabled(true);
+	}
 	
 	public void saveInvoice() {
 		Invoice invoice = getInvoiceFromInvoiceFields();

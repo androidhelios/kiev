@@ -34,8 +34,6 @@ public class OrderItem implements Serializable {
 	private String orderItemTax;
 	@NotNull
 	private String orderItemQuantityTax;
-	@NotNull
-	private String orderItemQuantityTaxPrice;
 	private String orderAdditionalInfo;
 
 	public BigDecimal getOrderItemId() {
@@ -101,14 +99,6 @@ public class OrderItem implements Serializable {
 
 	public void setOrderItemQuantityTax(String orderItemQuantityTax) {
 		this.orderItemQuantityTax = orderItemQuantityTax;
-	}
-
-	public String getOrderItemQuantityTaxPrice() {
-		return orderItemQuantityTaxPrice;
-	}
-
-	public void setOrderItemQuantityTaxPrice(String orderItemQuantityTaxPrice) {
-		this.orderItemQuantityTaxPrice = orderItemQuantityTaxPrice;
 	}
 
 	public String getOrderAdditionalInfo() {
