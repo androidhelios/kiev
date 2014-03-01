@@ -19,7 +19,7 @@ public class Product implements Serializable {
 	private BigDecimal productId;
 	@NotNull(message = "Полето име на продуктот не е пополнето")
 	private String productName;
-	@NotNull(message = "Полето единица мерка на продуктот не е пополнето")
+	@NotNull(message = "Полето мерна единица на продуктот не е пополнето")
 	private String productMeasurement;
 	@NotNull(message = "Полето данок на продуктот не е пополнето")
 	private String productTax;

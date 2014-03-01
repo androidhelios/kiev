@@ -36,7 +36,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	@Autowired
 	private IOrderItemService orderItemServiceImpl;
 	@Autowired
-	private IInvoiceService invoiceItemServiceImpl;
+	private IInvoiceService invoiceServiceImpl;
 
 	@Override
 	public JPanel initOrderItemPanel() {
@@ -52,6 +52,13 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelTableHolderContentTable = new JPanel();
 		panelTableHolderContentTable.setLayout(new BorderLayout());
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 300));
+		
+		defaultTableModel = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		defaultTableModel.setColumnIdentifiers(getTableCustomerColumnNames());
 
 		panelTableHolderContent.add(panelTableHolderContentTable,
 				BorderLayout.CENTER);
@@ -61,6 +68,11 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelAll.add(panelTableHolder, BorderLayout.CENTER);
 
 		return panelAll;
+	}
+	
+	public String[] getTableCustomerColumnNames() {
+		return new String[] { "Реден Бр.", "Id", "Назив", "Мерна единица",
+				"Телефонски број", "Email", "Забелешки" };
 	}
 
 	@Override
