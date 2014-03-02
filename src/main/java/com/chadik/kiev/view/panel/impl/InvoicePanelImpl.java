@@ -226,12 +226,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				int row = table.getSelectedRow();
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
-				orderItemPanelImpl.setInvoice(invoice);
-				orderItemPanelImpl.populateOrderItemTable();
-				orderItemDialogImpl.setInvoice(invoice);
-				
 				populateInvoiceFields(invoice);
-				
+				orderItemPanelImpl.setInvoice(invoice);
+				orderItemPanelImpl.populateOrderItemTable();				
 			}
 		});
 

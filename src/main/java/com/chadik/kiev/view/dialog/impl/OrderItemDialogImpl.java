@@ -420,6 +420,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		OrderItem orderItem = getOrderItemFromOrderItemFields();
 		orderItemServiceImpl.saveOrderItem(orderItem);
 		dialog.dispose();
+		orderItemPanelImpl.setInvoice(getInvoice());
 		orderItemPanelImpl.populateOrderItemTable();
 	}
 

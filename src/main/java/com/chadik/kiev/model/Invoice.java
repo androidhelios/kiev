@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -45,8 +46,7 @@ public class Invoice implements Serializable {
 	@NotNull(message = "Полето податок за исплата на фактурата не е пополнето")
 	private String invoicePaymentInfo;
 	private String invoiceAdditionalInfo;
-	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-	@NotNull
+	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@Valid
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
