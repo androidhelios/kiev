@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -151,14 +153,16 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int selectedComboBoxProductIndex = comboBox.getSelectedIndex();
-				Integer selectedComboBoxProductId = mapProducts
-						.get(selectedComboBoxProductIndex);
-				int intSelectedComboBoxProductId = selectedComboBoxProductId
-						.intValue();
-				Product product = productServiceImpl
-						.findProductById(new BigDecimal(
-								intSelectedComboBoxProductId));
-				populateOrderItemProductFields(product);
+				if (selectedComboBoxProductIndex > 0) {
+					Integer selectedComboBoxProductId = mapProducts
+							.get(selectedComboBoxProductIndex);
+					int intSelectedComboBoxProductId = selectedComboBoxProductId
+							.intValue();
+					Product product = productServiceImpl
+							.findProductById(new BigDecimal(
+									intSelectedComboBoxProductId));
+					populateOrderItemProductFields(product);
+				}
 			}
 		});
 
@@ -166,9 +170,28 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		labelOrderItemQuantity = new JLabel("Количина:");
 		labelOrderItemQuantity.setBounds(xLabel, y, weightLabel, height);
+		
+		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		textFieldOrderItemQuantity = new JTextField();
 		textFieldOrderItemQuantity.setBounds(xTextField, y, weightTextField, height);
+		textFieldOrderItemQuantity.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				populateCalculatedOrderItemFields(textFieldOrderItemQuantity.getText());
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				populateCalculatedOrderItemFields(textFieldOrderItemQuantity.getText());				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				populateCalculatedOrderItemFields(textFieldOrderItemQuantity.getText());
+			}
+		});
+		
 		textFieldOrderItemQuantity.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -261,7 +284,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		y = y + height + spacing;
 
-		labelOrderItemInvoiceId = new JLabel("ID:");
+		labelOrderItemInvoiceId = new JLabel("Фактура ID:");
 		labelOrderItemInvoiceId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemInvoiceId = new JTextField();
@@ -270,7 +293,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		
 		y = y + height + spacing;
 
-		labelOrderItemProductId = new JLabel("ID:");
+		labelOrderItemProductId = new JLabel("Продукт ID:");
 		labelOrderItemProductId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemProductId = new JTextField();
@@ -279,7 +302,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		
 		y = y + height + spacing;
 
-		labelOrderItemId = new JLabel("ID:");
+		labelOrderItemId = new JLabel("Порачка ID:");
 		labelOrderItemId.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemId = new JTextField();
@@ -418,6 +441,37 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	@Override
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;		
+	}
+	
+	public boolean isInt(String textFieldValue) {
+		try {
+			Integer.parseInt(textFieldValue);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public void populateCalculatedOrderItemFields(String quantity) {
+		String emptyString = "";
+		
+		if (isInt(quantity)) {
+			double quantityTextFieldValue = Double.parseDouble(quantity);
+			double doubleOrderItemProductPrice = Double.parseDouble(textFieldOrderItemProductPrice.getText());
+			double doubleOrderItemProductTax = Double.parseDouble(textFieldOrderItemProductTax.getText());
+			
+			double doubleOrderItemQuantityPriceWithoutTax = quantityTextFieldValue * doubleOrderItemProductPrice;
+			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceWithoutTax * doubleOrderItemProductTax/100;
+			double doubleOrderItemQuantityPrice = doubleOrderItemQuantityPriceWithoutTax + doubleOrderItemQuantityTax;
+			
+			textFieldOrderItemQuantityPriceWithoutTax.setText(Double.toString(doubleOrderItemQuantityPriceWithoutTax));
+			textFieldOrderItemQuantityTax.setText(Double.toString(doubleOrderItemQuantityTax));
+			textFieldOrderItemQuantityPrice.setText(Double.toString(doubleOrderItemQuantityPrice));
+		} else {
+			textFieldOrderItemQuantityPriceWithoutTax.setText(emptyString);
+			textFieldOrderItemQuantityTax.setText(emptyString);
+			textFieldOrderItemQuantityPrice.setText(emptyString);
+		}
 	}
 
 }
