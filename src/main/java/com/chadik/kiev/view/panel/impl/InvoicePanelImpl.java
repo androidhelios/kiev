@@ -44,6 +44,7 @@ import com.chadik.kiev.service.ISupplierService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
 import com.chadik.kiev.view.dialog.IInvoiceDialog;
+import com.chadik.kiev.view.dialog.IOrderItemDialog;
 import com.chadik.kiev.view.panel.IInvoicePanel;
 import com.chadik.kiev.view.panel.IOrderItemPanel;
 
@@ -138,22 +139,24 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
 
-	private Map<Integer, Integer> mapSupplierValues;
-	private Map<Integer, Integer> mapCustomerValues;
-	private Map<Integer, String> mapPaymentInfo;
+	private Map<Integer, Integer> mapSuppliers;
+	private Map<Integer, Integer> mapCustomers;
+	private Map<Integer, String> mapPaymentsInfo;
 
 	private List<Invoice> invoices;
 
 	@Autowired
 	private IInvoiceService invoiceServiceImpl;
 	@Autowired
-	private IInvoiceDialog invoiceDialogImpl;
-	@Autowired
 	private ISupplierService supplierServiceImpl;
 	@Autowired
 	private ICustomerService customerServiceImpl;
 	@Autowired
 	private IOrderItemPanel orderItemPanelImpl;
+	@Autowired
+	private IInvoiceDialog invoiceDialogImpl;
+	@Autowired
+	private IOrderItemDialog orderItemDialogImpl;
 
 	@Override
 	public JPanel initInvoicePanel() {
@@ -285,7 +288,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int selectedComboBoxSuplierIndex = comboBox.getSelectedIndex();
 				if (selectedComboBoxSuplierIndex != -1) {
-					Integer selectedComboBoxSupplierId = mapSupplierValues
+					Integer selectedComboBoxSupplierId = mapSuppliers
 							.get(selectedComboBoxSuplierIndex);
 					int intSelectedComboBoxSupplerId = selectedComboBoxSupplierId
 							.intValue();
@@ -312,7 +315,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int selectedComboBoxCustomerIndex = comboBox.getSelectedIndex();
 				if (selectedComboBoxCustomerIndex != -1) {
-					Integer selectedComboBoxCustomerId = mapCustomerValues
+					Integer selectedComboBoxCustomerId = mapCustomers
 							.get(selectedComboBoxCustomerIndex);
 					int intSelectedComboBoxCustomerId = selectedComboBoxCustomerId
 							.intValue();
@@ -614,7 +617,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonAddProduct.setEnabled(false);
 		buttonAddProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				invoiceDialogImpl.initInvoiceDialog();
+				orderItemDialogImpl.initOrderItemDialog();
 			}
 		});
 
@@ -859,7 +862,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	}
 
 	public void populateInvoiceSupplierComboBox() {
-		mapSupplierValues = new HashMap<Integer, Integer>();
+		mapSuppliers = new HashMap<Integer, Integer>();
 		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
 		int i = 0;
 
@@ -867,13 +870,13 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			String supplierName = supplier.getSupplierName();
 			BigDecimal supplierId = supplier.getSupplierId();
 			Integer integerSupplierId = supplierId.intValue();
-			mapSupplierValues.put(i++, integerSupplierId);
+			mapSuppliers.put(i++, integerSupplierId);
 			comboBoxInvoiceSupplierName.addItem(supplierName);
 		}
 	}
 
 	public void populateInvoiceCustomerComboBox() {
-		mapCustomerValues = new HashMap<Integer, Integer>();
+		mapCustomers = new HashMap<Integer, Integer>();
 		List<Customer> customers = customerServiceImpl.findAllCustomers();
 		int i = 0;
 
@@ -881,18 +884,18 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			String customerName = customer.getCustomerName();
 			BigDecimal customerId = customer.getCustomerId();
 			Integer integerCustomerId = customerId.intValue();
-			mapCustomerValues.put(i++, integerCustomerId);
+			mapCustomers.put(i++, integerCustomerId);
 			comboBoxInvoiceCustomerName.addItem(customerName);
 		}
 	}
 
 	public void populateInvoicePaymentInfoComboBox() {
-		mapPaymentInfo = new HashMap<Integer, String>();
-		mapPaymentInfo.put(0, "Неисплатена");
-		mapPaymentInfo.put(1, "Делумно исплатена");
-		mapPaymentInfo.put(2, "Исплатена");
+		mapPaymentsInfo = new HashMap<Integer, String>();
+		mapPaymentsInfo.put(0, "Неисплатена");
+		mapPaymentsInfo.put(1, "Делумно исплатена");
+		mapPaymentsInfo.put(2, "Исплатена");
 
-		for (Map.Entry<Integer, String> entry : mapPaymentInfo.entrySet()) {
+		for (Map.Entry<Integer, String> entry : mapPaymentsInfo.entrySet()) {
 			comboBoxInvoicePaymentInfo.addItem(entry.getValue());
 		}
 	}
@@ -994,7 +997,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public Supplier getSelectedComboBoxInvoiceSupplier() {
 		int selectedComboBoxSupplierIndex = comboBoxInvoiceSupplierName
 				.getSelectedIndex();
-		Integer selectedComboBoxSupplierId = mapCustomerValues
+		Integer selectedComboBoxSupplierId = mapCustomers
 				.get(selectedComboBoxSupplierIndex);
 		int intSelectedComboBoxSupplierId = selectedComboBoxSupplierId
 				.intValue();
@@ -1008,7 +1011,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public Customer getSelectedComboBoxInvoiceCustomer() {
 		int selectedComboBoxCustomerIndex = comboBoxInvoiceCustomerName
 				.getSelectedIndex();
-		Integer selectedComboBoxCustomerId = mapCustomerValues
+		Integer selectedComboBoxCustomerId = mapCustomers
 				.get(selectedComboBoxCustomerIndex);
 		int intSelectedComboBoxCustomerId = selectedComboBoxCustomerId
 				.intValue();
@@ -1024,9 +1027,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		comboBoxInvoicePaymentInfo.setSelectedIndex(0);
 		int selectedComboBoxPaymentInfoIndex = comboBoxInvoicePaymentInfo
 				.getSelectedIndex();
-		Integer selectedComboBoxCustomerId = mapCustomerValues
+		Integer selectedComboBoxCustomerId = mapCustomers
 				.get(selectedComboBoxPaymentInfoIndex);
-		paymentInfo = mapPaymentInfo.get(selectedComboBoxCustomerId);
+		paymentInfo = mapPaymentsInfo.get(selectedComboBoxCustomerId);
 		return paymentInfo;
 	}
 	
@@ -1036,7 +1039,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		Supplier supplier = invoice.getSupplier();
 		BigDecimal supplierId = supplier.getSupplierId();
 		Integer integerSupplierId = supplierId.intValue();
-		for (Map.Entry<Integer, Integer> entry : mapSupplierValues.entrySet()) {
+		for (Map.Entry<Integer, Integer> entry : mapSuppliers.entrySet()) {
 			if (integerSupplierId != null
 					&& integerSupplierId.equals(entry.getValue())) {
 				key = entry.getKey();
@@ -1053,7 +1056,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		Customer customer = invoice.getCustomer();
 		BigDecimal customerId = customer.getCustomerId();
 		Integer integerCustomerId = customerId.intValue();
-		for (Map.Entry<Integer, Integer> entry : mapCustomerValues.entrySet()) {
+		for (Map.Entry<Integer, Integer> entry : mapCustomers.entrySet()) {
 			if (integerCustomerId != null
 					&& integerCustomerId.equals(entry.getValue())) {
 				key = entry.getKey();
@@ -1068,7 +1071,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		int selectedIndex;
 		Integer key = null;
 		String paymentInfo = invoice.getInvoicePaymentInfo();
-		for (Map.Entry<Integer, String> entry : mapPaymentInfo.entrySet()) {
+		for (Map.Entry<Integer, String> entry : mapPaymentsInfo.entrySet()) {
 			if (paymentInfo != null && paymentInfo.equals(entry.getValue())) {
 				key = entry.getKey();
 				break;

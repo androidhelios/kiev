@@ -41,16 +41,16 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	private JPanel panelTableHolder;
 	private JPanel panelTableHolderContent;
 	private JPanel panelTableHolderContentTable;
-	
+
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
-	
+
 	private JScrollPane scrollPaneTable;
 	private JScrollBar verticalScrollBar;
-	
+
 	private Invoice invoice;
 	private List<OrderItem> orderItems;
-	
+
 	@Autowired
 	private IOrderItemService orderItemServiceImpl;
 	@Autowired
@@ -72,14 +72,14 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelTableHolderContentTable = new JPanel();
 		panelTableHolderContentTable.setLayout(new BorderLayout());
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 300));
-		
+
 		defaultTableModel = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
 		defaultTableModel.setColumnIdentifiers(getTableOrderItemColumnNames());
-		
+
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setModel(defaultTableModel);
@@ -93,7 +93,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		scrollPaneTable = new JScrollPane(table);
 
 		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
-		
+
 		panelTableHolderContentTable.add(scrollPaneTable);
 
 		panelTableHolderContent.add(panelTableHolderContentTable,
@@ -102,21 +102,12 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelTableHolder.add(panelTableHolderContent, BorderLayout.CENTER);
 
 		panelAll.add(panelTableHolder, BorderLayout.CENTER);
-		
+
 		if (invoice != null) {
 			populateOrderItemTable();
 		}
 
 		return panelAll;
-	}
-	
-	public String[] getTableOrderItemColumnNames() {
-		return new String[] { "Реден Бр.", "Id", "Назив", "Мерна единица",
-				"Количина", "Цена без данок", "Износ без данок", "ДДВ", "Износ на ДДВ", "Вкупен износ со ДДВ" };
-	}
-	
-	public int[] getTableOrderItemHiddenColumns() {
-		return new int[] { 1 };
 	}
 
 	@Override
@@ -129,8 +120,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		defaultTableModel.setRowCount(0);
 
 		for (OrderItem orderItem : orderItems) {
-			defaultTableModel.addRow(new String[] { 
-					Integer.toString(++i),
+			defaultTableModel.addRow(new String[] { Integer.toString(++i),
 					orderItem.getOrderItemId().toString(),
 					orderItem.getProduct().getProductName(),
 					orderItem.getProduct().getProductMeasurement(),
@@ -139,16 +129,28 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 					orderItem.getOrderItemQuantityPriceWithoutTax(),
 					orderItem.getProduct().getProductTax(),
 					orderItem.getOrderItemQuantityTax(),
-					orderItem.getOrderItemQuantityPrice() });
+					orderItem.getOrderItemQuantityPrice(),
+					orderItem.getOrderAdditionalInfo() });
 		}
 
 		if (table.getRowCount() > 0) {
-			invoicePanelImpl.setProductButtonsEnabled();			
+			invoicePanelImpl.setProductButtonsEnabled();
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
+	}
+
+	public String[] getTableOrderItemColumnNames() {
+		return new String[] { "Реден Бр.", "Id", "Назив", "Мерна единица",
+				"Количина", "Цена без данок", "Износ без данок", "ДДВ",
+				"Износ на ДДВ", "Вкупен износ со ДДВ",
+				"Дополнителни информации" };
+	}
+
+	public int[] getTableOrderItemHiddenColumns() {
+		return new int[] { 1, 10 };
 	}
 
 	@Override
@@ -159,6 +161,6 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	@Override
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
-	}	
+	}
 
 }
