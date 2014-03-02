@@ -129,7 +129,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 		y = y + height + spacing;
 
-		labelProductPrice = new JLabel("Цена:");
+		labelProductPrice = new JLabel("Цена без данок:");
 		labelProductPrice.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldProductPrice = new JTextField();

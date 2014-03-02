@@ -65,7 +65,6 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	private JTextField textFieldOrderItemId;
 	private JTextField textFieldOrderItemProductId;
 	private JTextField textFieldOrderItemInvoiceId;
-	private JTextField textFieldOrderItemProductName;
 	private JTextField textFieldOrderItemProductMeasurement;
 	private JTextField textFieldOrderItemQuantity;
 	private JTextField textFieldOrderItemProductPrice;
@@ -140,7 +139,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 		
-		labelOrderItemProductName = new JLabel("Име:");
+		labelOrderItemProductName = new JLabel("Продукт:");
 		labelOrderItemProductName.setBounds(xLabel, y, weightLabel, height);
 
 		comboBoxOrderItemProductName = new JComboBox();
@@ -165,7 +164,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		y = y + height + spacing;
 
-		labelOrderItemQuantity = new JLabel("Данок:");
+		labelOrderItemQuantity = new JLabel("Количина:");
 		labelOrderItemQuantity.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemQuantity = new JTextField();
@@ -174,7 +173,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		y = y + height + spacing;
 
-		labelOrderItemProductPrice = new JLabel("Цена:");
+		labelOrderItemProductPrice = new JLabel("Цена без данок:");
 		labelOrderItemProductPrice.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemProductPrice = new JTextField();
@@ -186,7 +185,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		y = y + height + spacing;
 		
-		labelOrderItemQuantityPriceWithoutTax = new JLabel("Цена со данок:");
+		labelOrderItemQuantityPriceWithoutTax = new JLabel("Износ без данок:");
 		labelOrderItemQuantityPriceWithoutTax.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemQuantityPriceWithoutTax = new JTextField();
@@ -198,7 +197,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		y = y + height + spacing;
 
-		labelOrderItemProductTax = new JLabel("Забелешки:");
+		labelOrderItemProductTax = new JLabel("Данок:");
 		labelOrderItemProductTax.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemProductTax = new JTextField();
@@ -211,7 +210,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		
 		y = y + height + spacing;
 
-		labelOrderItemQuantityTax = new JLabel("Забелешки:");
+		labelOrderItemQuantityTax = new JLabel("Износ на ДДВ:");
 		labelOrderItemQuantityTax.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemQuantityTax = new JTextField();
@@ -224,7 +223,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		
 		y = y + height + spacing;
 
-		labelOrderItemQuantityPrice = new JLabel("Забелешки:");
+		labelOrderItemQuantityPrice = new JLabel("Вкупен износ со ДДВ:");
 		labelOrderItemQuantityPrice.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldOrderItemQuantityPrice = new JTextField();
@@ -358,7 +357,9 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	public void populateOrderItemProductComboBox() {
 		mapProducts = new HashMap<Integer, Integer>();
 		List<Product> products = productServiceImpl.findAllProducts();
-		int i = 0;
+		String firstItem = "- Избери продукт -";
+		comboBoxOrderItemProductName.addItem(firstItem);		
+		int i = 1;
 
 		for (Product product : products) {
 			String productName = product.getProductName();

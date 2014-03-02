@@ -665,7 +665,9 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	public void populateInvoiceCustomerComboBox() {
 		mapCustomers = new HashMap<Integer, Integer>();
 		List<Customer> customers = customerServiceImpl.findAllCustomers();
-		int i = 0;
+		String firstItem = "- Избери клеинт -";
+		comboBoxInvoiceCustomerName.addItem(firstItem);
+		int i = 1;
 
 		for (Customer customer : customers) {
 			String customerName = customer.getCustomerName();
@@ -708,7 +710,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	public Supplier getSelectedComboBoxInvoiceSupplier() {
 		int selectedComboBoxSupplierIndex = comboBoxInvoiceSupplierName
 				.getSelectedIndex();
-		Integer selectedComboBoxSupplierId = mapCustomers
+		Integer selectedComboBoxSupplierId = mapSuppliers
 				.get(selectedComboBoxSupplierIndex);
 		int intSelectedComboBoxSupplierId = selectedComboBoxSupplierId
 				.intValue();
@@ -738,9 +740,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		comboBoxInvoicePaymentInfo.setSelectedIndex(0);
 		int selectedComboBoxPaymentInfoIndex = comboBoxInvoicePaymentInfo
 				.getSelectedIndex();
-		Integer selectedComboBoxCustomerId = mapCustomers
-				.get(selectedComboBoxPaymentInfoIndex);
-		paymentInfo = mapPaymentsInfo.get(selectedComboBoxCustomerId);
+		paymentInfo = mapPaymentsInfo.get(selectedComboBoxPaymentInfoIndex);
 		return paymentInfo;
 	}
 

@@ -1027,9 +1027,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		comboBoxInvoicePaymentInfo.setSelectedIndex(0);
 		int selectedComboBoxPaymentInfoIndex = comboBoxInvoicePaymentInfo
 				.getSelectedIndex();
-		Integer selectedComboBoxCustomerId = mapCustomers
-				.get(selectedComboBoxPaymentInfoIndex);
-		paymentInfo = mapPaymentsInfo.get(selectedComboBoxCustomerId);
+		paymentInfo = mapPaymentsInfo.get(selectedComboBoxPaymentInfoIndex);
 		return paymentInfo;
 	}
 	
