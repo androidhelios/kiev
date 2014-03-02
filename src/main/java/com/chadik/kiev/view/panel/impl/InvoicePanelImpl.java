@@ -226,9 +226,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				int row = table.getSelectedRow();
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
-				populateInvoiceFields(invoice);
 				orderItemPanelImpl.setInvoice(invoice);
 				orderItemPanelImpl.populateOrderItemTable();
+				orderItemDialogImpl.setInvoice(invoice);
+				
+				populateInvoiceFields(invoice);
 				
 			}
 		});
@@ -605,6 +607,9 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				String selectedRowInvoiceId = (String) table
 						.getValueAt(row, 1);
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
+				orderItemPanelImpl.setInvoice(invoice);
+				orderItemDialogImpl.setInvoice(invoice);
+				
 				populateInvoiceFields(invoice);
 				setInvoiceFieldsNonEditable();
 				setInvoiceInfoButtonsDisabled();
@@ -617,6 +622,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonAddProduct.setEnabled(false);
 		buttonAddProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowInvoiceId = (String) table
+						.getValueAt(row, 1);
+				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
+				orderItemDialogImpl.setInvoice(invoice);
 				orderItemDialogImpl.initOrderItemDialog();
 			}
 		});

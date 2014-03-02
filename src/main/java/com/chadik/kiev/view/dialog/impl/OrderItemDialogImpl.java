@@ -78,8 +78,6 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	
 	private JComboBox comboBoxOrderItemProductName;
 	
-	private JScrollPane scrollPanePanelFieldsContent;
-	
 	private JButton buttonSave;
 	private JButton buttonCancel;
 
@@ -120,11 +118,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		panelFieldsContent = new JPanel();
 		panelFieldsContent.setLayout(null);
 		panelFieldsContent.setBackground(new Color(192, 192, 192));
-		panelFieldsContent.setPreferredSize(new Dimension(450, 750));
-
-		scrollPanePanelFieldsContent = new JScrollPane(panelFieldsContent);
-		scrollPanePanelFieldsContent
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		panelFieldsContent.setPreferredSize(new Dimension(400, 300));
 
 		panelButtons = new JPanel();
 		panelButtons.setLayout(new BorderLayout());
@@ -352,7 +346,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		panelButtonsContent.add(buttonSave);
 		panelButtonsContent.add(buttonCancel);
 		
-		panelFields.add(scrollPanePanelFieldsContent, BorderLayout.CENTER);
+		panelFields.add(panelFieldsContent, BorderLayout.CENTER);
 
 		panelButtons.add(panelButtonsContent, BorderLayout.CENTER);
 
