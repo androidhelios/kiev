@@ -88,6 +88,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
+	
+	private String selectedSupplierTableRow;
 
 	private List<Supplier> suppliers;
 
@@ -381,6 +383,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
+		setSelectedSupplierTableRow("");
 		populateSupplierTable();
 
 		return panelAll;
@@ -408,11 +411,18 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		}
 
 		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
+			
+			int selectedRow = table.getRowCount() - 1;
+			
+			if (!getSelectedSupplierTableRow().equals("")) {
+				selectedRow = Integer.parseInt(getSelectedSupplierTableRow());
+			}
+			
+			table.setRowSelectionInterval(selectedRow,
+					selectedRow);
 
 			selectedRowSupplierId = (String) table.getValueAt(
-					table.getRowCount() - 1, 1);
+					selectedRow, 1);
 			Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 			populateSupplierFields(supplier);
 
@@ -424,6 +434,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 		setSupplierFieldsNonEditable();
+		
+		setSelectedSupplierTableRow("");
 
 	}
 	
@@ -472,6 +484,16 @@ public class SupplierPanelImpl implements ISupplierPanel {
 				.getText());
 
 		return supplier;
+	}
+	
+	@Override
+	public String getSelectedSupplierTableRow() {
+		return selectedSupplierTableRow;
+	}
+	
+	@Override
+	public void setSelectedSupplierTableRow(String selectedSupplierTableRow) {
+		this.selectedSupplierTableRow = selectedSupplierTableRow;		
 	}
 
 	public void setSupplierFieldsNonEditable() {
@@ -542,8 +564,9 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		Supplier supplier = getSupplierFromSupplierFields();
 		supplierServiceImpl.saveSupplier(supplier);
 		int row = table.getSelectedRow();
+		String selectedRow = Integer.toString(row);
+		setSelectedSupplierTableRow(selectedRow);
 		populateSupplierTable();
-		table.setRowSelectionInterval(row, row);
 		setSupplierFieldsNonEditable();
 		setSupplierInfoButtonsDisabled();
 	}

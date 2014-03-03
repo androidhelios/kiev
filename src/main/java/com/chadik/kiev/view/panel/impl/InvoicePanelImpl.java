@@ -138,6 +138,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
+	
+	private String selectedInvoiceTableRow;
 
 	private Map<Integer, Integer> mapSuppliers;
 	private Map<Integer, Integer> mapCustomers;
@@ -789,6 +791,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
+		setSelectedInvoiceTableRow("");
 		populateInvoiceTable();
 
 		return panelAll;
@@ -823,15 +826,23 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			
 			populateInvoiceComboBoxes();
 			
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
+			int selectedRow = table.getRowCount() - 1;
+			
+			if (!getSelectedInvoiceTableRow().equals("")) {
+				selectedRow = Integer.parseInt(getSelectedInvoiceTableRow());
+			}
+			
+			table.setRowSelectionInterval(selectedRow,
+					selectedRow);
 
 			selectedRowInvoiceId = (String) table.getValueAt(
-					table.getRowCount() - 1, 1);
+					selectedRow, 1);
 			Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 			populateInvoiceFields(invoice);
 			
 			setInvoiceTableButtonsEnabled();
+			
+			setSelectedInvoiceTableRow("");
 			
 		}
 
@@ -1034,7 +1045,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	public String getSelectedComboBoxInvoicePaymentInfo() {
 		String paymentInfo;
-		comboBoxInvoicePaymentInfo.setSelectedIndex(0);
 		int selectedComboBoxPaymentInfoIndex = comboBoxInvoicePaymentInfo
 				.getSelectedIndex();
 		paymentInfo = mapPaymentsInfo.get(selectedComboBoxPaymentInfoIndex);
@@ -1087,6 +1097,17 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		}
 		selectedIndex = key.intValue();
 		return selectedIndex;
+	}
+	
+
+	@Override
+	public String getSelectedInvoiceTableRow() {
+		return selectedInvoiceTableRow;
+	}
+	
+	@Override
+	public void setSelectedInvoiceTableRow(String selectedInvoiceTableRow) {
+		this.selectedInvoiceTableRow = selectedInvoiceTableRow;		
 	}
 
 	public void setInvoiceTableButtonsEnabled() {
@@ -1200,6 +1221,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		Invoice invoice = getInvoiceFromInvoiceFields();
 		invoiceServiceImpl.saveInvoice(invoice);
 		int row = table.getSelectedRow();
+		String selectedRow = Integer.toString(row);
+		setSelectedInvoiceTableRow(selectedRow);
 		populateInvoiceTable();
 		table.setRowSelectionInterval(row, row);
 		setInvoiceFieldsNonEditable();

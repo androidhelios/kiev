@@ -84,6 +84,8 @@ public class ProductPanelImpl implements IProductPanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
+	
+	private String selectedProductTableRow;
 
 	private List<Product> products;
 
@@ -339,7 +341,8 @@ public class ProductPanelImpl implements IProductPanel {
 
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
-
+		
+		setSelectedProductTableRow("");
 		populateProductTable();
 
 		return panelAll;
@@ -364,11 +367,17 @@ public class ProductPanelImpl implements IProductPanel {
 		}
 
 		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
+			int selectedRow = table.getRowCount() - 1;
+			
+			if (!getSelectedProductTableRow().equals("")) {
+				selectedRow = Integer.parseInt(getSelectedProductTableRow());
+			}
+			
+			table.setRowSelectionInterval(selectedRow,
+					selectedRow);
 
 			selectedRowProductId = (String) table.getValueAt(
-					table.getRowCount() - 1, 1);
+					selectedRow, 1);
 			Product product = getProductFromProductTable(selectedRowProductId);
 			populateProductFields(product);
 
@@ -380,6 +389,8 @@ public class ProductPanelImpl implements IProductPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 		setCustomerFieldsNonEditable();
+		
+		setSelectedProductTableRow("");
 
 	}
 	
@@ -421,6 +432,16 @@ public class ProductPanelImpl implements IProductPanel {
 				.getText());
 
 		return product;
+	}
+	
+	@Override
+	public String getSelectedProductTableRow() {
+		return selectedProductTableRow;
+	}
+	
+	@Override
+	public void setSelectedProductTableRow(String selectedProductTableRow) {
+		this.selectedProductTableRow = selectedProductTableRow;		
 	}
 
 	public void setCustomerFieldsNonEditable() {
@@ -481,8 +502,9 @@ public class ProductPanelImpl implements IProductPanel {
 		Product product = getProductFromProductFields();
 		productServiceImpl.saveProduct(product);
 		int row = table.getSelectedRow();
+		String selectedRow = Integer.toString(row);
+		setSelectedProductTableRow(selectedRow);
 		populateProductTable();
-		table.setRowSelectionInterval(row, row);
 		setCustomerFieldsNonEditable();
 		setProductInfoButtonsDisabled();
 	}
@@ -536,5 +558,5 @@ public class ProductPanelImpl implements IProductPanel {
 		c.weighty = 1.0;
 		return c;
 	}
-
+	
 }

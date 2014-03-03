@@ -82,6 +82,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
+	
+	private String selectedCustomerTableRow;
 
 	private List<Customer> customers;
 
@@ -329,6 +331,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
+		setSelectedCustomerTableRow("");
 		populateCustomerTable();
 
 		return panelAll;
@@ -353,11 +356,17 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		}
 
 		if (table.getRowCount() > 0) {
-			table.setRowSelectionInterval(table.getRowCount() - 1,
-					table.getRowCount() - 1);
+			int selectedRow = table.getRowCount() - 1;
+			
+			if (!getSelectedCustomerTableRow().equals("")) {
+				selectedRow = Integer.parseInt(getSelectedCustomerTableRow());
+			}
+			
+			table.setRowSelectionInterval(selectedRow,
+					selectedRow);
 
 			selectedRowCustomerId = (String) table.getValueAt(
-					table.getRowCount() - 1, 1);
+					selectedRow, 1);
 			Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 			populateCustomerFields(customer);
 
@@ -369,6 +378,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 		setCustomerFieldsNonEditable();
+		
+		setSelectedCustomerTableRow("");
 
 	}
 	
@@ -408,6 +419,16 @@ public class CustomerPanelImpl implements ICustomerPanel {
 				.getText());
 
 		return customer;
+	}
+	
+	@Override
+	public String getSelectedCustomerTableRow() {
+		return selectedCustomerTableRow;
+	}
+	
+	@Override
+	public void setSelectedCustomerTableRow(String selectedCustomerTableRow) {
+		this.selectedCustomerTableRow = selectedCustomerTableRow;		
 	}
 
 	public void setCustomerFieldsNonEditable() {
@@ -465,8 +486,9 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		Customer customer = getCustomerFromCustomerFields();
 		customerServiceImpl.saveCustomer(customer);
 		int row = table.getSelectedRow();
+		String selectedRow = Integer.toString(row);
+		setSelectedCustomerTableRow(selectedRow);
 		populateCustomerTable();
-		table.setRowSelectionInterval(row, row);
 		setCustomerFieldsNonEditable();
 		setCustomerInfoButtonsDisabled();
 	}

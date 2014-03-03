@@ -7,5 +7,9 @@ public interface ISupplierPanel {
 	public JPanel initSupplierPanel();
 
 	public void populateSupplierTable();
+	
+	public void setSelectedSupplierTableRow(String selectedSupplierTableRow);
+	
+	public String getSelectedSupplierTableRow();
 
 }

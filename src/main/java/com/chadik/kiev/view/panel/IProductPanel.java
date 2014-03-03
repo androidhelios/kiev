@@ -7,5 +7,9 @@ public interface IProductPanel {
 	public JPanel initProductPanel();
 
 	public void populateProductTable();
+	
+	public void setSelectedProductTableRow(String selectedProductTableRow);
+	
+	public String getSelectedProductTableRow();
 
 }
