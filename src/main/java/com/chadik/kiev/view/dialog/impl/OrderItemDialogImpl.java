@@ -8,8 +8,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -82,6 +85,8 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	private JButton buttonCancel;
 
 	private Color nonEditableTextFieldColor;
+	
+	private DecimalFormat decimalFormat;
 	
 	private Map<Integer, Integer> mapProducts;
 	
@@ -452,20 +457,22 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	}
 	
 	public void populateCalculatedOrderItemFields(String quantity) {
+		decimalFormat = new DecimalFormat("#.##");
 		String emptyString = "";
 		
 		if (isInt(quantity)) {
 			double quantityTextFieldValue = Double.parseDouble(quantity);
-			double doubleOrderItemProductPrice = Double.parseDouble(textFieldOrderItemProductPrice.getText());
+			String doubleOrderItemProductPriceDotSeparator = textFieldOrderItemProductPrice.getText().replace(",", ".");
+			double doubleOrderItemProductPrice = Double.parseDouble(doubleOrderItemProductPriceDotSeparator);
 			double doubleOrderItemProductTax = Double.parseDouble(textFieldOrderItemProductTax.getText());
 			
 			double doubleOrderItemQuantityPriceWithoutTax = quantityTextFieldValue * doubleOrderItemProductPrice;
 			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceWithoutTax * doubleOrderItemProductTax/100;
 			double doubleOrderItemQuantityPrice = doubleOrderItemQuantityPriceWithoutTax + doubleOrderItemQuantityTax;
 			
-			textFieldOrderItemQuantityPriceWithoutTax.setText(Double.toString(doubleOrderItemQuantityPriceWithoutTax));
-			textFieldOrderItemQuantityTax.setText(Double.toString(doubleOrderItemQuantityTax));
-			textFieldOrderItemQuantityPrice.setText(Double.toString(doubleOrderItemQuantityPrice));
+			textFieldOrderItemQuantityPriceWithoutTax.setText(decimalFormat.format(doubleOrderItemQuantityPriceWithoutTax));
+			textFieldOrderItemQuantityTax.setText(decimalFormat.format(doubleOrderItemQuantityTax));
+			textFieldOrderItemQuantityPrice.setText(decimalFormat.format(doubleOrderItemQuantityPrice));
 		} else {
 			textFieldOrderItemQuantityPriceWithoutTax.setText(emptyString);
 			textFieldOrderItemQuantityTax.setText(emptyString);

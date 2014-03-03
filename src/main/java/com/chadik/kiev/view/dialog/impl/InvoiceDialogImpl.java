@@ -69,9 +69,9 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	private JLabel labelInvoiceDate;
 	private JLabel labelInvoiceDeliveryDate;
 	private JLabel labelInvoiceDeliveryNumber;
-	private JLabel labelInvoiceTotalPrice;
-	private JLabel labelInvoiceTotalTax;
-	private JLabel labelInvoiceTotalPriceTax;
+	private JLabel labelInvoiceTotalQuantityPrice;
+	private JLabel labelInvoiceTotalQuantityPriceWithoutTax;
+	private JLabel labelInvoiceTotalQuantityTax;
 	private JLabel labelInvoicePaymentInfo;
 	private JLabel labelInvoiceAdditionalInfo;
 
@@ -94,9 +94,9 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	private JTextField textFieldInvoiceDate;
 	private JTextField textFieldInvoiceDeliveryDate;
 	private JTextField textFieldInvoiceDeliveryNumber;
-	private JTextField textFieldInvoiceTotalPrice;
-	private JTextField textFieldInvoiceTotalTax;
-	private JTextField textFieldInvoiceTotalPriceTax;
+	private JTextField textFieldInvoiceTotalQuantityPrice;
+	private JTextField textFieldInvoiceTotalQuantityPriceWithoutTax;
+	private JTextField textFieldInvoiceTotalQuantityTax;
 	private JTextField textFieldInvoiceAdditionalInfo;
 
 	private JComboBox comboBoxInvoiceSupplierName;
@@ -402,17 +402,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 
-		labelInvoiceDeliveryDate = new JLabel("Delivery date:");
-		labelInvoiceDeliveryDate.setBounds(xLabel, y, weightLabel, height);
-
-		textFieldInvoiceDeliveryDate = new JTextField();
-		textFieldInvoiceDeliveryDate.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldInvoiceDeliveryDate.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelInvoiceDeliveryNumber = new JLabel("Delivery number:");
+		labelInvoiceDeliveryNumber = new JLabel("Испратница бр:");
 		labelInvoiceDeliveryNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryNumber = new JTextField();
@@ -422,39 +412,56 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 
-		labelInvoiceTotalPrice = new JLabel("Нејасно 3:");
-		labelInvoiceTotalPrice.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceDeliveryDate = new JLabel("Дата на испратница:");
+		labelInvoiceDeliveryDate.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldInvoiceTotalPrice = new JTextField();
-		textFieldInvoiceTotalPrice.setBounds(xTextField, y, weightTextField,
+		textFieldInvoiceDeliveryDate = new JTextField();
+		textFieldInvoiceDeliveryDate.setBounds(xTextField, y, weightTextField,
 				height);
-		textFieldInvoiceTotalPrice.setText("0.00");
-		textFieldInvoiceTotalPrice.setBackground(nonEditableTextFieldColor);
-		textFieldInvoiceTotalPrice.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceDeliveryDate.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
-		labelInvoiceTotalTax = new JLabel("Нејасно 2:");
-		labelInvoiceTotalTax.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceTotalQuantityPriceWithoutTax = new JLabel(
+				"Збир износ без данок:");
+		labelInvoiceTotalQuantityPriceWithoutTax.setBounds(xLabel, y,
+				weightLabel, height);
 
-		textFieldInvoiceTotalTax = new JTextField();
-		textFieldInvoiceTotalTax.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldInvoiceTotalTax.setText("0.00");
-		textFieldInvoiceTotalTax.setBackground(nonEditableTextFieldColor);
-		textFieldInvoiceTotalTax.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceTotalQuantityPriceWithoutTax = new JTextField();
+		textFieldInvoiceTotalQuantityPriceWithoutTax.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceTotalQuantityPriceWithoutTax.setText("0,00");
+		textFieldInvoiceTotalQuantityPriceWithoutTax
+				.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceTotalQuantityPriceWithoutTax.setMargin(new Insets(2, 2,
+				2, 2));
 
 		y = y + height + spacing;
 
-		labelInvoiceTotalPriceTax = new JLabel("Нејасно 1:");
-		labelInvoiceTotalPriceTax.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceTotalQuantityTax = new JLabel("Збир износ на ДДВ:");
+		labelInvoiceTotalQuantityTax.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldInvoiceTotalPriceTax = new JTextField();
-		textFieldInvoiceTotalPriceTax.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldInvoiceTotalPriceTax.setText("0.00");
-		textFieldInvoiceTotalPriceTax.setBackground(nonEditableTextFieldColor);
-		textFieldInvoiceTotalPriceTax.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceTotalQuantityTax = new JTextField();
+		textFieldInvoiceTotalQuantityTax.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceTotalQuantityTax.setText("0,00");
+		textFieldInvoiceTotalQuantityTax
+				.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceTotalQuantityTax.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+
+		labelInvoiceTotalQuantityPrice = new JLabel("Вкупен износ со ДДВ:");
+		labelInvoiceTotalQuantityPrice
+				.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldInvoiceTotalQuantityPrice = new JTextField();
+		textFieldInvoiceTotalQuantityPrice.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceTotalQuantityPrice.setText("0,00");
+		textFieldInvoiceTotalQuantityPrice
+				.setBackground(nonEditableTextFieldColor);
+		textFieldInvoiceTotalQuantityPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -579,20 +586,20 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		panelFieldsContent.add(labelInvoiceDate);
 		panelFieldsContent.add(textFieldInvoiceDate);
 
-		panelFieldsContent.add(labelInvoiceDeliveryDate);
-		panelFieldsContent.add(textFieldInvoiceDeliveryDate);
-
 		panelFieldsContent.add(labelInvoiceDeliveryNumber);
 		panelFieldsContent.add(textFieldInvoiceDeliveryNumber);
 
-		panelFieldsContent.add(labelInvoiceTotalPrice);
-		panelFieldsContent.add(textFieldInvoiceTotalPrice);
+		panelFieldsContent.add(labelInvoiceDeliveryDate);
+		panelFieldsContent.add(textFieldInvoiceDeliveryDate);
 
-		panelFieldsContent.add(labelInvoiceTotalTax);
-		panelFieldsContent.add(textFieldInvoiceTotalTax);
+		panelFieldsContent.add(labelInvoiceTotalQuantityPriceWithoutTax);
+		panelFieldsContent.add(textFieldInvoiceTotalQuantityPriceWithoutTax);
 
-		panelFieldsContent.add(labelInvoiceTotalPriceTax);
-		panelFieldsContent.add(textFieldInvoiceTotalPriceTax);
+		panelFieldsContent.add(labelInvoiceTotalQuantityTax);
+		panelFieldsContent.add(textFieldInvoiceTotalQuantityTax);
+
+		panelFieldsContent.add(labelInvoiceTotalQuantityPrice);
+		panelFieldsContent.add(textFieldInvoiceTotalQuantityPrice);
 
 		panelFieldsContent.add(labelInvoicePaymentInfo);
 		panelFieldsContent.add(comboBoxInvoicePaymentInfo);
@@ -621,7 +628,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		return dialog;
 	}
-	
+
 	public void populateInvoiceSupplierFields(Supplier supplier) {
 		textFieldInvoiceSupplierId.setText(supplier.getSupplierId().toString());
 		textFieldInvoiceSupplierAddress.setText(supplier.getSupplierAddress());
@@ -653,7 +660,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
 		comboBoxInvoiceSupplierName.removeAllItems();
 		int i = 0;
-		
+
 		for (Supplier supplier : suppliers) {
 			String supplierName = supplier.getSupplierName();
 			BigDecimal supplierId = supplier.getSupplierId();
@@ -691,25 +698,30 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 			comboBoxInvoicePaymentInfo.addItem(entry.getValue());
 		}
 	}
-	
+
 	public Invoice getInvoiceFromInvoiceFields() {
-		Invoice invoice = new Invoice();		
+		Invoice invoice = new Invoice();
 		invoice.setCustomer(getSelectedComboBoxInvoiceCustomer());
 		invoice.setSupplier(getSelectedComboBoxInvoiceSupplier());
 		invoice.setInvoiceNumber(textFieldInvoiceNumber.getText());
 		invoice.setInvoiceSerialNumber(textFieldInvoiceSerialNumber.getText());
 		invoice.setInvoiceDate(textFieldInvoiceDate.getText());
 		invoice.setInvoiceDeliveryDate(textFieldInvoiceDeliveryDate.getText());
-		invoice.setInvoiceDeliveryNumber(textFieldInvoiceDeliveryNumber.getText());
-		invoice.setInvoiceTotalPrice(textFieldInvoiceTotalPrice.getText());
-		invoice.setInvoiceTotalTax(textFieldInvoiceTotalTax.getText());
-		invoice.setInvoiceTotalPriceTax(textFieldInvoiceTotalPriceTax.getText());
+		invoice.setInvoiceDeliveryNumber(textFieldInvoiceDeliveryNumber
+				.getText());
+		invoice.setInvoiceTotalPrice(textFieldInvoiceTotalQuantityPrice
+				.getText());
+		invoice.setInvoiceTotalTax(textFieldInvoiceTotalQuantityPriceWithoutTax
+				.getText());
+		invoice.setInvoiceTotalPriceTax(textFieldInvoiceTotalQuantityTax
+				.getText());
 		invoice.setInvoicePaymentInfo(getSelectedComboBoxInvoicePaymentInfo());
-		invoice.setInvoiceAdditionalInfo(textFieldInvoiceAdditionalInfo.getText());
-		
+		invoice.setInvoiceAdditionalInfo(textFieldInvoiceAdditionalInfo
+				.getText());
+
 		return invoice;
 	}
-	
+
 	public Supplier getSelectedComboBoxInvoiceSupplier() {
 		int selectedComboBoxSupplierIndex = comboBoxInvoiceSupplierName
 				.getSelectedIndex();
@@ -723,7 +735,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		return supplier;
 	}
-	
+
 	public Customer getSelectedComboBoxInvoiceCustomer() {
 		int selectedComboBoxCustomerIndex = comboBoxInvoiceCustomerName
 				.getSelectedIndex();
@@ -749,7 +761,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 	public void saveInvoiceAndDispose() {
 		Invoice invoice = getInvoiceFromInvoiceFields();
-		
+
 		invoiceServiceImpl.saveInvoice(invoice);
 		dialog.dispose();
 		invoicePanelImpl.populateInvoiceTable();
