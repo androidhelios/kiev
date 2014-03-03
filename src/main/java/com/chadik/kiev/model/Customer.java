@@ -7,11 +7,15 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 public class Customer implements Serializable {
@@ -26,8 +30,8 @@ public class Customer implements Serializable {
 	private String customerPhoneNumber;
 	private String customerEmail;
 	private String customerAdditionalInfo;
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-	@NotNull
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	@Valid
 	private List<Invoice> invoices = new ArrayList<Invoice>();
 

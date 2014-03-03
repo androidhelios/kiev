@@ -871,6 +871,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void populateInvoiceSupplierComboBox() {
 		mapSuppliers = new HashMap<Integer, Integer>();
 		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
+		comboBoxInvoiceSupplierName.removeAllItems();
 		int i = 0;
 
 		for (Supplier supplier : suppliers) {
@@ -885,6 +886,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void populateInvoiceCustomerComboBox() {
 		mapCustomers = new HashMap<Integer, Integer>();
 		List<Customer> customers = customerServiceImpl.findAllCustomers();
+		comboBoxInvoiceCustomerName.removeAllItems();
 		int i = 0;
 
 		for (Customer customer : customers) {
@@ -897,6 +899,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	}
 
 	public void populateInvoicePaymentInfoComboBox() {
+		comboBoxInvoicePaymentInfo.removeAllItems();
 		mapPaymentsInfo = new HashMap<Integer, String>();
 		mapPaymentsInfo.put(0, "Неисплатена");
 		mapPaymentsInfo.put(1, "Делумно исплатена");

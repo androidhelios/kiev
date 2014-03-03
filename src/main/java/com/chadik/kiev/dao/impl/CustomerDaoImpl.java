@@ -35,7 +35,7 @@ public class CustomerDaoImpl implements ICustomerDao {
 	public List<Customer> findAllCustomers() {
 		List<Customer> customers = null;
 		Query query = HibernateUtil.getSession().createQuery(
-				"from " + Customer.class.getName());
+				"from " + Customer.class.getName() + " order by customerId");
 		customers = query.list();
 		return customers;
 	}

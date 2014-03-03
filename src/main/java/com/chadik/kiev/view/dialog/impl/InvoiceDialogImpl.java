@@ -651,8 +651,9 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	public void populateInvoiceSupplierComboBox() {
 		mapSuppliers = new HashMap<Integer, Integer>();
 		List<Supplier> suppliers = supplierServiceImpl.findAllSuppliers();
+		comboBoxInvoiceSupplierName.removeAllItems();
 		int i = 0;
-
+		
 		for (Supplier supplier : suppliers) {
 			String supplierName = supplier.getSupplierName();
 			BigDecimal supplierId = supplier.getSupplierId();
@@ -665,6 +666,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	public void populateInvoiceCustomerComboBox() {
 		mapCustomers = new HashMap<Integer, Integer>();
 		List<Customer> customers = customerServiceImpl.findAllCustomers();
+		comboBoxInvoiceCustomerName.removeAllItems();
 		String firstItem = "- Избери клеинт -";
 		comboBoxInvoiceCustomerName.addItem(firstItem);
 		int i = 1;
@@ -679,6 +681,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 	}
 
 	public void populateInvoicePaymentInfoComboBox() {
+		comboBoxInvoicePaymentInfo.removeAllItems();
 		mapPaymentsInfo = new HashMap<Integer, String>();
 		mapPaymentsInfo.put(0, "Неисплатена");
 		mapPaymentsInfo.put(1, "Делумно исплатена");

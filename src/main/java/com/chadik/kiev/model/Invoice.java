@@ -16,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 public class Invoice implements Serializable {
 
@@ -47,6 +50,7 @@ public class Invoice implements Serializable {
 	private String invoicePaymentInfo;
 	private String invoiceAdditionalInfo;
 	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	@Valid
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 

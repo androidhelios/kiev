@@ -390,14 +390,18 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	}
 	
 	public OrderItem getOrderItemFromOrderItemFields() {
+		Invoice invoice = getInvoice();
 		OrderItem orderItem = new OrderItem();
-		orderItem.setInvoice(getInvoice());
+		
+		orderItem.setInvoice(invoice);
 		orderItem.setProduct(getSelectedComboBoxOrderItemProduct());
 		orderItem.setOrderItemQuantity(textFieldOrderItemQuantity.getText());
 		orderItem.setOrderItemQuantityPrice(textFieldOrderItemQuantityPrice.getText());
 		orderItem.setOrderItemQuantityPriceWithoutTax(textFieldOrderItemQuantityPriceWithoutTax.getText());
 		orderItem.setOrderItemQuantityTax(textFieldOrderItemQuantityTax.getText());
 		orderItem.setOrderAdditionalInfo(textFieldOrderItemAdditionalInfo.getText());
+		
+		invoice.getOrderItems().add(orderItem);
 
 		return orderItem;
 	}

@@ -34,7 +34,7 @@ public class ProductDaoImpl implements IProductDao {
 	public List<Product> findAllProducts() {
 		List<Product> products = null;
 		Query query = HibernateUtil.getSession().createQuery(
-				"from " + Product.class.getName());
+				"from " + Product.class.getName() + " order by productId");
 		products = query.list();
 		return products;
 	}

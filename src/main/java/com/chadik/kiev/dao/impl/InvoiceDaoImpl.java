@@ -34,7 +34,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<Invoice> findAllInvoices() {
 		List<Invoice> invoices = null;
 		Query query = HibernateUtil.getSession().createQuery(
-				"from " + Invoice.class.getName());
+				"from " + Invoice.class.getName() + " order by invoiceId");
 		invoices = query.list();
 		return invoices;
 	}

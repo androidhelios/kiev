@@ -34,7 +34,7 @@ public class SupplierDaoImpl implements ISupplierDao {
 	public List<Supplier> findAllSuppliers() {
 		List<Supplier> suppliers = null;
 		Query query = HibernateUtil.getSession().createQuery(
-				"from " + Supplier.class.getName());
+				"from " + Supplier.class.getName() + " order by supplierId");
 		suppliers = query.list();
 		return suppliers;
 	}

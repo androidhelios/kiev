@@ -5,11 +5,15 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 public class Product implements Serializable {
@@ -28,7 +32,8 @@ public class Product implements Serializable {
 	@NotNull(message = "Полето цена на продуктот со данок не е пополнето")
 	private String productTaxPrice;
 	private String productAdditionalInfo;
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	@Valid
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>(0);
 

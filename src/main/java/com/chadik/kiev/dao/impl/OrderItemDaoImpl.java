@@ -34,7 +34,7 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 	public List<OrderItem> findAllOrderItems() {
 		List<OrderItem> orderItems = null;
 		Query query = HibernateUtil.getSession().createQuery(
-				"from " + OrderItem.class.getName());
+				"from " + OrderItem.class.getName() + " orderby orderItemId");
 		orderItems = query.list();
 		return orderItems;
 	}
