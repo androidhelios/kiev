@@ -20,34 +20,28 @@ public class App {
     	  new ClassPathXmlApplicationContext("applicationContext.xml");
  
     	SupplierServiceImpl supplierServiceImpl = (SupplierServiceImpl) appContext.getBean("supplierServiceImpl");
-        System.out.println("hello supplierServiceImpl");
-        
-        Supplier supplier = new Supplier();
-        supplier.setSupplierName("ivan1");
-        supplier.setSupplierAddress("ivan2");
-        supplier.setSupplierBankAccount("ivan3");
-        supplier.setSupplierBankName("ivan4");
-        supplier.setSupplierRegistryNumber("pile5");        
-        
-        supplierServiceImpl.saveSupplier(supplier);
-        
-        supplier.setSupplierRegistryNumber("чадиковски");        
-        
-        supplierServiceImpl.saveSupplier(supplier);        
-
-        System.out.println("bye " + supplier.getSupplierName());
+    	List<Supplier> supplierList = supplierServiceImpl.findAllSuppliers();
+    	
+    	if (supplierList.size() < 1) {
+    		supplierServiceImpl.saveSupplier(createMainSupplier());
+    	}
         
         FrameMain frameMain = (FrameMain)appContext.getBean("frameMain");
-        frameMain.initFrame(); 
+        frameMain.initFrame();
         
-        List<Supplier> suppliersNo = new ArrayList<Supplier>();
-        suppliersNo = supplierServiceImpl.findAllSuppliers();
-        
-        Supplier supplierSecond = suppliersNo.get(0);
-        System.out.println("ovovjv:" + supplierSecond.getSupplierBankName());
-        
-        System.out.println("no " + suppliersNo.size());
-        
-   	
+    }
+    
+    public static Supplier createMainSupplier() {
+        Supplier supplier = new Supplier();
+        supplier.setSupplierName("supplierName");
+        supplier.setSupplierAddress("supplierAddress");
+        supplier.setSupplierBankAccount("supplierBankAccount");
+        supplier.setSupplierBankName("supplierBankName");
+        supplier.setSupplierRegistryNumber("supplierRegistryNumber");
+        supplier.setSupplierEmail("supplierEmail");
+        supplier.setSupplierPhoneNumber("supplierPhoneNumber");
+        supplier.setSupplierAdditionalInfo("supplierAdditionalInfo");
+    	
+        return supplier;    	
     }
 }
