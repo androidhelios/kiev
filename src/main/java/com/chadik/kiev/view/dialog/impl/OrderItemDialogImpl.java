@@ -394,6 +394,30 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		}
 	}
 	
+	public void populateCalculatedOrderItemFields(String quantity) {
+		decimalFormat = new DecimalFormat("#.##");
+		String emptyString = "";
+		
+		if (isInt(quantity)) {
+			double quantityTextFieldValue = Double.parseDouble(quantity);
+			String doubleOrderItemProductPriceDotSeparator = textFieldOrderItemProductPrice.getText().replace(",", ".");
+			double doubleOrderItemProductPrice = Double.parseDouble(doubleOrderItemProductPriceDotSeparator);
+			double doubleOrderItemProductTax = Double.parseDouble(textFieldOrderItemProductTax.getText());
+			
+			double doubleOrderItemQuantityPriceWithoutTax = quantityTextFieldValue * doubleOrderItemProductPrice;
+			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceWithoutTax * doubleOrderItemProductTax/100;
+			double doubleOrderItemQuantityPrice = doubleOrderItemQuantityPriceWithoutTax + doubleOrderItemQuantityTax;
+			
+			textFieldOrderItemQuantityPriceWithoutTax.setText(decimalFormat.format(doubleOrderItemQuantityPriceWithoutTax));
+			textFieldOrderItemQuantityTax.setText(decimalFormat.format(doubleOrderItemQuantityTax));
+			textFieldOrderItemQuantityPrice.setText(decimalFormat.format(doubleOrderItemQuantityPrice));
+		} else {
+			textFieldOrderItemQuantityPriceWithoutTax.setText(emptyString);
+			textFieldOrderItemQuantityTax.setText(emptyString);
+			textFieldOrderItemQuantityPrice.setText(emptyString);
+		}
+	}
+	
 	public OrderItem getOrderItemFromOrderItemFields() {
 		Invoice invoice = getInvoice();
 		OrderItem orderItem = new OrderItem();
@@ -425,18 +449,6 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		return product;
 	}
 	
-	public void saveOrderItemAndDispose() {
-		OrderItem orderItem = getOrderItemFromOrderItemFields();
-		orderItemServiceImpl.saveOrderItem(orderItem);
-		dialog.dispose();
-		orderItemPanelImpl.setInvoice(getInvoice());
-		orderItemPanelImpl.populateOrderItemTable();
-	}
-
-	public void dispose() {
-		dialog.dispose();
-	}
-
 	@Override
 	public Invoice getInvoice() {
 		return invoice;
@@ -447,6 +459,14 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		this.invoice = invoice;		
 	}
 	
+	public void saveOrderItemAndDispose() {
+		OrderItem orderItem = getOrderItemFromOrderItemFields();
+		orderItemServiceImpl.saveOrderItem(orderItem);
+		dialog.dispose();
+		orderItemPanelImpl.setInvoice(getInvoice());
+		orderItemPanelImpl.populateOrderItemTable();
+	}
+	
 	public boolean isInt(String textFieldValue) {
 		try {
 			Integer.parseInt(textFieldValue);
@@ -455,29 +475,9 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 			return false;
 		}
 	}
-	
-	public void populateCalculatedOrderItemFields(String quantity) {
-		decimalFormat = new DecimalFormat("#.##");
-		String emptyString = "";
-		
-		if (isInt(quantity)) {
-			double quantityTextFieldValue = Double.parseDouble(quantity);
-			String doubleOrderItemProductPriceDotSeparator = textFieldOrderItemProductPrice.getText().replace(",", ".");
-			double doubleOrderItemProductPrice = Double.parseDouble(doubleOrderItemProductPriceDotSeparator);
-			double doubleOrderItemProductTax = Double.parseDouble(textFieldOrderItemProductTax.getText());
-			
-			double doubleOrderItemQuantityPriceWithoutTax = quantityTextFieldValue * doubleOrderItemProductPrice;
-			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceWithoutTax * doubleOrderItemProductTax/100;
-			double doubleOrderItemQuantityPrice = doubleOrderItemQuantityPriceWithoutTax + doubleOrderItemQuantityTax;
-			
-			textFieldOrderItemQuantityPriceWithoutTax.setText(decimalFormat.format(doubleOrderItemQuantityPriceWithoutTax));
-			textFieldOrderItemQuantityTax.setText(decimalFormat.format(doubleOrderItemQuantityTax));
-			textFieldOrderItemQuantityPrice.setText(decimalFormat.format(doubleOrderItemQuantityPrice));
-		} else {
-			textFieldOrderItemQuantityPriceWithoutTax.setText(emptyString);
-			textFieldOrderItemQuantityTax.setText(emptyString);
-			textFieldOrderItemQuantityPrice.setText(emptyString);
-		}
-	}
 
+	public void dispose() {
+		dialog.dispose();
+	}
+	
 }

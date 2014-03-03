@@ -484,7 +484,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		y = y + height + spacing;
 
-		labelInvoiceDeliveryNumber = new JLabel("Delivery number:");
+		labelInvoiceDeliveryNumber = new JLabel("Испратница бр.:");
 		labelInvoiceDeliveryNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryNumber = new JTextField();
@@ -494,7 +494,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		y = y + height + spacing;
 
-		labelInvoiceDeliveryDate = new JLabel("Delivery date:");
+		labelInvoiceDeliveryDate = new JLabel("Дата на испратница:");
 		labelInvoiceDeliveryDate.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryDate = new JTextField();
@@ -1228,6 +1228,15 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void setInvoicePrintEnabled() {
 		buttonPrint.setEnabled(true);
 	}
+	
+	@Override
+	public void setInvoiceOrderItemTotalValues(
+			String invoiceTotalQuantityPriceWithoutTax,
+			String invoiceTotalQuantityTax, String invoiceTotalQuantityPrice) {
+		textFieldInvoiceTotalQuantityPriceWithoutTax.setText(invoiceTotalQuantityPriceWithoutTax);
+		textFieldInvoiceTotalQuantityTax.setText(invoiceTotalQuantityTax);
+		textFieldInvoiceTotalQuantityPrice.setText(invoiceTotalQuantityPrice);		
+	}
 
 	public void saveInvoice() {
 		Invoice invoice = getInvoiceFromInvoiceFields();
@@ -1289,15 +1298,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weighty = 1.0;
 		return c;
-	}
-
-	@Override
-	public void setInvoiceOrderItemTotalValues(
-			String invoiceTotalQuantityPriceWithoutTax,
-			String invoiceTotalQuantityTax, String invoiceTotalQuantityPrice) {
-		textFieldInvoiceTotalQuantityPriceWithoutTax.setText(invoiceTotalQuantityPriceWithoutTax);
-		textFieldInvoiceTotalQuantityTax.setText(invoiceTotalQuantityTax);
-		textFieldInvoiceTotalQuantityPrice.setText(invoiceTotalQuantityPrice);		
 	}
 
 }

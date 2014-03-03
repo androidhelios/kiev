@@ -402,7 +402,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 
 		y = y + height + spacing;
 
-		labelInvoiceDeliveryNumber = new JLabel("Испратница бр:");
+		labelInvoiceDeliveryNumber = new JLabel("Испратница бр.:");
 		labelInvoiceDeliveryNumber.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldInvoiceDeliveryNumber = new JTextField();
