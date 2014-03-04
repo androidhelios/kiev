@@ -95,6 +95,8 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelTableHolder.add(panelTableHolderContent, BorderLayout.CENTER);
 
 		panelAll.add(panelTableHolder, BorderLayout.CENTER);
+		
+		setOrderItemTable(table);
 
 		if (invoice != null) {
 			populateOrderItemTable();
@@ -178,6 +180,16 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	@Override
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
+	}
+
+	@Override
+	public JTable getOrderItemTable() {
+		return table;
+	}
+
+	@Override
+	public void setOrderItemTable(JTable orderItemTable) {
+		this.table = orderItemTable;
 	}
 
 }

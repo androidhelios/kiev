@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Invoice;
 import com.chadik.kiev.model.Supplier;
+import com.chadik.kiev.printer.IInvoicePrinter;
 import com.chadik.kiev.service.ICustomerService;
 import com.chadik.kiev.service.IInvoiceService;
 import com.chadik.kiev.service.ISupplierService;
@@ -159,6 +161,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private IInvoiceDialog invoiceDialogImpl;
 	@Autowired
 	private IOrderItemDialog orderItemDialogImpl;
+	@Autowired
+	private IInvoicePrinter documentPrinterImpl;
 
 	@Override
 	public JPanel initInvoicePanel() {
@@ -640,6 +644,15 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonPrint = new JButton("Испечати");
 		buttonPrint.setPreferredSize(new Dimension(100, 25));
 		buttonPrint.setEnabled(false);
+		buttonPrint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
+				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
+				documentPrinterImpl.setInvoice(invoice);
+				documentPrinterImpl.initInvoicePrinter();
+			}
+		});
 
 		panelTableHolderContentTable.add(scrollPaneTable);
 
@@ -987,8 +1000,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public String[] getTableInvoiceColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Корисник", "Клиент",
 				"Број на фактура", "Сериски број на фактура", "Дата",
-				"Датум на достава", "Број на достава", "Непознато 1",
-				"Непознато 2", "Непознато 3", "Исплата на фактура",
+				"Датум на достава", "Број на достава", "Износ без данок",
+				"Износ на ДДВ", "Вкупен износ со ДДВ", "Исплата на фактура",
 				"Дополнителни информации" };
 	}
 

@@ -1,7 +1,12 @@
 package com.chadik.kiev.util;
 
+import java.util.ArrayList;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 public final class TableUtil {
 
@@ -29,6 +34,19 @@ public final class TableUtil {
 		for (int i = 0; i < columns.length; i++) {
 			hideColumn(table, columns[i]);
 		}
+	}
+
+	public static ArrayList<String> getPresentedTableColumns(JTable table) {
+		ArrayList<String> presentedTableColumns = new ArrayList<String>();
+
+		JTableHeader tableHeader = table.getTableHeader();
+		TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+		for (int i = 0, y = tableColumnModel.getColumnCount(); i < y; i++) {
+			TableColumn tableColumn = tableColumnModel.getColumn(i);
+			presentedTableColumns.add(tableColumn.getHeaderValue().toString());
+		}
+
+		return presentedTableColumns;
 	}
 
 }
