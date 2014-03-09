@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,6 +19,7 @@ import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ICustomerPanel;
 import com.chadik.kiev.view.panel.IInvoicePanel;
+import com.chadik.kiev.view.panel.IPasswordPanel;
 import com.chadik.kiev.view.panel.IProductPanel;
 import com.chadik.kiev.view.panel.ISupplierPanel;
 
@@ -46,10 +48,16 @@ public class FrameMain {
 	private IProductPanel productPanelImpl;
 	@Autowired
 	private IInvoicePanel invoicePanelImpl;
+	@Autowired
+	private IPasswordPanel passwordPanelImpl;
 	
 	public JFrame initFrame() {
 		mainFrame = new JFrame();
 		mainFrame.setMinimumSize(new Dimension(1000, 600));
+		
+		ImageIcon imageIcon = new ImageIcon("ico/invoice(1).png");
+		
+		mainFrame.setIconImage(imageIcon.getImage());
 		
 		menuBar = new JMenuBar();
 		
@@ -57,7 +65,7 @@ public class FrameMain {
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setPreferredSize(new Dimension(1000, 600));
 		
-		mainFrame.setTitle("kiev");
+		mainFrame.setTitle("ПСРФ");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		mainFrame.setContentPane(contentPane);
@@ -65,6 +73,7 @@ public class FrameMain {
 		mainFrame.setJMenuBar(menuBar);
 		
 		menuFile = new JMenu("Датотека");
+		menuFile.setEnabled(false);
 		
 		menuBar.add(menuFile);
 		
@@ -117,6 +126,8 @@ public class FrameMain {
 		supplierPanelImpl.initSupplierPanel();
 		customerPanelImpl.initCustomerPanel();
 		productPanelImpl.initProductPanel();	
+		
+		mainFrame.add(passwordPanelImpl.initPasswordPanel());
         
 		mainFrame.pack();
 		mainFrame.setVisible(true);
@@ -124,6 +135,13 @@ public class FrameMain {
 		
 		return mainFrame;
 		
-	}	
+	}
+	
+	public void clearContentPane() {
+		menuFile.setEnabled(true);
+		contentPane.removeAll();
+		contentPane.validate();
+		contentPane.repaint();
+	}
 
 }

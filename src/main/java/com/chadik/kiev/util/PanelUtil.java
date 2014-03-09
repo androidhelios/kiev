@@ -19,6 +19,7 @@ public final class PanelUtil {
 		switchPanel.setVisible(true);
 		panelHolder.add(switchPanel, panelAlligment);
 		frameHolder.validate();
+		frameHolder.repaint();
 
 	}
 	

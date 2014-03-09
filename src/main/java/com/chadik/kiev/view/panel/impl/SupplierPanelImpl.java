@@ -68,6 +68,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	private JLabel labelSupplierAddress;
 	private JLabel labelSupplierPhoneNumber;
 	private JLabel labelSupplierEmail;
+	private JLabel labelSupplierUserName;
+	private JLabel labelSupplierPassword;
 	private JLabel labelSupplierAdditionalInfo;
 
 	private JTextField textFieldSupplierId;
@@ -78,6 +80,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	private JTextField textFieldSupplierAddress;
 	private JTextField textFieldSupplierPhoneNumber;
 	private JTextField textFieldSupplierEmail;
+	private JTextField textFieldSupplierUserName;
+	private JTextField textFieldSupplierPassword;
 	private JTextField textFieldSupplierAdditionalInfo;
 
 	private JButton buttonNew;
@@ -175,6 +179,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
+		buttonNew.setEnabled(false);
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				supplierDialogImpl.initSupplierDialog();
@@ -275,6 +280,26 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
+		
+		labelSupplierUserName = new JLabel("Корисничко Име:");
+		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldSupplierUserName = new JTextField();
+		textFieldSupplierUserName
+				.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+		
+		labelSupplierPassword = new JLabel("Лозинка:");
+		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldSupplierPassword = new JTextField();
+		textFieldSupplierPassword
+				.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
 
 		labelSupplierAdditionalInfo = new JLabel("Забелешки:");
 		labelSupplierAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
@@ -364,6 +389,14 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelInfoHolderContentInfo.add(labelSupplierEmail, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierEmail,
 				textFieldConstraints());
+		
+		panelInfoHolderContentInfo.add(labelSupplierUserName, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierUserName,
+				textFieldConstraints());
+		
+		panelInfoHolderContentInfo.add(labelSupplierPassword, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierPassword,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelSupplierAdditionalInfo,
 				labelConstraints());
@@ -427,6 +460,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 			populateSupplierFields(supplier);
 
 			setSupplierTableButtonsEnabled();
+			
+			buttonDelete.setEnabled(false);
 
 		}
 
@@ -449,6 +484,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierAddress.setText(supplier.getSupplierAddress());
 		textFieldSupplierPhoneNumber.setText(supplier.getSupplierPhoneNumber());
 		textFieldSupplierEmail.setText(supplier.getSupplierEmail());
+		textFieldSupplierUserName.setText(supplier.getSupplierUserName());
+		textFieldSupplierPassword.setText(supplier.getSupplierPassword());
 		textFieldSupplierAdditionalInfo.setText(supplier
 				.getSupplierAdditionalInfo());
 	}
@@ -480,6 +517,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		supplier.setSupplierAddress(textFieldSupplierAddress.getText());
 		supplier.setSupplierPhoneNumber(textFieldSupplierPhoneNumber.getText());
 		supplier.setSupplierEmail(textFieldSupplierEmail.getText());
+		supplier.setSupplierUserName(textFieldSupplierUserName.getText());
+		supplier.setSupplierPassword(textFieldSupplierPassword.getText());
 		supplier.setSupplierAdditionalInfo(textFieldSupplierAdditionalInfo
 				.getText());
 
@@ -512,6 +551,10 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierPhoneNumber.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierEmail.setEditable(false);
 		textFieldSupplierEmail.setBackground(nonEditableTextFieldColor);
+		textFieldSupplierUserName.setEditable(false);
+		textFieldSupplierUserName.setBackground(nonEditableTextFieldColor);
+		textFieldSupplierPassword.setEditable(false);
+		textFieldSupplierPassword.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierAdditionalInfo.setEditable(false);
 		textFieldSupplierAdditionalInfo
 				.setBackground(nonEditableTextFieldColor);
@@ -534,6 +577,10 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierPhoneNumber.setBackground(originalTextFieldColor);
 		textFieldSupplierEmail.setEditable(true);
 		textFieldSupplierEmail.setBackground(originalTextFieldColor);
+		textFieldSupplierUserName.setEditable(true);
+		textFieldSupplierUserName.setBackground(originalTextFieldColor);
+		textFieldSupplierPassword.setEditable(true);
+		textFieldSupplierPassword.setBackground(originalTextFieldColor);
 		textFieldSupplierAdditionalInfo.setEditable(true);
 		textFieldSupplierAdditionalInfo.setBackground(originalTextFieldColor);
 		textFieldSupplierId.setEditable(true);

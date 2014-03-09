@@ -35,6 +35,10 @@ public class Supplier implements Serializable {
 	private String supplierAddress;
 	private String supplierPhoneNumber;
 	private String supplierEmail;
+	@NotNull(message = "Полето корисничко име не е пополнето")
+	private String supplierUserName;
+	@NotNull(message = "Полето лозинка не е пополнето")
+	private String supplierPassword;
 	private String supplierAdditionalInfo;
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
@@ -103,6 +107,22 @@ public class Supplier implements Serializable {
 
 	public void setSupplierEmail(String supplierEmail) {
 		this.supplierEmail = supplierEmail;
+	}
+
+	public String getSupplierUserName() {
+		return supplierUserName;
+	}
+
+	public void setSupplierUserName(String supplierUserName) {
+		this.supplierUserName = supplierUserName;
+	}
+
+	public String getSupplierPassword() {
+		return supplierPassword;
+	}
+
+	public void setSupplierPassword(String supplierPassword) {
+		this.supplierPassword = supplierPassword;
 	}
 
 	public String getSupplierAdditionalInfo() {

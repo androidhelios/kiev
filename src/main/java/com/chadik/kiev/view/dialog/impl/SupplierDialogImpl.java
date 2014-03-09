@@ -45,6 +45,8 @@ public class SupplierDialogImpl implements ISupplierDialog {
 	private JLabel labelSupplierAddress;
 	private JLabel labelSupplierPhoneNumber;
 	private JLabel labelSupplierEmail;
+	private JLabel labelSupplierUserName;
+	private JLabel labelSupplierPassword;
 	private JLabel labelSupplierAdditionalInfo;
 
 	private JTextField textFieldSupplierId;
@@ -55,6 +57,8 @@ public class SupplierDialogImpl implements ISupplierDialog {
 	private JTextField textFieldSupplierAddress;
 	private JTextField textFieldSupplierPhoneNumber;
 	private JTextField textFieldSupplierEmail;
+	private JTextField textFieldSupplierUserName;
+	private JTextField textFieldSupplierPassword;
 	private JTextField textFieldSupplierAdditionalInfo;
 
 	private JButton buttonSave;
@@ -161,9 +165,9 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierPhoneNumber.setBounds(xTextField, y, weightTextField,
 				height);
 		textFieldSupplierPhoneNumber.setMargin(new Insets(2, 2, 2, 2));
-
+		
 		y = y + height + spacing;
-
+		
 		labelSupplierEmail = new JLabel("Email:");
 		labelSupplierEmail.setBounds(xLabel, y, weightLabel, height);
 
@@ -171,6 +175,26 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierEmail.setBounds(xTextField, y, weightTextField, height);
 		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
+		y = y + height + spacing;
+
+		labelSupplierUserName = new JLabel("Корисничко име:");
+		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldSupplierUserName = new JTextField();
+		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
+		
+		y = y + height + spacing;
+
+		labelSupplierPassword = new JLabel("Лозинка:");
+		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldSupplierPassword = new JTextField();
+		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
+		
 		y = y + height + spacing;
 
 		labelSupplierAdditionalInfo = new JLabel("Забелешки:");
@@ -226,6 +250,12 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		panelFieldsContent.add(labelSupplierEmail);
 		panelFieldsContent.add(textFieldSupplierEmail);
+		
+		panelFieldsContent.add(labelSupplierUserName);
+		panelFieldsContent.add(textFieldSupplierUserName);
+		
+		panelFieldsContent.add(labelSupplierPassword);
+		panelFieldsContent.add(textFieldSupplierPassword);
 
 		panelFieldsContent.add(labelSupplierAdditionalInfo);
 		panelFieldsContent.add(textFieldSupplierAdditionalInfo);
@@ -258,6 +288,8 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		supplier.setSupplierAddress(textFieldSupplierAddress.getText());
 		supplier.setSupplierPhoneNumber(textFieldSupplierPhoneNumber.getText());
 		supplier.setSupplierEmail(textFieldSupplierEmail.getText());
+		supplier.setSupplierUserName(textFieldSupplierUserName.getText());
+		supplier.setSupplierPassword(textFieldSupplierPassword.getText());
 		supplier.setSupplierAdditionalInfo(textFieldSupplierAdditionalInfo.getText());
 
 		return supplier;
