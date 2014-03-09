@@ -89,8 +89,6 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			
 			pdfDocument.add(tableSupplierInfoContent);
 			
-			pdfDocument.add(new Phrase("\n"));
-			
 			PdfPTable tableSupplierInfoAccountText = new PdfPTable(3);
 			tableSupplierInfoAccountText.setWidthPercentage(100);
 						
@@ -98,18 +96,21 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			cellSupplierInfoAccountTextBankAccountNumber.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellSupplierInfoAccountTextBankAccountNumber.setBorder(Rectangle.NO_BORDER);
 			cellSupplierInfoAccountTextBankAccountNumber.setPaddingBottom(5);
+			cellSupplierInfoAccountTextBankAccountNumber.setPaddingTop(10);
 			tableSupplierInfoAccountText.addCell(cellSupplierInfoAccountTextBankAccountNumber);
 			
 			PdfPCell cellSupplierInfoAccountTextRegistryNumber = new PdfPCell(new Phrase("Број за ДДВ:", font));
 			cellSupplierInfoAccountTextRegistryNumber.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellSupplierInfoAccountTextRegistryNumber.setBorder(Rectangle.NO_BORDER);
 			cellSupplierInfoAccountTextRegistryNumber.setPaddingBottom(5);
+			cellSupplierInfoAccountTextRegistryNumber.setPaddingTop(10);
 			tableSupplierInfoAccountText.addCell(cellSupplierInfoAccountTextRegistryNumber);
 			
 			PdfPCell cellSupplierInfoAccountTextBankName = new PdfPCell(new Phrase("Депонент на:", font));
 			cellSupplierInfoAccountTextBankName.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellSupplierInfoAccountTextBankName.setBorder(Rectangle.NO_BORDER);
 			cellSupplierInfoAccountTextBankName.setPaddingBottom(5);
+			cellSupplierInfoAccountTextBankName.setPaddingTop(10);
 			tableSupplierInfoAccountText.addCell(cellSupplierInfoAccountTextBankName);
 			
 			PdfPCell cellSupplierInfoAccountTextBankAccountNumberValue = new PdfPCell(new Phrase(invoice.getSupplier().getSupplierRegistryNumber(), font));
