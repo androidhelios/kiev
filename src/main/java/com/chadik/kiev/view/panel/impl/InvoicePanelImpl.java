@@ -21,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -38,6 +39,8 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Invoice;
+import com.chadik.kiev.model.OrderItem;
+import com.chadik.kiev.model.Product;
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.printer.IInvoicePrinter;
 import com.chadik.kiev.service.ICustomerService;
@@ -266,12 +269,18 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			public void actionPerformed(ActionEvent e) {
 				setInvoiceFieldsEditable();
 				setInvoiceInfoButtonsEnabled();
+				setInvoiceInfoPrintButtonDisabled();
 			}
 		});
 
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
+		buttonDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteInvoice();
+			}
+		});
 
 		int spacing = 5;
 		int weightLabel = 125;
@@ -602,6 +611,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveInvoice();
+				setInvoiceInfoPrintButtonEnabled();
 			}
 		});
 
@@ -640,6 +650,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonDeleteProduct.setBackground(new Color(224, 224, 224));
 		buttonDeleteProduct.setPreferredSize(new Dimension(100, 25));
 		buttonDeleteProduct.setEnabled(false);
+		buttonDeleteProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				orderItemPanelImpl.deleteOrderItem();
+			}
+		});
 
 		buttonPrint = new JButton("Испечати");
 		buttonPrint.setPreferredSize(new Dimension(100, 25));
@@ -651,6 +666,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 				documentPrinterImpl.setInvoice(invoice);
 				documentPrinterImpl.initInvoicePrinter();
+				JOptionPane.showMessageDialog(
+		                null,
+		                "Фактурата е испечатена",
+		                "Информација",
+		                JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -986,6 +1006,33 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		populateInvoiceCustomerComboBox();
 		populateInvoicePaymentInfoComboBox();
 	}
+	
+	public void clearInvoiceFields() {
+		comboBoxInvoiceSupplierName.removeAllItems();
+		comboBoxInvoiceCustomerName.removeAllItems();
+		textFieldInvoiceSupplierAddress.setText("");
+		textFieldInvoiceSupplierPhone.setText("");
+		textFieldInvoiceSupplierEmail.setText("");
+		textFieldInvoiceSupplierRegistryNumber.setText("");
+		textFieldInvoiceSupplierBankName.setText("");
+		textFieldInvoiceSupplierBankAccount.setText("");
+		textFieldInvoiceSupplierAdditionalInfo.setText("");
+		textFieldInvoiceCustomerAddress.setText("");
+		textFieldInvoiceCustomerPhoneNumber.setText("");
+		textFieldInvoiceCustomerEmail.setText("");
+		textFieldInvoiceCustomerAdditionalInfo.setText("");
+		textFieldInvoiceNumber.setText("");
+		textFieldInvoiceSerialNumber.setText("");
+		textFieldInvoiceDate.setText("");
+		textFieldInvoiceDeliveryDate.setText("");
+		textFieldInvoiceDeliveryNumber.setText("");
+		textFieldInvoiceTotalQuantityPrice.setText("");
+		textFieldInvoiceTotalQuantityPriceWithoutTax.setText("");
+		textFieldInvoiceTotalQuantityTax.setText("");
+		comboBoxInvoicePaymentInfo.removeAllItems();
+		textFieldInvoiceAdditionalInfo.setText("");
+		textFieldInvoiceId.setText("");
+	}
 
 	public void clearInvoiceComboBoxes() {
 		comboBoxInvoiceSupplierName.removeAllItems();
@@ -1123,6 +1170,16 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public String getSelectedInvoiceTableRow() {
 		return selectedInvoiceTableRow;
 	}
+	
+	@Override
+	public String[] getInvoiceOrderItemTotalValues() {
+		String[] values = new String[3];		
+		values[0] = textFieldInvoiceTotalQuantityPriceWithoutTax.getText();
+		values[1] = textFieldInvoiceTotalQuantityTax.getText();
+		values[2] = textFieldInvoiceTotalQuantityPrice.getText();
+		
+		return values;
+	}
 
 	@Override
 	public void setSelectedInvoiceTableRow(String selectedInvoiceTableRow) {
@@ -1222,7 +1279,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonCancel.setEnabled(true);
 		buttonAddProduct.setEnabled(true);
 		buttonDeleteProduct.setEnabled(true);
-		buttonPrint.setEnabled(true);
 	}
 
 	public void setInvoiceInfoButtonsDisabled() {
@@ -1232,6 +1288,14 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonDeleteProduct.setEnabled(false);
 	}
 
+	public void setInvoiceInfoPrintButtonDisabled() {
+		buttonPrint.setEnabled(false);
+	}
+	
+	public void setInvoiceInfoPrintButtonEnabled() {
+		buttonPrint.setEnabled(true);
+	}
+	
 	@Override
 	public void setProductButtonsEnabled() {
 		buttonAddProduct.setEnabled(true);
@@ -1250,6 +1314,16 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalQuantityTax.setText(invoiceTotalQuantityTax);
 		textFieldInvoiceTotalQuantityPrice.setText(invoiceTotalQuantityPrice);		
 	}
+	
+	@Override
+	public void setOrderItemRemoveButtonEnabled() {
+		buttonDeleteProduct.setEnabled(true);		
+	}
+
+	@Override
+	public void setOrderItemRemoveButtonDisabled() {
+		buttonDeleteProduct.setEnabled(false);		
+	}
 
 	public void saveInvoice() {
 		Invoice invoice = getInvoiceFromInvoiceFields();
@@ -1262,6 +1336,35 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		setInvoiceFieldsNonEditable();
 		setInvoiceInfoButtonsDisabled();
 	}
+	
+	public void deleteInvoice() {
+		int row = table.getSelectedRow();
+		String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
+		Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
+		invoiceServiceImpl.deleteInvoice(invoice);
+		String selectedRow = Integer.toString(row);
+		
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+		clearInvoiceFields();
+		
+		populateInvoiceTable();
+		
+		if (table.getRowCount() > 0) {
+			setSelectedInvoiceTableRow(selectedRow);
+			buttonEdit.setEnabled(true);
+			buttonDelete.setEnabled(true);
+			
+		}
+		
+		setInvoiceFieldsNonEditable();
+		setInvoiceInfoButtonsDisabled();
+	}
+	
+	public void deleteOrderItem() {
+
+	}
+
 
 	public GridBagConstraints invoicePanelConstraints() {
 		GridBagConstraints c = new GridBagConstraints();

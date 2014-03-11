@@ -2,6 +2,7 @@ package com.chadik.kiev.view.panel.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Invoice;
 import com.chadik.kiev.model.OrderItem;
+import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.IInvoiceService;
 import com.chadik.kiev.service.IOrderItemService;
 import com.chadik.kiev.util.TableUtil;
@@ -43,6 +45,8 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	private List<OrderItem> orderItems;
 
 	private DecimalFormat decimalFormat;
+
+	private String selectedOrderItemTableRow;
 
 	@Autowired
 	private IOrderItemService orderItemServiceImpl;
@@ -95,7 +99,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelTableHolder.add(panelTableHolderContent, BorderLayout.CENTER);
 
 		panelAll.add(panelTableHolder, BorderLayout.CENTER);
-		
+
 		setOrderItemTable(table);
 
 		if (invoice != null) {
@@ -141,14 +145,23 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 					.getOrderItemQuantityPrice();
 
 			invoiceTotalQuantityPriceWithoutTax = invoiceTotalQuantityPriceWithoutTax
-					+ Double.parseDouble(orderItemTotalQuantityPriceWithoutTax.replace(",", "."));
+					+ Double.parseDouble(orderItemTotalQuantityPriceWithoutTax
+							.replace(",", "."));
 			invoiceTotalQuantityTax = invoiceTotalQuantityTax
-					+ Double.parseDouble(orderItemTotalQuantityTax.replace(",", "."));
+					+ Double.parseDouble(orderItemTotalQuantityTax.replace(",",
+							"."));
 			invoiceTotalQuantityPrice = invoiceTotalQuantityPrice
-					+ Double.parseDouble(orderItemTotalQuantityPrice.replace(",", "."));
+					+ Double.parseDouble(orderItemTotalQuantityPrice.replace(
+							",", "."));
 		}
 
 		if (table.getRowCount() > 0) {
+			
+			int selectedRow = table.getRowCount() - 1;
+			
+			table.setRowSelectionInterval(selectedRow,
+					selectedRow);
+			
 			invoicePanelImpl.setProductButtonsEnabled();
 			invoicePanelImpl.setInvoiceOrderItemTotalValues(
 					decimalFormat.format(invoiceTotalQuantityPriceWithoutTax),
@@ -173,6 +186,13 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	}
 
 	@Override
+	public OrderItem getOrderItemFromOrderItemTable(
+			String selectedRowOrderItemId) {
+		BigDecimal invoiceId = new BigDecimal(selectedRowOrderItemId);
+		return orderItemServiceImpl.findOrderItemById(invoiceId);
+	}
+
+	@Override
 	public Invoice getInvoice() {
 		return invoice;
 	}
@@ -180,6 +200,10 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	@Override
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
+	}
+
+	public void setSelectedOrderItemTableRow(String selectedOrderItemTableRow) {
+		this.selectedOrderItemTableRow = selectedOrderItemTableRow;
 	}
 
 	@Override
@@ -190,6 +214,23 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	@Override
 	public void setOrderItemTable(JTable orderItemTable) {
 		this.table = orderItemTable;
+	}
+
+	@Override
+	public void deleteOrderItem() {
+		int row = table.getSelectedRow();
+		String selectedRowOrderItemId = (String) table.getValueAt(row, 1);
+		OrderItem orderItem = getOrderItemFromOrderItemTable(selectedRowOrderItemId);
+		orderItemServiceImpl.deleteOrderItem(orderItem);
+		
+		invoicePanelImpl.setOrderItemRemoveButtonDisabled();
+
+		populateOrderItemTable();
+
+		if (table.getRowCount() > 0) {
+			invoicePanelImpl.setOrderItemRemoveButtonEnabled();
+		}
+
 	}
 
 }

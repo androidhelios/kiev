@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
+import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.ICustomerService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
@@ -188,6 +189,11 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
+		buttonDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteCustomer();
+			}
+		});
 
 		int spacing = 5;
 		int weightLabel = 125;
@@ -392,6 +398,15 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerAdditionalInfo.setText(customer
 				.getCustomerAdditionalInfo());
 	}
+	
+	public void clearCustomerFields() {
+		textFieldCustomerId.setText("");
+		textFieldCustomerName.setText("");
+		textFieldCustomerAddress.setText("");
+		textFieldCustomerPhoneNumber.setText("");
+		textFieldCustomerEmail.setText("");
+		textFieldCustomerAdditionalInfo.setText("");
+	}
 
 	public String[] getTableCustomerColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Адреса",
@@ -489,6 +504,30 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		String selectedRow = Integer.toString(row);
 		setSelectedCustomerTableRow(selectedRow);
 		populateCustomerTable();
+		setCustomerFieldsNonEditable();
+		setCustomerInfoButtonsDisabled();
+	}
+	
+	public void deleteCustomer() {
+		int row = table.getSelectedRow();
+		String selectedRowCustomerId = (String) table.getValueAt(row, 1);
+		Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
+		customerServiceImpl.deleteCustomer(customer);
+		String selectedRow = Integer.toString(row);
+		
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+		clearCustomerFields();
+		
+		populateCustomerTable();
+		
+		if (table.getRowCount() > 0) {
+			setSelectedCustomerTableRow(selectedRow);
+			buttonEdit.setEnabled(true);
+			buttonDelete.setEnabled(true);
+			
+		}
+		
 		setCustomerFieldsNonEditable();
 		setCustomerInfoButtonsDisabled();
 	}

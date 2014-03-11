@@ -182,7 +182,7 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setCustomerFieldsEditable();
+				setProductFieldsEditable();
 				setProductInfoButtonsEnabled();
 			}
 		});
@@ -190,6 +190,11 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonDelete = new JButton("Избриши");
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
+		buttonDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteProduct();
+			}
+		});
 
 		int spacing = 5;
 		int weightLabel = 125;
@@ -283,7 +288,7 @@ public class ProductPanelImpl implements IProductPanel {
 				String selectedRowProductId = (String) table.getValueAt(row, 1);
 				Product product = getProductFromProductTable(selectedRowProductId);
 				populateProductFields(product);
-				setCustomerFieldsNonEditable();
+				setProductFieldsNonEditable();
 				setProductInfoButtonsDisabled();
 			}
 		});
@@ -388,7 +393,7 @@ public class ProductPanelImpl implements IProductPanel {
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
-		setCustomerFieldsNonEditable();
+		setProductFieldsNonEditable();
 		
 		setSelectedProductTableRow("");
 
@@ -403,6 +408,16 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductTaxPrice.setText(product.getProductTaxPrice());
 		textFieldProductAdditionalInfo.setText(product
 				.getProductAdditionalInfo());
+	}
+	
+	public void clearProductFields() {
+		textFieldProductId.setText("");
+		textFieldProductName.setText("");
+		textFieldProductMeasurement.setText("");
+		textFieldProductTax.setText("");
+		textFieldProductPrice.setText("");
+		textFieldProductTaxPrice.setText("");
+		textFieldProductAdditionalInfo.setText("");
 	}
 
 	public String[] getTableProductColumnNames() {
@@ -444,7 +459,7 @@ public class ProductPanelImpl implements IProductPanel {
 		this.selectedProductTableRow = selectedProductTableRow;		
 	}
 
-	public void setCustomerFieldsNonEditable() {
+	public void setProductFieldsNonEditable() {
 		textFieldProductName.setEditable(false);
 		textFieldProductName.setBackground(nonEditableTextFieldColor);
 		textFieldProductMeasurement.setEditable(false);
@@ -461,7 +476,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setBackground(nonEditableTextFieldColor);
 	}
 
-	public void setCustomerFieldsEditable() {
+	public void setProductFieldsEditable() {
 		textFieldProductName.setEditable(true);
 		textFieldProductName.setBackground(originalTextFieldColor);
 		textFieldProductMeasurement.setEditable(true);
@@ -505,7 +520,31 @@ public class ProductPanelImpl implements IProductPanel {
 		String selectedRow = Integer.toString(row);
 		setSelectedProductTableRow(selectedRow);
 		populateProductTable();
-		setCustomerFieldsNonEditable();
+		setProductFieldsNonEditable();
+		setProductInfoButtonsDisabled();
+	}
+	
+	public void deleteProduct() {
+		int row = table.getSelectedRow();
+		String selectedRowProductId = (String) table.getValueAt(row, 1);
+		Product product = getProductFromProductTable(selectedRowProductId);
+		productServiceImpl.deleteProduct(product);
+		String selectedRow = Integer.toString(row);
+		
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+		clearProductFields();
+		
+		populateProductTable();
+		
+		if (table.getRowCount() > 0) {
+			setSelectedProductTableRow(selectedRow);
+			buttonEdit.setEnabled(true);
+			buttonDelete.setEnabled(true);
+			
+		}
+		
+		setProductFieldsNonEditable();
 		setProductInfoButtonsDisabled();
 	}
 

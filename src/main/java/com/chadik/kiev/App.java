@@ -58,16 +58,16 @@ public class App {
     
     public static Supplier createMainSupplier() {
         Supplier supplier = new Supplier();
-        supplier.setSupplierName("supplierName");
-        supplier.setSupplierAddress("supplierAddress");
-        supplier.setSupplierBankAccount("supplierBankAccount");
-        supplier.setSupplierBankName("supplierBankName");
-        supplier.setSupplierRegistryNumber("supplierRegistryNumber");
-        supplier.setSupplierPhoneNumber("supplierPhoneNumber");
-        supplier.setSupplierEmail("supplierEmail");
-        supplier.setSupplierUserName("supplierUserName");
-        supplier.setSupplierPassword("supplierPassword");
-        supplier.setSupplierAdditionalInfo("supplierAdditionalInfo");
+        supplier.setSupplierName("Име");
+        supplier.setSupplierAddress("Адреса");
+        supplier.setSupplierBankAccount("Банкарска сметка");
+        supplier.setSupplierBankName("Банка");
+        supplier.setSupplierRegistryNumber("Регистарски број");
+        supplier.setSupplierPhoneNumber("Телефонски број");
+        supplier.setSupplierEmail("Email");
+        supplier.setSupplierUserName("korisnik");
+        supplier.setSupplierPassword("korisnik1");
+        supplier.setSupplierAdditionalInfo("Дополнителни информации");
     	
         return supplier;    	
     }

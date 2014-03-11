@@ -17,5 +17,11 @@ public interface IInvoicePanel {
 	public void setInvoiceOrderItemTotalValues(
 			String invoiceTotalQuantityPriceWithoutTax,
 			String invoiceTotalQuantityTax, String invoiceTotalQuantityPrice);
+	
+	public String[] getInvoiceOrderItemTotalValues();
+	
+	public void setOrderItemRemoveButtonEnabled();
+	
+	public void setOrderItemRemoveButtonDisabled();
 
 }

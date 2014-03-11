@@ -55,7 +55,7 @@ public class FrameMain {
 		mainFrame = new JFrame();
 		mainFrame.setMinimumSize(new Dimension(1000, 600));
 		
-		ImageIcon imageIcon = new ImageIcon("ico/invoice(1).png");
+		ImageIcon imageIcon = new ImageIcon("img/invoice.png");
 		
 		mainFrame.setIconImage(imageIcon.getImage());
 		
