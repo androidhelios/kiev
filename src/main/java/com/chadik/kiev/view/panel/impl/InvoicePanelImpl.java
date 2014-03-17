@@ -12,12 +12,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -33,14 +33,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Invoice;
-import com.chadik.kiev.model.OrderItem;
-import com.chadik.kiev.model.Product;
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.printer.IInvoicePrinter;
 import com.chadik.kiev.service.ICustomerService;
@@ -93,6 +92,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private JLabel labelInvoiceCustomerPhoneNumber;
 	private JLabel labelInvoiceCustomerEmail;
 	private JLabel labelInvoiceCustomerAdditionalInfo;
+	private JLabel labelInvoiceNumberBeforeLast;
 	private JLabel labelInvoiceNumber;
 	private JLabel labelInvoiceSerialNumber;
 	private JLabel labelInvoiceDate;
@@ -101,6 +101,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private JLabel labelInvoiceTotalQuantityPrice;
 	private JLabel labelTotalQuantityPriceWithoutTax;
 	private JLabel labelInvoiceTotalQuantityTax;
+	private JLabel labelInvoiceCurrency;
 	private JLabel labelInvoicePaymentInfo;
 	private JLabel labelInvoiceAdditionalInfo;
 
@@ -118,6 +119,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private JTextField textFieldInvoiceCustomerPhoneNumber;
 	private JTextField textFieldInvoiceCustomerEmail;
 	private JTextField textFieldInvoiceCustomerAdditionalInfo;
+	private JTextField textFieldInvoiceNumberBeforeLast;
 	private JTextField textFieldInvoiceNumber;
 	private JTextField textFieldInvoiceSerialNumber;
 	private JTextField textFieldInvoiceDate;
@@ -130,6 +132,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	private JComboBox comboBoxInvoiceSupplierName;
 	private JComboBox comboBoxInvoiceCustomerName;
+	private JComboBox comboBoxInvoiceCurrency;
 	private JComboBox comboBoxInvoicePaymentInfo;
 
 	private JButton buttonNew;
@@ -143,11 +146,15 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
+	private Color mandatoryTextFieldColor;
 
 	private String selectedInvoiceTableRow;
+	
+	private boolean editMode;
 
 	private Map<Integer, Integer> mapSuppliers;
 	private Map<Integer, Integer> mapCustomers;
+	private Map<Integer, String> mapCurrencies;
 	private Map<Integer, String> mapPaymentsInfo;
 
 	private List<Invoice> invoices;
@@ -203,7 +210,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentInfoFields = new JPanel();
 		panelInfoHolderContentInfoFields.setLayout(new GridBagLayout());
 		panelInfoHolderContentInfoFields.setPreferredSize(new Dimension(400,
-				800));
+				850));
 		panelInfoHolderContentInfoFields
 				.setBackground(new Color(192, 192, 192));
 		panelInfoHolderContentInfoFields.setBorder(BorderFactory
@@ -228,17 +235,59 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		};
 		defaultTableModel.setColumnIdentifiers(getTableInvoiceColumnNames());
 
-		table = new JTable();
+		table = new JTable() {
+			public java.awt.Component prepareRenderer(
+					TableCellRenderer renderer, int rowIndex, int colIndex) {
+
+				java.awt.Component c = super.prepareRenderer(renderer,
+						rowIndex, colIndex);
+
+				Color halfPayedInvoiceColor = new Color(255, 255, 153);
+				Color fullPayedInvoiceColor = new Color(153, 255, 153);
+				Color defaultColor = javax.swing.UIManager
+						.getColor("Table.dropCellForeground");
+
+				String invoicePaymentInfo = (String) table.getValueAt(rowIndex,
+						12);
+
+				if ("Неисплатена".equals(invoicePaymentInfo)
+						&& !isCellSelected(rowIndex, colIndex)) {
+					c.setBackground(defaultColor);
+				}
+
+				if ("Делумно исплатена".equals(invoicePaymentInfo)
+						&& !isCellSelected(rowIndex, colIndex)) {
+					c.setBackground(halfPayedInvoiceColor);
+				}
+
+				if ("Исплатена".equals(invoicePaymentInfo)
+						&& !isCellSelected(rowIndex, colIndex)) {
+					c.setBackground(fullPayedInvoiceColor);
+				}
+
+				return c;
+			}
+		};
+
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				int row = table.getSelectedRow();
-				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
-				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
-				populateInvoiceFields(invoice);
-				setInvoicePrintEnabled();
-				orderItemPanelImpl.setInvoice(invoice);
-				orderItemPanelImpl.populateOrderItemTable();
+				if (isEditMode()) {
+					table.setEnabled(false);
+				} else {
+					table.setEnabled(true);
+					int row = table.getSelectedRow();
+					String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
+					BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
+					int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+					Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
+					populateInvoiceFields(invoice);
+					buttonAddProduct.setEnabled(false);
+					buttonDeleteProduct.setEnabled(false);
+					buttonPrint.setEnabled(true);
+					orderItemPanelImpl.setInvoiceId(intSelectedRowInvoiceId);
+					orderItemPanelImpl.populateOrderItemTable();
+				}
 			}
 		});
 
@@ -258,6 +307,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonNew.setPreferredSize(new Dimension(100, 25));
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setAllButtonsDisabled();
 				invoiceDialogImpl.initInvoiceDialog();
 			}
 		});
@@ -270,10 +320,15 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				setInvoiceFieldsEditable();
 				setInvoiceInfoButtonsEnabled();
 				setInvoiceInfoPrintButtonDisabled();
+				setInvoiceTableButtonsDisabled();
+				buttonNew.setEnabled(false);
+				setEditMode(true);
+				table.setEnabled(false);
 			}
 		});
 
 		buttonDelete = new JButton("Избриши");
+		buttonDelete.setForeground(Color.RED);
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
 		buttonDelete.addActionListener(new ActionListener() {
@@ -289,6 +344,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
+
+		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		labelInvoiceSupplierName = new JLabel("Име на корисник:");
 		labelInvoiceSupplierName.setBounds(xLabel, y, weightLabel, height);
@@ -319,6 +376,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		labelInvoiceCustomerName = new JLabel("Име на клиент:");
 		labelInvoiceCustomerName.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceCustomerName.setForeground(mandatoryTextFieldColor);
 
 		comboBoxInvoiceCustomerName = new JComboBox();
 		comboBoxInvoiceCustomerName.setBounds(xTextField, y, weightTextField,
@@ -468,8 +526,22 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		y = y + height + spacing;
 
+		labelInvoiceNumberBeforeLast = new JLabel("Број на претходна фактура:");
+		labelInvoiceNumberBeforeLast.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldInvoiceNumberBeforeLast = new JTextField();
+		textFieldInvoiceNumberBeforeLast.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldInvoiceNumberBeforeLast.setMargin(new Insets(2, 2, 2, 2));
+		textFieldInvoiceNumberBeforeLast.setEditable(false);
+		textFieldInvoiceNumberBeforeLast
+				.setBackground(nonEditableTextFieldColor);
+
+		y = y + height + spacing;
+
 		labelInvoiceNumber = new JLabel("Број на фактура:");
 		labelInvoiceNumber.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceNumber.setForeground(mandatoryTextFieldColor);
 
 		textFieldInvoiceNumber = new JTextField();
 		textFieldInvoiceNumber
@@ -490,6 +562,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		labelInvoiceDate = new JLabel("Датум на фактура:");
 		labelInvoiceDate.setBounds(xLabel, y, weightLabel, height);
+		labelInvoiceDate.setForeground(mandatoryTextFieldColor);
 
 		textFieldInvoiceDate = new JTextField();
 		textFieldInvoiceDate.setBounds(xTextField, y, weightTextField, height);
@@ -547,6 +620,22 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalQuantityPrice.setBounds(xTextField, y,
 				weightTextField, height);
 		textFieldInvoiceTotalQuantityPrice.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+
+		labelInvoiceCurrency = new JLabel("Валута:");
+		labelInvoiceCurrency.setBounds(xLabel, y, weightLabel, height);
+
+		comboBoxInvoiceCurrency = new JComboBox();
+		comboBoxInvoiceCurrency.setBounds(xTextField, y, weightTextField,
+				height);
+		comboBoxInvoiceCurrency.setEnabled(false);
+		comboBoxInvoiceCurrency.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
 
 		y = y + height + spacing;
 
@@ -610,8 +699,19 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonSave.setEnabled(false);
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveInvoice();
-				setInvoiceInfoPrintButtonEnabled();
+				if (validateInvoiceFields()) {
+					saveInvoice();
+					setInvoiceInfoPrintButtonEnabled();
+					setEditMode(false);
+					table.setEnabled(true);
+				} else {
+					Object[] options = { "OK" };
+					int input = JOptionPane.showOptionDialog(null,
+							"Погрешен внес", "Грешка",
+							JOptionPane.ERROR_MESSAGE,
+							JOptionPane.ERROR_MESSAGE, null, options,
+							options[0]);
+				}
 			}
 		});
 
@@ -623,35 +723,46 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				int row = table.getSelectedRow();
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
-				orderItemPanelImpl.setInvoice(invoice);
-				orderItemDialogImpl.setInvoice(invoice);
 
 				populateInvoiceFields(invoice);
 				setInvoiceFieldsNonEditable();
 				setInvoiceInfoButtonsDisabled();
+				setInvoiceTableButtonsEnabled();
+				setEditMode(false);
+				table.setEnabled(true);
 			}
 		});
 
-		buttonAddProduct = new JButton("Додади");
-		buttonAddProduct.setBackground(new Color(224, 224, 224));
-		buttonAddProduct.setPreferredSize(new Dimension(100, 25));
+		ImageIcon iconButtonAddProduct = new ImageIcon("img/text-plus-icon.png");
+		
+		buttonAddProduct = new JButton(iconButtonAddProduct);
+//		buttonAddProduct.setBackground(new Color(224, 224, 224));
+		buttonAddProduct.setPreferredSize(new Dimension(25, 25));
 		buttonAddProduct.setEnabled(false);
 		buttonAddProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
-				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
-				orderItemDialogImpl.setInvoice(invoice);
+				BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
+				int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+				orderItemDialogImpl.setInvoiceId(intSelectedRowInvoiceId);
 				orderItemDialogImpl.initOrderItemDialog();
 			}
 		});
+		
+		ImageIcon iconButtonDeleteProduct = new ImageIcon("img/Math-minus-icon.png");
 
-		buttonDeleteProduct = new JButton("Одземи");
-		buttonDeleteProduct.setBackground(new Color(224, 224, 224));
-		buttonDeleteProduct.setPreferredSize(new Dimension(100, 25));
+		buttonDeleteProduct = new JButton(iconButtonDeleteProduct);
+//		buttonDeleteProduct.setBackground(new Color(224, 224, 224));
+		buttonDeleteProduct.setPreferredSize(new Dimension(25, 25));
 		buttonDeleteProduct.setEnabled(false);
 		buttonDeleteProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
+				BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
+				int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+				orderItemPanelImpl.setInvoiceId(intSelectedRowInvoiceId);
 				orderItemPanelImpl.deleteOrderItem();
 			}
 		});
@@ -666,11 +777,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 				documentPrinterImpl.setInvoice(invoice);
 				documentPrinterImpl.initInvoicePrinter();
-				JOptionPane.showMessageDialog(
-		                null,
-		                "Фактурата е испечатена",
-		                "Информација",
-		                JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Фактурата е испечатена",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -753,6 +861,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentInfoFields.add(
 				textFieldInvoiceCustomerAdditionalInfo, textFieldConstraints());
 
+		panelInfoHolderContentInfoFields.add(labelInvoiceNumberBeforeLast,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(textFieldInvoiceNumberBeforeLast,
+				textFieldConstraints());
+
 		panelInfoHolderContentInfoFields.add(labelInvoiceNumber,
 				labelConstraints());
 		panelInfoHolderContentInfoFields.add(textFieldInvoiceNumber,
@@ -794,6 +907,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentInfoFields.add(
 				textFieldInvoiceTotalQuantityPrice, textFieldConstraints());
 
+		panelInfoHolderContentInfoFields.add(labelInvoiceCurrency,
+				labelConstraints());
+		panelInfoHolderContentInfoFields.add(comboBoxInvoiceCurrency,
+				textFieldConstraints());
+
 		panelInfoHolderContentInfoFields.add(labelInvoicePaymentInfo,
 				labelConstraints());
 		panelInfoHolderContentInfoFields.add(comboBoxInvoicePaymentInfo,
@@ -807,6 +925,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentButtons.add(buttonSave);
 		panelInfoHolderContentButtons.add(buttonCancel);
 		panelInfoHolderContentButtons.add(PanelUtil.createJSeparator());
+		panelInfoHolderContentButtons.add(new JLabel(" Артикл: "));
 		panelInfoHolderContentButtons.add(buttonAddProduct);
 		panelInfoHolderContentButtons.add(buttonDeleteProduct);
 		panelInfoHolderContentButtons.add(PanelUtil.createJSeparator());
@@ -871,8 +990,13 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			table.setRowSelectionInterval(selectedRow, selectedRow);
 
 			selectedRowInvoiceId = (String) table.getValueAt(selectedRow, 1);
+			BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
+			int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
 			Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 			populateInvoiceFields(invoice);
+			
+			orderItemPanelImpl.setInvoiceId(intSelectedRowInvoiceId);
+			orderItemPanelImpl.populateOrderItemTable();
 
 			setInvoiceTableButtonsEnabled();
 			setInvoicePrintEnabled();
@@ -944,6 +1068,19 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		}
 	}
 
+	public void populateInvoiceCurrencyComboBox() {
+		comboBoxInvoiceCurrency.removeAllItems();
+		mapCurrencies = new HashMap<Integer, String>();
+		mapCurrencies.put(0, "- Избери валута -");
+		mapCurrencies.put(1, "ДЕН");
+		mapCurrencies.put(2, "EUR");
+		mapCurrencies.put(3, "USD");
+
+		for (Map.Entry<Integer, String> entry : mapCurrencies.entrySet()) {
+			comboBoxInvoiceCurrency.addItem(entry.getValue());
+		}
+	}
+
 	public void populateInvoicePaymentInfoComboBox() {
 		comboBoxInvoicePaymentInfo.removeAllItems();
 		mapPaymentsInfo = new HashMap<Integer, String>();
@@ -982,6 +1119,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				.getCustomerEmail());
 		textFieldInvoiceCustomerAdditionalInfo.setText(invoice.getCustomer()
 				.getCustomerAdditionalInfo());
+		textFieldInvoiceNumberBeforeLast.setText(getInvoiceNumberBeforeLast(invoice.getInvoiceNumber()));
 		textFieldInvoiceNumber.setText(invoice.getInvoiceNumber());
 		textFieldInvoiceSerialNumber.setText(invoice.getInvoiceSerialNumber());
 		textFieldInvoiceDate.setText(invoice.getInvoiceDate());
@@ -994,6 +1132,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				.getInvoiceTotalTax());
 		textFieldInvoiceTotalQuantityTax.setText(invoice
 				.getInvoiceTotalPriceTax());
+		comboBoxInvoiceCurrency
+				.setSelectedIndex(getSelectedInvoiceCurrencyComboBoxIndex(invoice));
 		comboBoxInvoicePaymentInfo
 				.setSelectedIndex(getSelectedInvoicePaymentInfoComboBoxIndex(invoice));
 		textFieldInvoiceAdditionalInfo.setText(invoice
@@ -1004,9 +1144,10 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void populateInvoiceComboBoxes() {
 		populateInvoiceSupplierComboBox();
 		populateInvoiceCustomerComboBox();
+		populateInvoiceCurrencyComboBox();
 		populateInvoicePaymentInfoComboBox();
 	}
-	
+
 	public void clearInvoiceFields() {
 		comboBoxInvoiceSupplierName.removeAllItems();
 		comboBoxInvoiceCustomerName.removeAllItems();
@@ -1021,6 +1162,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceCustomerPhoneNumber.setText("");
 		textFieldInvoiceCustomerEmail.setText("");
 		textFieldInvoiceCustomerAdditionalInfo.setText("");
+		textFieldInvoiceNumberBeforeLast.setText("");
 		textFieldInvoiceNumber.setText("");
 		textFieldInvoiceSerialNumber.setText("");
 		textFieldInvoiceDate.setText("");
@@ -1029,6 +1171,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalQuantityPrice.setText("");
 		textFieldInvoiceTotalQuantityPriceWithoutTax.setText("");
 		textFieldInvoiceTotalQuantityTax.setText("");
+		comboBoxInvoiceCurrency.removeAllItems();
 		comboBoxInvoicePaymentInfo.removeAllItems();
 		textFieldInvoiceAdditionalInfo.setText("");
 		textFieldInvoiceId.setText("");
@@ -1037,6 +1180,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void clearInvoiceComboBoxes() {
 		comboBoxInvoiceSupplierName.removeAllItems();
 		comboBoxInvoiceCustomerName.removeAllItems();
+		comboBoxInvoiceCurrency.removeAllItems();
 		comboBoxInvoicePaymentInfo.removeAllItems();
 	}
 
@@ -1075,6 +1219,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				.getText());
 		invoice.setInvoiceTotalPriceTax(textFieldInvoiceTotalQuantityTax
 				.getText());
+		invoice.setInvoiceCurrency(getSelectedComboBoxInvoiceCurrency());
 		invoice.setInvoicePaymentInfo(getSelectedComboBoxInvoicePaymentInfo());
 		invoice.setInvoiceAdditionalInfo(textFieldInvoiceAdditionalInfo
 				.getText());
@@ -1085,7 +1230,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public Supplier getSelectedComboBoxInvoiceSupplier() {
 		int selectedComboBoxSupplierIndex = comboBoxInvoiceSupplierName
 				.getSelectedIndex();
-		Integer selectedComboBoxSupplierId = mapCustomers
+		Integer selectedComboBoxSupplierId = mapSuppliers
 				.get(selectedComboBoxSupplierIndex);
 		int intSelectedComboBoxSupplierId = selectedComboBoxSupplierId
 				.intValue();
@@ -1108,6 +1253,14 @@ public class InvoicePanelImpl implements IInvoicePanel {
 						.valueOf(intSelectedComboBoxCustomerId)));
 
 		return customer;
+	}
+
+	public String getSelectedComboBoxInvoiceCurrency() {
+		String currency;
+		int selectedComboBoxPaymentInfoIndex = comboBoxInvoiceCurrency
+				.getSelectedIndex();
+		currency = mapCurrencies.get(selectedComboBoxPaymentInfoIndex);
+		return currency;
 	}
 
 	public String getSelectedComboBoxInvoicePaymentInfo() {
@@ -1152,6 +1305,20 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		return selectedIndex;
 	}
 
+	public int getSelectedInvoiceCurrencyComboBoxIndex(Invoice invoice) {
+		int selectedIndex;
+		Integer key = null;
+		String currency = invoice.getInvoiceCurrency();
+		for (Map.Entry<Integer, String> entry : mapCurrencies.entrySet()) {
+			if (currency != null && currency.equals(entry.getValue())) {
+				key = entry.getKey();
+				break;
+			}
+		}
+		selectedIndex = key.intValue();
+		return selectedIndex;
+	}
+
 	public int getSelectedInvoicePaymentInfoComboBoxIndex(Invoice invoice) {
 		int selectedIndex;
 		Integer key = null;
@@ -1170,15 +1337,43 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public String getSelectedInvoiceTableRow() {
 		return selectedInvoiceTableRow;
 	}
-	
+
+	public String getInvoiceNumberBeforeLast(String currentInvoiceNumber) {
+		String invoceNumberBeforeLast = "";
+		invoices = invoiceServiceImpl.findAllInvoices();
+		if (invoices.size() > 0) {
+			if (invoices.size() == 1) {
+				invoceNumberBeforeLast = "";
+			} else if (invoices.size() > 1) {
+				invoceNumberBeforeLast = invoices.get(invoices.size() - 2)
+						.getInvoiceNumber();
+			}
+
+		}
+		
+		if (currentInvoiceNumber.equals(invoceNumberBeforeLast)) {
+			invoceNumberBeforeLast = "";
+		}
+
+		return invoceNumberBeforeLast;
+	}
+
 	@Override
 	public String[] getInvoiceOrderItemTotalValues() {
-		String[] values = new String[3];		
+		String[] values = new String[3];
 		values[0] = textFieldInvoiceTotalQuantityPriceWithoutTax.getText();
 		values[1] = textFieldInvoiceTotalQuantityTax.getText();
 		values[2] = textFieldInvoiceTotalQuantityPrice.getText();
-		
+
 		return values;
+	}
+	
+	public boolean isEditMode() {
+		return editMode;
+	}
+	
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
 	}
 
 	@Override
@@ -1186,9 +1381,13 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		this.selectedInvoiceTableRow = selectedInvoiceTableRow;
 	}
 
+	@Override
 	public void setInvoiceTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+		buttonNew.setEnabled(true);
+		if (table.getRowCount() > 0) {
+			buttonEdit.setEnabled(true);
+			buttonDelete.setEnabled(true);
+		}
 	}
 
 	public void setInvoiceTableButtonsDisabled() {
@@ -1249,6 +1448,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceTotalQuantityTax.setEditable(false);
 		textFieldInvoiceTotalQuantityTax
 				.setBackground(nonEditableTextFieldColor);
+		comboBoxInvoiceCurrency.setEnabled(false);
 		comboBoxInvoicePaymentInfo.setEnabled(false);
 		textFieldInvoiceAdditionalInfo.setEditable(false);
 		textFieldInvoiceAdditionalInfo.setBackground(nonEditableTextFieldColor);
@@ -1267,6 +1467,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceDeliveryDate.setBackground(originalTextFieldColor);
 		textFieldInvoiceDeliveryNumber.setEditable(true);
 		textFieldInvoiceDeliveryNumber.setBackground(originalTextFieldColor);
+		comboBoxInvoiceCurrency.setEnabled(true);
 		comboBoxInvoicePaymentInfo.setEnabled(true);
 		textFieldInvoiceAdditionalInfo.setEditable(true);
 		textFieldInvoiceAdditionalInfo.setBackground(originalTextFieldColor);
@@ -1286,16 +1487,19 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonCancel.setEnabled(false);
 		buttonAddProduct.setEnabled(false);
 		buttonDeleteProduct.setEnabled(false);
+		if (table.getRowCount() > 0) {
+			buttonPrint.setEnabled(true);
+		}
 	}
 
 	public void setInvoiceInfoPrintButtonDisabled() {
 		buttonPrint.setEnabled(false);
 	}
-	
+
 	public void setInvoiceInfoPrintButtonEnabled() {
 		buttonPrint.setEnabled(true);
 	}
-	
+
 	@Override
 	public void setProductButtonsEnabled() {
 		buttonAddProduct.setEnabled(true);
@@ -1305,24 +1509,43 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public void setInvoicePrintEnabled() {
 		buttonPrint.setEnabled(true);
 	}
-	
+
 	@Override
 	public void setInvoiceOrderItemTotalValues(
 			String invoiceTotalQuantityPriceWithoutTax,
 			String invoiceTotalQuantityTax, String invoiceTotalQuantityPrice) {
-		textFieldInvoiceTotalQuantityPriceWithoutTax.setText(invoiceTotalQuantityPriceWithoutTax);
+		textFieldInvoiceTotalQuantityPriceWithoutTax
+				.setText(invoiceTotalQuantityPriceWithoutTax);
 		textFieldInvoiceTotalQuantityTax.setText(invoiceTotalQuantityTax);
-		textFieldInvoiceTotalQuantityPrice.setText(invoiceTotalQuantityPrice);		
+		textFieldInvoiceTotalQuantityPrice.setText(invoiceTotalQuantityPrice);
 	}
-	
+
 	@Override
 	public void setOrderItemRemoveButtonEnabled() {
-		buttonDeleteProduct.setEnabled(true);		
+		buttonDeleteProduct.setEnabled(true);
 	}
 
 	@Override
 	public void setOrderItemRemoveButtonDisabled() {
-		buttonDeleteProduct.setEnabled(false);		
+		buttonDeleteProduct.setEnabled(false);
+	}
+
+	public void setAllButtonsDisabled() {
+		buttonNew.setEnabled(false);
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+		buttonAddProduct.setEnabled(false);
+		buttonDeleteProduct.setEnabled(false);
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+		buttonPrint.setEnabled(false);
+	}
+
+	public boolean validateInvoiceFields() {
+		boolean result = true;
+		result = result && (!"".equals(textFieldInvoiceNumber.getText()))
+				&& (!"".equals(textFieldInvoiceDate.getText()));
+		return result;
 	}
 
 	public void saveInvoice() {
@@ -1336,35 +1559,40 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		setInvoiceFieldsNonEditable();
 		setInvoiceInfoButtonsDisabled();
 	}
-	
+
 	public void deleteInvoice() {
 		int row = table.getSelectedRow();
 		String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
 		Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 		invoiceServiceImpl.deleteInvoice(invoice);
 		String selectedRow = Integer.toString(row);
+		int intSelectedRow = Integer.parseInt(selectedRow);
+		
+		clearInvoiceFields();
 		
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
-		clearInvoiceFields();
+
+		
+		if (table.getRowCount() - 1 > intSelectedRow) {
+			setSelectedInvoiceTableRow(selectedRow);
+		}
 		
 		populateInvoiceTable();
 		
-		if (table.getRowCount() > 0) {
-			setSelectedInvoiceTableRow(selectedRow);
+		if (table.getRowCount() > 0) {			
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
-			
+
 		}
-		
+
 		setInvoiceFieldsNonEditable();
 		setInvoiceInfoButtonsDisabled();
 	}
-	
+
 	public void deleteOrderItem() {
 
 	}
-
 
 	public GridBagConstraints invoicePanelConstraints() {
 		GridBagConstraints c = new GridBagConstraints();

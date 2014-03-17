@@ -11,5 +11,7 @@ public interface ISupplierPanel {
 	public void setSelectedSupplierTableRow(String selectedSupplierTableRow);
 	
 	public String getSelectedSupplierTableRow();
+	
+	public void setSupplierTableButtonsEnabled();
 
 }

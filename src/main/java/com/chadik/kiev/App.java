@@ -38,7 +38,7 @@ public class App {
     		supplierServiceImpl.saveSupplier(supplier);
     	}
     	
-    	if (getAppMode().endsWith("test")) {
+    	if (getAppMode().equals("test")) {
     		Customer customer = createCustomer();
     		customerServiceImpl.saveCustomer(customer);
     		
@@ -53,7 +53,7 @@ public class App {
     }
     
     public static String getAppMode() {
-    	return "test";
+    	return "live";
     }
     
     public static Supplier createMainSupplier() {

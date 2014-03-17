@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.ISupplierService;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ISupplierPanel;
 
@@ -63,15 +65,19 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 	private JButton buttonSave;
 	private JButton buttonCancel;
+	
+	private Color mandatoryTextFieldColor;
 
 	@Autowired
 	private ISupplierService supplierServiceImpl;
 	@Autowired
 	private ISupplierPanel supplierPanelImpl;
+	@Autowired
+	private FrameMain frameMain;
 
 	@Override
 	public JDialog initSupplierDialog() {
-		dialog = new JDialog();
+		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нов Корисник");
 		dialog.setResizable(false);
 
@@ -108,9 +114,12 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
+		
+		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		labelSupplierName = new JLabel("Име:");
 		labelSupplierName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierName.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierName = new JTextField();
 		textFieldSupplierName.setBounds(xTextField, y, weightTextField, height);
@@ -120,6 +129,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		labelSupplierRegistryNumber = new JLabel("Регистерски Број:");
 		labelSupplierRegistryNumber.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierRegistryNumber.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierRegistryNumber = new JTextField();
 		textFieldSupplierRegistryNumber.setBounds(xTextField, y, weightTextField,
@@ -130,6 +140,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		labelSupplierBankName = new JLabel("Банка:");
 		labelSupplierBankName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierBankName.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierBankName = new JTextField();
 		textFieldSupplierBankName.setBounds(xTextField, y, weightTextField,
@@ -140,6 +151,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		labelSupplierBankAccount = new JLabel("Банкарска Сметка:");
 		labelSupplierBankAccount.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierBankAccount.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierBankAccount = new JTextField();
 		textFieldSupplierBankAccount.setBounds(xTextField, y, weightTextField,
@@ -150,6 +162,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		labelSupplierAddress = new JLabel("Адреса:");
 		labelSupplierAddress.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierAddress.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierAddress = new JTextField();
 		textFieldSupplierAddress
@@ -179,6 +192,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		labelSupplierUserName = new JLabel("Корисничко име:");
 		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierUserName.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierUserName = new JTextField();
 		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
@@ -189,6 +203,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		labelSupplierPassword = new JLabel("Лозинка:");
 		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierPassword.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierPassword = new JTextField();
 		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
@@ -218,15 +233,31 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveSupplierAndDispose();
+				if (validateSupplierFields()) {
+					saveSupplierAndDispose();
+				} else {
+					dialog.setVisible(false);
+
+					Object[] options = { "OK" };
+					int input = JOptionPane.showOptionDialog(null,
+							"Погрешен внес", "Грешка",
+							JOptionPane.ERROR_MESSAGE,
+							JOptionPane.ERROR_MESSAGE, null, options,
+							options[0]);
+
+					if (input == 0) {
+						dialog.setVisible(true);
+					}
+				}
+
 			}
 		});
-
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setPreferredSize(new Dimension(100, 25));
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				
 			}
 		});
 
@@ -273,8 +304,8 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		contentPane.add(panelAll);
 
 		dialog.pack();
+		dialog.setLocationRelativeTo(frameMain.getMainFrame());
 		dialog.setVisible(true);
-		dialog.setLocationRelativeTo(null);
 
 		return dialog;
 	}
@@ -293,6 +324,18 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		supplier.setSupplierAdditionalInfo(textFieldSupplierAdditionalInfo.getText());
 
 		return supplier;
+	}
+	
+	public boolean validateSupplierFields() {
+		boolean result = true;
+		result = result && (!"".equals(textFieldSupplierName.getText()))
+				&& (!"".equals(textFieldSupplierRegistryNumber.getText()))
+				&& (!"".equals(textFieldSupplierBankName.getText()))
+				&& (!"".equals(textFieldSupplierBankAccount.getText()))
+				&& (!"".equals(textFieldSupplierAddress.getText()))
+				&& (!"".equals(textFieldSupplierUserName.getText()))
+				&& (!"".equals(textFieldSupplierPassword.getText()));
+		return result;
 	}
 
 	public void saveSupplierAndDispose() {

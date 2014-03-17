@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +12,9 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.service.ICustomerService;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.ICustomerDialog;
 import com.chadik.kiev.view.panel.ICustomerPanel;
 
@@ -54,14 +58,20 @@ public class CustomerDialogImpl implements ICustomerDialog {
 	private JButton buttonSave;
 	private JButton buttonCancel;
 
+	private Color mandatoryTextFieldColor;
+
 	@Autowired
 	private ICustomerService customerServiceImpl;
 	@Autowired
 	private ICustomerPanel customerPanelImpl;
+	@Autowired
+	private FrameMain frameMain;
+	
+	private JFrame frame;
 
 	@Override
 	public JDialog initCustomerDialog() {
-		dialog = new JDialog();
+		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нов Клиент");
 		dialog.setResizable(false);
 
@@ -98,8 +108,11 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 
+		mandatoryTextFieldColor = new Color(204, 0, 0);
+
 		labelCustomerName = new JLabel("Име:");
 		labelCustomerName.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerName.setForeground(mandatoryTextFieldColor);
 
 		textFieldCustomerName = new JTextField();
 		textFieldCustomerName.setBounds(xTextField, y, weightTextField, height);
@@ -109,6 +122,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 
 		labelCustomerAddress = new JLabel("Адреса:");
 		labelCustomerAddress.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerAddress.setForeground(mandatoryTextFieldColor);
 
 		textFieldCustomerAddress = new JTextField();
 		textFieldCustomerAddress.setBounds(xTextField, y, weightTextField,
@@ -158,7 +172,23 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveCustomerAndDispose();
+				if (validateCustomerFields()) {
+					saveCustomerAndDispose();
+				} else {
+					dialog.setVisible(false);
+
+					Object[] options = { "OK" };
+					int input = JOptionPane.showOptionDialog(null,
+							"Погрешен внес", "Грешка",
+							JOptionPane.ERROR_MESSAGE,
+							JOptionPane.ERROR_MESSAGE, null, options,
+							options[0]);
+
+					if (input == 0) {
+						dialog.setVisible(true);
+					}
+				}
+
 			}
 		});
 
@@ -167,6 +197,7 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				customerPanelImpl.setCustomerTableButtonsEnabled();
 			}
 		});
 
@@ -198,8 +229,8 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		contentPane.add(panelAll);
 
 		dialog.pack();
+		dialog.setLocationRelativeTo(frameMain.getMainFrame());
 		dialog.setVisible(true);
-		dialog.setLocationRelativeTo(null);
 
 		return dialog;
 	}
@@ -216,6 +247,13 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		return customer;
 	}
 
+	public boolean validateCustomerFields() {
+		boolean result = true;
+		result = result && (!"".equals(textFieldCustomerName.getText()))
+				&& (!"".equals(textFieldCustomerAddress.getText()));
+		return result;
+	}
+
 	public void saveCustomerAndDispose() {
 		Customer customer = getCustomerFromCustomerFields();
 		customerServiceImpl.saveCustomer(customer);
@@ -225,6 +263,17 @@ public class CustomerDialogImpl implements ICustomerDialog {
 
 	public void dispose() {
 		dialog.dispose();
+	}
+
+	@Override
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	@Override
+	public void seFrame(JFrame mainFrame) {
+		this.frame = mainFrame;
+		
 	}
 
 }

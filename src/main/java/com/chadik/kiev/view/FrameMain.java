@@ -93,7 +93,7 @@ public class FrameMain {
 			}
 		});
 		
-		menuItemProduct = new JMenuItem("Увид на продукти");
+		menuItemProduct = new JMenuItem("Увид на артикли");
 		menuItemProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane, productPanelImpl.initProductPanel(), BorderLayout.CENTER);
@@ -135,6 +135,14 @@ public class FrameMain {
 		
 		return mainFrame;
 		
+	}
+	
+	public JFrame getMainFrame() {
+		return mainFrame;
+	}
+
+	public void setMainFrame(JFrame mainFrame) {
+		this.mainFrame = mainFrame;
 	}
 	
 	public void clearContentPane() {

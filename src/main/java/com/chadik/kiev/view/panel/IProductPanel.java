@@ -11,5 +11,7 @@ public interface IProductPanel {
 	public void setSelectedProductTableRow(String selectedProductTableRow);
 	
 	public String getSelectedProductTableRow();
+	
+	public void setProductTableButtonsEnabled();
 
 }

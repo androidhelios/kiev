@@ -1,5 +1,7 @@
 package com.chadik.kiev.view.panel;
 
+import java.math.BigDecimal;
+
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -12,9 +14,9 @@ public interface IOrderItemPanel {
 
 	public void populateOrderItemTable();
 	
-	public Invoice getInvoice();
+	public int getInvoiceId();
 	
-	public void setInvoice(Invoice invoice);
+	public void setInvoiceId(int invoiceId);
 	
 	public JTable getOrderItemTable();
 	

@@ -29,7 +29,6 @@ public class Product implements Serializable {
 	private String productTax;
 	@NotNull(message = "Полето цена на продуктот не е пополнето")
 	private String productPrice;
-	@NotNull(message = "Полето цена на продуктот со данок не е пополнето")
 	private String productTaxPrice;
 	private String productAdditionalInfo;
 	@OneToMany(mappedBy = "product", fetch=FetchType.EAGER)

@@ -36,7 +36,6 @@ public class Invoice implements Serializable {
 	@NotNull(message = "Полето број на фактурата не е пополнето")
 	private String invoiceNumber;
 	private String invoiceSerialNumber;
-	@NotNull(message = "Полето дата на фактурата не е пополнето")
 	private String invoiceDate;
 	private String invoiceDeliveryDate;
 	private String invoiceDeliveryNumber;
@@ -48,8 +47,9 @@ public class Invoice implements Serializable {
 	private String invoiceTotalPriceTax;
 	@NotNull(message = "Полето податок за исплата на фактурата не е пополнето")
 	private String invoicePaymentInfo;
+	private String invoiceCurrency;
 	private String invoiceAdditionalInfo;
-	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	@Valid
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -148,6 +148,14 @@ public class Invoice implements Serializable {
 
 	public void setInvoicePaymentInfo(String invoicePaymentInfo) {
 		this.invoicePaymentInfo = invoicePaymentInfo;
+	}
+	
+	public String getInvoiceCurrency() {
+		return invoiceCurrency;
+	}
+
+	public void setInvoiceCurrency(String invoiceCurrency) {
+		this.invoiceCurrency = invoiceCurrency;
 	}
 
 	public String getInvoiceAdditionalInfo() {

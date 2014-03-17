@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -92,8 +93,11 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
-	
+	private Color mandatoryTextFieldColor;
+
 	private String selectedSupplierTableRow;
+	
+	private boolean editMode;
 
 	private List<Supplier> suppliers;
 
@@ -156,12 +160,16 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				if (isEditMode()) {
+					table.setEnabled(false);
+				} else {
 				int row = table.getSelectedRow();
 				String selectedRowSupplierId = (String) table
 						.getValueAt(row, 1);
 				Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 				populateSupplierFields(supplier);
 				setSupplierInfoButtonsDisabled();
+				}
 			}
 		});
 
@@ -194,6 +202,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 			public void actionPerformed(ActionEvent e) {
 				setSupplierFieldsEditable();
 				setSupplierInfoButtonsEnabled();
+				setEditMode(true);
+				table.setEnabled(false);
 			}
 		});
 
@@ -209,8 +219,11 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 
+		mandatoryTextFieldColor = new Color(204, 0, 0);
+
 		labelSupplierName = new JLabel("Име:");
 		labelSupplierName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierName.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierName = new JTextField();
 		textFieldSupplierName.setBounds(xTextField, y, weightTextField, height);
@@ -223,6 +236,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		labelSupplierRegistryNumber = new JLabel("Регистерски Број:");
 		labelSupplierRegistryNumber.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierRegistryNumber.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierRegistryNumber = new JTextField();
 		textFieldSupplierRegistryNumber.setBounds(xTextField, y,
@@ -233,6 +247,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		labelSupplierBankName = new JLabel("Банка:");
 		labelSupplierBankName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierBankName.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierBankName = new JTextField();
 		textFieldSupplierBankName.setBounds(xTextField, y, weightTextField,
@@ -243,6 +258,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		labelSupplierBankAccount = new JLabel("Банкарска Сметка:");
 		labelSupplierBankAccount.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierBankAccount.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierBankAccount = new JTextField();
 		textFieldSupplierBankAccount.setBounds(xTextField, y, weightTextField,
@@ -253,6 +269,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		labelSupplierAddress = new JLabel("Адреса:");
 		labelSupplierAddress.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierAddress.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierAddress = new JTextField();
 		textFieldSupplierAddress.setBounds(xTextField, y, weightTextField,
@@ -280,23 +297,25 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelSupplierUserName = new JLabel("Корисничко Име:");
 		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierUserName.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierUserName = new JTextField();
-		textFieldSupplierUserName
-				.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
+				height);
 		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelSupplierPassword = new JLabel("Лозинка:");
 		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierPassword.setForeground(mandatoryTextFieldColor);
 
 		textFieldSupplierPassword = new JTextField();
-		textFieldSupplierPassword
-				.setBounds(xTextField, y, weightTextField, height);
+		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
+				height);
 		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -323,7 +342,18 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		buttonSave.setEnabled(false);
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveSupplier();
+				if (validateSupplierFields()) {
+					saveSupplier();
+					setEditMode(false);
+					table.setEnabled(true);
+				} else {
+					Object[] options = { "OK" };
+					int input = JOptionPane.showOptionDialog(null,
+							"Погрешен внес", "Грешка",
+							JOptionPane.ERROR_MESSAGE,
+							JOptionPane.ERROR_MESSAGE, null, options,
+							options[0]);
+				}
 			}
 		});
 
@@ -339,6 +369,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 				populateSupplierFields(supplier);
 				setSupplierFieldsNonEditable();
 				setSupplierInfoButtonsDisabled();
+				setEditMode(false);
+				table.setEnabled(true);
 			}
 		});
 
@@ -389,12 +421,14 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		panelInfoHolderContentInfo.add(labelSupplierEmail, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierEmail,
 				textFieldConstraints());
-		
-		panelInfoHolderContentInfo.add(labelSupplierUserName, labelConstraints());
+
+		panelInfoHolderContentInfo.add(labelSupplierUserName,
+				labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierUserName,
 				textFieldConstraints());
-		
-		panelInfoHolderContentInfo.add(labelSupplierPassword, labelConstraints());
+
+		panelInfoHolderContentInfo.add(labelSupplierPassword,
+				labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierPassword,
 				textFieldConstraints());
 
@@ -444,24 +478,22 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		}
 
 		if (table.getRowCount() > 0) {
-			
+
 			int selectedRow = table.getRowCount() - 1;
-			
+
 			if (!getSelectedSupplierTableRow().equals("")) {
 				selectedRow = Integer.parseInt(getSelectedSupplierTableRow());
 			}
-			
-			table.setRowSelectionInterval(selectedRow,
-					selectedRow);
 
-			selectedRowSupplierId = (String) table.getValueAt(
-					selectedRow, 1);
+			table.setRowSelectionInterval(selectedRow, selectedRow);
+
+			selectedRowSupplierId = (String) table.getValueAt(selectedRow, 1);
 			Supplier supplier = getSupplierFromSupplierTable(selectedRowSupplierId);
 			populateSupplierFields(supplier);
 
 			setSupplierTableButtonsEnabled();
-			
-			buttonDelete.setEnabled(false);
+
+//			buttonDelete.setEnabled(false);
 
 		}
 
@@ -469,11 +501,11 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 		setSupplierFieldsNonEditable();
-		
+
 		setSelectedSupplierTableRow("");
 
 	}
-	
+
 	public void populateSupplierFields(Supplier supplier) {
 		textFieldSupplierId.setText(supplier.getSupplierId().toString());
 		textFieldSupplierName.setText(supplier.getSupplierName());
@@ -525,14 +557,22 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		return supplier;
 	}
 	
+	public boolean isEditMode() {
+		return editMode;
+	}
+	
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
+	}
+
 	@Override
 	public String getSelectedSupplierTableRow() {
 		return selectedSupplierTableRow;
 	}
-	
+
 	@Override
 	public void setSelectedSupplierTableRow(String selectedSupplierTableRow) {
-		this.selectedSupplierTableRow = selectedSupplierTableRow;		
+		this.selectedSupplierTableRow = selectedSupplierTableRow;
 	}
 
 	public void setSupplierFieldsNonEditable() {
@@ -586,10 +626,13 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierId.setEditable(true);
 		textFieldSupplierId.setBackground(originalTextFieldColor);
 	}
-	
+
 	public void setSupplierTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+//		buttonNew.setEnabled(true);
+		if (table.getRowCount() > 0) {
+			buttonEdit.setEnabled(true);
+//			buttonDelete.setEnabled(true);
+		}
 	}
 
 	public void setSupplierTableButtonsDisabled() {
@@ -605,6 +648,18 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	public void setSupplierInfoButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
+	}
+
+	public boolean validateSupplierFields() {
+		boolean result = true;
+		result = result && (!"".equals(textFieldSupplierName.getText()))
+				&& (!"".equals(textFieldSupplierRegistryNumber.getText()))
+				&& (!"".equals(textFieldSupplierBankName.getText()))
+				&& (!"".equals(textFieldSupplierBankAccount.getText()))
+				&& (!"".equals(textFieldSupplierAddress.getText()))
+				&& (!"".equals(textFieldSupplierUserName.getText()))
+				&& (!"".equals(textFieldSupplierPassword.getText()));
+		return result;
 	}
 
 	public void saveSupplier() {
@@ -623,7 +678,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
 	}
-	
+
 	public GridBagConstraints firstLabelConstrains() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(15, 10, 0, 0);

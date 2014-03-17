@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Invoice;
 import com.chadik.kiev.model.OrderItem;
-import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.IInvoiceService;
 import com.chadik.kiev.service.IOrderItemService;
 import com.chadik.kiev.util.TableUtil;
@@ -41,7 +40,8 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	private JScrollPane scrollPaneTable;
 	private JScrollBar verticalScrollBar;
 
-	private Invoice invoice;
+	private int invoiceId;
+
 	private List<OrderItem> orderItems;
 
 	private DecimalFormat decimalFormat;
@@ -102,7 +102,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 
 		setOrderItemTable(table);
 
-		if (invoice != null) {
+		if (getInvoiceId() > 0) {
 			populateOrderItemTable();
 		}
 
@@ -117,7 +117,9 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		double invoiceTotalQuantityTax = 0;
 		double invoiceTotalQuantityPrice = 0;
 
-		Invoice invoice = getInvoice();
+		Invoice invoice = invoiceServiceImpl.findInvoiceById(new BigDecimal(
+				String.valueOf(getInvoiceId())));
+
 		orderItems = invoice.getOrderItems();
 
 		int i = 0;
@@ -156,13 +158,12 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		}
 
 		if (table.getRowCount() > 0) {
-			
+
 			int selectedRow = table.getRowCount() - 1;
-			
-			table.setRowSelectionInterval(selectedRow,
-					selectedRow);
-			
-			invoicePanelImpl.setProductButtonsEnabled();
+
+			table.setRowSelectionInterval(selectedRow, selectedRow);
+
+//			invoicePanelImpl.setProductButtonsEnabled();
 			invoicePanelImpl.setInvoiceOrderItemTotalValues(
 					decimalFormat.format(invoiceTotalQuantityPriceWithoutTax),
 					decimalFormat.format(invoiceTotalQuantityTax),
@@ -192,16 +193,6 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		return orderItemServiceImpl.findOrderItemById(invoiceId);
 	}
 
-	@Override
-	public Invoice getInvoice() {
-		return invoice;
-	}
-
-	@Override
-	public void setInvoice(Invoice invoice) {
-		this.invoice = invoice;
-	}
-
 	public void setSelectedOrderItemTableRow(String selectedOrderItemTableRow) {
 		this.selectedOrderItemTableRow = selectedOrderItemTableRow;
 	}
@@ -222,7 +213,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		String selectedRowOrderItemId = (String) table.getValueAt(row, 1);
 		OrderItem orderItem = getOrderItemFromOrderItemTable(selectedRowOrderItemId);
 		orderItemServiceImpl.deleteOrderItem(orderItem);
-		
+
 		invoicePanelImpl.setOrderItemRemoveButtonDisabled();
 
 		populateOrderItemTable();
@@ -231,6 +222,16 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 			invoicePanelImpl.setOrderItemRemoveButtonEnabled();
 		}
 
+	}
+
+	@Override
+	public int getInvoiceId() {
+		return invoiceId;
+	}
+
+	@Override
+	public void setInvoiceId(int invoiceId) {
+		this.invoiceId = invoiceId;
 	}
 
 }

@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.chadik.kiev.model.Customer;
-import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.ICustomerService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
@@ -83,8 +83,11 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
-	
+	private Color mandatoryTextFieldColor;
+
 	private String selectedCustomerTableRow;
+	
+	private boolean editMode;
 
 	private List<Customer> customers;
 
@@ -147,12 +150,16 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				if (isEditMode()) {
+					table.setEnabled(false);
+				} else {
 				int row = table.getSelectedRow();
 				String selectedRowCustomerId = (String) table
 						.getValueAt(row, 1);
 				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 				populateCustomerFields(customer);
 				setCustomerInfoButtonsDisabled();
+				}
 			}
 		});
 
@@ -172,6 +179,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonNew.setPreferredSize(new Dimension(100, 25));
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setAllButtonsDisabled();
 				customerDialogImpl.initCustomerDialog();
 			}
 		});
@@ -183,6 +191,9 @@ public class CustomerPanelImpl implements ICustomerPanel {
 			public void actionPerformed(ActionEvent e) {
 				setCustomerFieldsEditable();
 				setCustomerInfoButtonsEnabled();
+				buttonNew.setEnabled(false);
+				setEditMode(true);
+				table.setEnabled(false);
 			}
 		});
 
@@ -203,8 +214,11 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 
+		mandatoryTextFieldColor = new Color(204, 0, 0);
+
 		labelCustomerName = new JLabel("Име:");
 		labelCustomerName.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerName.setForeground(mandatoryTextFieldColor);
 
 		textFieldCustomerName = new JTextField();
 		textFieldCustomerName.setBounds(xTextField, y, weightTextField, height);
@@ -217,6 +231,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 		labelCustomerAddress = new JLabel("Адреса:");
 		labelCustomerAddress.setBounds(xLabel, y, weightLabel, height);
+		labelCustomerAddress.setForeground(mandatoryTextFieldColor);
 
 		textFieldCustomerAddress = new JTextField();
 		textFieldCustomerAddress.setBounds(xTextField, y, weightTextField,
@@ -267,7 +282,18 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonSave.setEnabled(false);
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveCustomer();
+				if (validateCustomerFields()) {
+					saveCustomer();
+					setEditMode(false);
+					table.setEnabled(true);
+				} else {
+					Object[] options = { "OK" };
+					int input = JOptionPane.showOptionDialog(null,
+							"Погрешен внес", "Грешка",
+							JOptionPane.ERROR_MESSAGE,
+							JOptionPane.ERROR_MESSAGE, null, options,
+							options[0]);
+				}
 			}
 		});
 
@@ -283,6 +309,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 				populateCustomerFields(customer);
 				setCustomerFieldsNonEditable();
 				setCustomerInfoButtonsDisabled();
+				setEditMode(false);
+				table.setEnabled(true);
 			}
 		});
 
@@ -363,16 +391,14 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 		if (table.getRowCount() > 0) {
 			int selectedRow = table.getRowCount() - 1;
-			
+
 			if (!getSelectedCustomerTableRow().equals("")) {
 				selectedRow = Integer.parseInt(getSelectedCustomerTableRow());
 			}
-			
-			table.setRowSelectionInterval(selectedRow,
-					selectedRow);
 
-			selectedRowCustomerId = (String) table.getValueAt(
-					selectedRow, 1);
+			table.setRowSelectionInterval(selectedRow, selectedRow);
+
+			selectedRowCustomerId = (String) table.getValueAt(selectedRow, 1);
 			Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 			populateCustomerFields(customer);
 
@@ -384,11 +410,11 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 		setCustomerFieldsNonEditable();
-		
+
 		setSelectedCustomerTableRow("");
 
 	}
-	
+
 	public void populateCustomerFields(Customer customer) {
 		textFieldCustomerId.setText(customer.getCustomerId().toString());
 		textFieldCustomerName.setText(customer.getCustomerName());
@@ -398,7 +424,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerAdditionalInfo.setText(customer
 				.getCustomerAdditionalInfo());
 	}
-	
+
 	public void clearCustomerFields() {
 		textFieldCustomerId.setText("");
 		textFieldCustomerName.setText("");
@@ -435,15 +461,23 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 		return customer;
 	}
-	
+
 	@Override
 	public String getSelectedCustomerTableRow() {
 		return selectedCustomerTableRow;
 	}
 	
+	public boolean isEditMode() {
+		return editMode;
+	}
+	
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
+	}
+
 	@Override
 	public void setSelectedCustomerTableRow(String selectedCustomerTableRow) {
-		this.selectedCustomerTableRow = selectedCustomerTableRow;		
+		this.selectedCustomerTableRow = selectedCustomerTableRow;
 	}
 
 	public void setCustomerFieldsNonEditable() {
@@ -476,10 +510,13 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		textFieldCustomerId.setEditable(true);
 		textFieldCustomerId.setBackground(originalTextFieldColor);
 	}
-	
+
 	public void setCustomerTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+		buttonNew.setEnabled(true); 
+		if (table.getRowCount() > 0) {
+			buttonEdit.setEnabled(true);
+			buttonDelete.setEnabled(true);
+		}
 	}
 
 	public void setCustomerTableButtonsDisabled() {
@@ -496,6 +533,21 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
 	}
+	
+	public void setAllButtonsDisabled() {
+		buttonNew.setEnabled(false);
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+	}
+
+	public boolean validateCustomerFields() {
+		boolean result = true;
+		result = result && (!"".equals(textFieldCustomerName.getText()))
+				&& (!"".equals(textFieldCustomerAddress.getText()));
+		return result;
+	}
 
 	public void saveCustomer() {
 		Customer customer = getCustomerFromCustomerFields();
@@ -507,27 +559,33 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		setCustomerFieldsNonEditable();
 		setCustomerInfoButtonsDisabled();
 	}
-	
+
 	public void deleteCustomer() {
 		int row = table.getSelectedRow();
 		String selectedRowCustomerId = (String) table.getValueAt(row, 1);
 		Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
 		customerServiceImpl.deleteCustomer(customer);
 		String selectedRow = Integer.toString(row);
+		int intSelectedRow = Integer.parseInt(selectedRow);
 		
+		clearCustomerFields();
+
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
-		clearCustomerFields();
+		
+		if (table.getRowCount() - 1 > intSelectedRow) {
+			setSelectedCustomerTableRow(selectedRow);
+		}
 		
 		populateCustomerTable();
 		
-		if (table.getRowCount() > 0) {
-			setSelectedCustomerTableRow(selectedRow);
+		if (table.getRowCount() > 0) {			
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
-			
+
 		}
-		
+
+
 		setCustomerFieldsNonEditable();
 		setCustomerInfoButtonsDisabled();
 	}
@@ -537,7 +595,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
 	}
-	
+
 	public GridBagConstraints firstLabelConstrains() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(15, 10, 0, 0);
@@ -571,7 +629,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		return c;
 	}
-	
+
 	public GridBagConstraints lastComponentConstrains() {
 		GridBagConstraints c = customerPanelConstraints();
 		c.anchor = GridBagConstraints.BASELINE;

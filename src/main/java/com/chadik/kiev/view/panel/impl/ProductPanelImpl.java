@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -84,8 +85,11 @@ public class ProductPanelImpl implements IProductPanel {
 
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
-	
+	private Color mandatoryTextFieldColor;
+
 	private String selectedProductTableRow;
+	
+	private boolean editMode;
 
 	private List<Product> products;
 
@@ -110,7 +114,7 @@ public class ProductPanelImpl implements IProductPanel {
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
 		panelTableHolderContentTable.setBorder(new TitledBorder(
-				"Листа на продукти"));
+				"Листа на артикли"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
@@ -148,11 +152,15 @@ public class ProductPanelImpl implements IProductPanel {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				if (isEditMode()) {
+					table.setEnabled(false);
+				} else {
 				int row = table.getSelectedRow();
 				String selectedRowProductId = (String) table.getValueAt(row, 1);
 				Product product = getProductFromProductTable(selectedRowProductId);
 				populateProductFields(product);
 				setProductInfoButtonsDisabled();
+				}
 			}
 		});
 
@@ -172,8 +180,8 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonNew.setPreferredSize(new Dimension(100, 25));
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setAllButtonsDisabled();
 				productDialogImpl.initProductDialog();
-				setProductInfoButtonsDisabled();
 			}
 		});
 
@@ -184,6 +192,9 @@ public class ProductPanelImpl implements IProductPanel {
 			public void actionPerformed(ActionEvent e) {
 				setProductFieldsEditable();
 				setProductInfoButtonsEnabled();
+				buttonNew.setEnabled(false);
+				setEditMode(true);
+				table.setEnabled(false);
 			}
 		});
 
@@ -204,8 +215,11 @@ public class ProductPanelImpl implements IProductPanel {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 
+		mandatoryTextFieldColor = new Color(204, 0, 0);
+
 		labelProductName = new JLabel("Име:");
 		labelProductName.setBounds(xLabel, y, weightLabel, height);
+		labelProductName.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductName = new JTextField();
 		textFieldProductName.setBounds(xTextField, y, weightTextField, height);
@@ -218,6 +232,7 @@ public class ProductPanelImpl implements IProductPanel {
 
 		labelProductMeasurement = new JLabel("Мерна единица:");
 		labelProductMeasurement.setBounds(xLabel, y, weightLabel, height);
+		labelProductMeasurement.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductMeasurement = new JTextField();
 		textFieldProductMeasurement.setBounds(xTextField, y, weightTextField,
@@ -228,6 +243,7 @@ public class ProductPanelImpl implements IProductPanel {
 
 		labelProductTax = new JLabel("Данок:");
 		labelProductTax.setBounds(xLabel, y, weightLabel, height);
+		labelProductTax.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
@@ -237,18 +253,20 @@ public class ProductPanelImpl implements IProductPanel {
 
 		labelProductPrice = new JLabel("Цена без данок:");
 		labelProductPrice.setBounds(xLabel, y, weightLabel, height);
+		labelProductPrice.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductPrice = new JTextField();
 		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
 		textFieldProductPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelProductTaxPrice = new JLabel("Цена со данок:");
 		labelProductTaxPrice.setBounds(xLabel, y, weightLabel, height);
 
 		textFieldProductTaxPrice = new JTextField();
-		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField,
+				height);
 		textFieldProductTaxPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -275,7 +293,18 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonSave.setEnabled(false);
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveProduct();
+				if (validateProductFields()) {
+					saveProduct();
+					setEditMode(false);
+					table.setEnabled(true);
+				} else {
+					Object[] options = { "OK" };
+					int input = JOptionPane.showOptionDialog(null,
+							"Погрешен внес", "Грешка",
+							JOptionPane.ERROR_MESSAGE,
+							JOptionPane.ERROR_MESSAGE, null, options,
+							options[0]);
+				}
 			}
 		});
 
@@ -290,6 +319,8 @@ public class ProductPanelImpl implements IProductPanel {
 				populateProductFields(product);
 				setProductFieldsNonEditable();
 				setProductInfoButtonsDisabled();
+				setEditMode(false);
+				table.setEnabled(true);
 			}
 		});
 
@@ -324,8 +355,9 @@ public class ProductPanelImpl implements IProductPanel {
 		panelInfoHolderContentInfo.add(labelProductPrice, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldProductPrice,
 				textFieldConstraints());
-		
-		panelInfoHolderContentInfo.add(labelProductTaxPrice, labelConstraints());
+
+		panelInfoHolderContentInfo
+				.add(labelProductTaxPrice, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldProductTaxPrice,
 				textFieldConstraints());
 
@@ -346,7 +378,7 @@ public class ProductPanelImpl implements IProductPanel {
 
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
-		
+
 		setSelectedProductTableRow("");
 		populateProductTable();
 
@@ -373,16 +405,14 @@ public class ProductPanelImpl implements IProductPanel {
 
 		if (table.getRowCount() > 0) {
 			int selectedRow = table.getRowCount() - 1;
-			
+
 			if (!getSelectedProductTableRow().equals("")) {
 				selectedRow = Integer.parseInt(getSelectedProductTableRow());
 			}
-			
-			table.setRowSelectionInterval(selectedRow,
-					selectedRow);
 
-			selectedRowProductId = (String) table.getValueAt(
-					selectedRow, 1);
+			table.setRowSelectionInterval(selectedRow, selectedRow);
+
+			selectedRowProductId = (String) table.getValueAt(selectedRow, 1);
 			Product product = getProductFromProductTable(selectedRowProductId);
 			populateProductFields(product);
 
@@ -394,11 +424,11 @@ public class ProductPanelImpl implements IProductPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
 		setProductFieldsNonEditable();
-		
+
 		setSelectedProductTableRow("");
 
 	}
-	
+
 	public void populateProductFields(Product product) {
 		textFieldProductId.setText(product.getProductId().toString());
 		textFieldProductName.setText(product.getProductName());
@@ -409,7 +439,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductAdditionalInfo.setText(product
 				.getProductAdditionalInfo());
 	}
-	
+
 	public void clearProductFields() {
 		textFieldProductId.setText("");
 		textFieldProductName.setText("");
@@ -448,15 +478,23 @@ public class ProductPanelImpl implements IProductPanel {
 
 		return product;
 	}
-	
+
 	@Override
 	public String getSelectedProductTableRow() {
 		return selectedProductTableRow;
 	}
 	
+	public boolean isEditMode() {
+		return editMode;
+	}
+	
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
+	}
+
 	@Override
 	public void setSelectedProductTableRow(String selectedProductTableRow) {
-		this.selectedProductTableRow = selectedProductTableRow;		
+		this.selectedProductTableRow = selectedProductTableRow;
 	}
 
 	public void setProductFieldsNonEditable() {
@@ -492,10 +530,13 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setEditable(true);
 		textFieldProductId.setBackground(originalTextFieldColor);
 	}
-	
+
 	public void setProductTableButtonsEnabled() {
-		buttonEdit.setEnabled(true);
-		buttonDelete.setEnabled(true);
+		buttonNew.setEnabled(true);
+		if (table.getRowCount() > 0) {
+			buttonEdit.setEnabled(true);
+			buttonDelete.setEnabled(true);
+		}
 	}
 
 	public void setProductTableButtonsDisabled() {
@@ -512,6 +553,23 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
 	}
+	
+	public void setAllButtonsDisabled() {
+		buttonNew.setEnabled(false);
+		buttonEdit.setEnabled(false);
+		buttonDelete.setEnabled(false);
+		buttonSave.setEnabled(false);
+		buttonCancel.setEnabled(false);
+	}
+
+	public boolean validateProductFields() {
+		boolean result = true;
+		result = result && (!"".equals(textFieldProductName.getText()))
+				&& (!"".equals(textFieldProductMeasurement.getText()))
+				&& (!"".equals(textFieldProductTax.getText()))
+				&& (!"".equals(textFieldProductPrice.getText()));
+		return result;
+	}
 
 	public void saveProduct() {
 		Product product = getProductFromProductFields();
@@ -523,25 +581,30 @@ public class ProductPanelImpl implements IProductPanel {
 		setProductFieldsNonEditable();
 		setProductInfoButtonsDisabled();
 	}
-	
+
 	public void deleteProduct() {
 		int row = table.getSelectedRow();
 		String selectedRowProductId = (String) table.getValueAt(row, 1);
 		Product product = getProductFromProductTable(selectedRowProductId);
 		productServiceImpl.deleteProduct(product);
 		String selectedRow = Integer.toString(row);
+		int intSelectedRow = Integer.parseInt(selectedRow);
+
+		clearProductFields();
 		
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
-		clearProductFields();
 		
-		populateProductTable();
-		
-		if (table.getRowCount() > 0) {
+		if (table.getRowCount() - 1 > intSelectedRow) {
 			setSelectedProductTableRow(selectedRow);
+		}
+
+		populateProductTable();
+
+		if (table.getRowCount() > 0) {			
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
-			
+
 		}
 		
 		setProductFieldsNonEditable();
@@ -553,7 +616,7 @@ public class ProductPanelImpl implements IProductPanel {
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
 	}
-	
+
 	public GridBagConstraints firstLabelConstrains() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(15, 10, 0, 0);
@@ -597,5 +660,5 @@ public class ProductPanelImpl implements IProductPanel {
 		c.weighty = 1.0;
 		return c;
 	}
-	
+
 }

@@ -8,8 +8,8 @@ public interface IOrderItemDialog {
 	
 	public JDialog initOrderItemDialog();
 	
-	public Invoice getInvoice();
+	public int getInvoiceId();
 	
-	public void setInvoice(Invoice invoice);
+	public void setInvoiceId(int invoiceId);
 
 }

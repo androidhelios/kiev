@@ -11,5 +11,7 @@ public interface ICustomerPanel {
 	public void setSelectedCustomerTableRow(String selectedCustomerTableRow);
 	
 	public String getSelectedCustomerTableRow();
+	
+	public void setCustomerTableButtonsEnabled();
 
 }

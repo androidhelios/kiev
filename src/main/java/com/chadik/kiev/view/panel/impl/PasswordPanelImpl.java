@@ -8,10 +8,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -60,12 +63,11 @@ public class PasswordPanelImpl implements IPasswordPanel {
 		
 		panelLoginHolder = new JPanel();
 		panelLoginHolder.setLayout(new GridBagLayout());
-//		panelLoginHolder.setPreferredSize(new Dimension(1000, 600));
 		panelLoginHolder.setBackground(new Color(224, 224, 224));
 		
 		panelLoginHolderContent = new JPanel();
 		panelLoginHolderContent.setLayout(null);
-		panelLoginHolderContent.setPreferredSize(new Dimension(400, 150));
+		panelLoginHolderContent.setPreferredSize(new Dimension(400, 135));
 		panelLoginHolderContent.setBorder(new BevelBorder(BevelBorder.LOWERED));
 		
 		int spacing = 5;
@@ -92,6 +94,35 @@ public class PasswordPanelImpl implements IPasswordPanel {
 		passwordFieldPassword.setBounds(xTextField, y, weightTextField,
 				height);
 		passwordFieldPassword.setMargin(new Insets(2, 2, 2, 2));
+		passwordFieldPassword.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER ) {
+					if (validatePassword()) {
+						frameMain.clearContentPane();
+					} else {
+						textFieldUserName.setText("");
+						textFieldUserName.requestFocus();
+						passwordFieldPassword.setText("");
+						JOptionPane.showMessageDialog(null, "Корисничкото име и лозинка не се совпаѓаат",
+								"Грешка", JOptionPane.ERROR_MESSAGE);
+					}
+				}				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		y = y + height + spacing;
 		
@@ -105,6 +136,8 @@ public class PasswordPanelImpl implements IPasswordPanel {
 				} else {
 					textFieldUserName.setText("");
 					passwordFieldPassword.setText("");
+					JOptionPane.showMessageDialog(null, "Корисничкото име и лозинка не се совпаѓаат",
+							"Грешка", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

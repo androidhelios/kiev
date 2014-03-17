@@ -23,5 +23,7 @@ public interface IInvoicePanel {
 	public void setOrderItemRemoveButtonEnabled();
 	
 	public void setOrderItemRemoveButtonDisabled();
+	
+	public void setInvoiceTableButtonsEnabled();
 
 }
