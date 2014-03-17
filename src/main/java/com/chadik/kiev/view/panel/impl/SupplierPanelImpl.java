@@ -184,6 +184,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		scrollPaneTable = new JScrollPane(table);
 
 		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
+		
+		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -208,6 +210,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		});
 
 		buttonDelete = new JButton("Избриши");
+		buttonDelete.setForeground(mandatoryTextFieldColor);
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
 
@@ -218,8 +221,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
-
-		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		labelSupplierName = new JLabel("Име:");
 		labelSupplierName.setBounds(xLabel, y, weightLabel, height);

@@ -149,7 +149,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private Color mandatoryTextFieldColor;
 
 	private String selectedInvoiceTableRow;
-	
+
 	private boolean editMode;
 
 	private Map<Integer, Integer> mapSuppliers;
@@ -277,9 +277,12 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				} else {
 					table.setEnabled(true);
 					int row = table.getSelectedRow();
-					String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
-					BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
-					int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+					String selectedRowInvoiceId = (String) table.getValueAt(
+							row, 1);
+					BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(
+							selectedRowInvoiceId);
+					int intSelectedRowInvoiceId = Integer
+							.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
 					Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 					populateInvoiceFields(invoice);
 					buttonAddProduct.setEnabled(false);
@@ -302,6 +305,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		scrollPaneTable = new JScrollPane(table);
 
 		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
+		
+		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -328,7 +333,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		});
 
 		buttonDelete = new JButton("Избриши");
-		buttonDelete.setForeground(Color.RED);
+		buttonDelete.setForeground(mandatoryTextFieldColor);
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
 		buttonDelete.addActionListener(new ActionListener() {
@@ -344,8 +349,6 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
-
-		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		labelInvoiceSupplierName = new JLabel("Име на корисник:");
 		labelInvoiceSupplierName.setBounds(xLabel, y, weightLabel, height);
@@ -734,34 +737,39 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		});
 
 		ImageIcon iconButtonAddProduct = new ImageIcon("img/text-plus-icon.png");
-		
+
 		buttonAddProduct = new JButton(iconButtonAddProduct);
-//		buttonAddProduct.setBackground(new Color(224, 224, 224));
+		// buttonAddProduct.setBackground(new Color(224, 224, 224));
 		buttonAddProduct.setPreferredSize(new Dimension(25, 25));
 		buttonAddProduct.setEnabled(false);
 		buttonAddProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
-				BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
-				int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+				BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(
+						selectedRowInvoiceId);
+				int intSelectedRowInvoiceId = Integer
+						.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
 				orderItemDialogImpl.setInvoiceId(intSelectedRowInvoiceId);
 				orderItemDialogImpl.initOrderItemDialog();
 			}
 		});
-		
-		ImageIcon iconButtonDeleteProduct = new ImageIcon("img/Math-minus-icon.png");
+
+		ImageIcon iconButtonDeleteProduct = new ImageIcon(
+				"img/Math-minus-icon.png");
 
 		buttonDeleteProduct = new JButton(iconButtonDeleteProduct);
-//		buttonDeleteProduct.setBackground(new Color(224, 224, 224));
+		// buttonDeleteProduct.setBackground(new Color(224, 224, 224));
 		buttonDeleteProduct.setPreferredSize(new Dimension(25, 25));
 		buttonDeleteProduct.setEnabled(false);
 		buttonDeleteProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				String selectedRowInvoiceId = (String) table.getValueAt(row, 1);
-				BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
-				int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+				BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(
+						selectedRowInvoiceId);
+				int intSelectedRowInvoiceId = Integer
+						.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
 				orderItemPanelImpl.setInvoiceId(intSelectedRowInvoiceId);
 				orderItemPanelImpl.deleteOrderItem();
 			}
@@ -990,11 +998,13 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			table.setRowSelectionInterval(selectedRow, selectedRow);
 
 			selectedRowInvoiceId = (String) table.getValueAt(selectedRow, 1);
-			BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(selectedRowInvoiceId);
-			int intSelectedRowInvoiceId = Integer.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
+			BigDecimal bigDecimalSelectedRowInvoiceId = new BigDecimal(
+					selectedRowInvoiceId);
+			int intSelectedRowInvoiceId = Integer
+					.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
 			Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 			populateInvoiceFields(invoice);
-			
+
 			orderItemPanelImpl.setInvoiceId(intSelectedRowInvoiceId);
 			orderItemPanelImpl.populateOrderItemTable();
 
@@ -1119,7 +1129,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				.getCustomerEmail());
 		textFieldInvoiceCustomerAdditionalInfo.setText(invoice.getCustomer()
 				.getCustomerAdditionalInfo());
-		textFieldInvoiceNumberBeforeLast.setText(getInvoiceNumberBeforeLast(invoice.getInvoiceNumber()));
+		textFieldInvoiceNumberBeforeLast
+				.setText(getInvoiceNumberBeforeLast(invoice.getInvoiceNumber()));
 		textFieldInvoiceNumber.setText(invoice.getInvoiceNumber());
 		textFieldInvoiceSerialNumber.setText(invoice.getInvoiceSerialNumber());
 		textFieldInvoiceDate.setText(invoice.getInvoiceDate());
@@ -1341,18 +1352,15 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	public String getInvoiceNumberBeforeLast(String currentInvoiceNumber) {
 		String invoceNumberBeforeLast = "";
 		invoices = invoiceServiceImpl.findAllInvoices();
-		if (invoices.size() > 0) {
-			if (invoices.size() == 1) {
-				invoceNumberBeforeLast = "";
-			} else if (invoices.size() > 1) {
-				invoceNumberBeforeLast = invoices.get(invoices.size() - 2)
-						.getInvoiceNumber();
-			}
 
+		if (invoices.size() >= 1) {
+			invoceNumberBeforeLast = invoices.get(invoices.size() - 1)
+					.getInvoiceNumber();
 		}
-		
+
 		if (currentInvoiceNumber.equals(invoceNumberBeforeLast)) {
-			invoceNumberBeforeLast = "";
+			invoceNumberBeforeLast = "(" + currentInvoiceNumber
+					+ ") - Оваа фактура е последно внесена фактура";
 		}
 
 		return invoceNumberBeforeLast;
@@ -1367,11 +1375,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		return values;
 	}
-	
+
 	public boolean isEditMode() {
 		return editMode;
 	}
-	
+
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
 	}
@@ -1567,20 +1575,19 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		invoiceServiceImpl.deleteInvoice(invoice);
 		String selectedRow = Integer.toString(row);
 		int intSelectedRow = Integer.parseInt(selectedRow);
-		
+
 		clearInvoiceFields();
-		
+
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
 
-		
 		if (table.getRowCount() - 1 > intSelectedRow) {
 			setSelectedInvoiceTableRow(selectedRow);
 		}
-		
+
 		populateInvoiceTable();
-		
-		if (table.getRowCount() > 0) {			
+
+		if (table.getRowCount() > 0) {
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
 

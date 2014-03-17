@@ -33,16 +33,16 @@ import javax.swing.table.DefaultTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.chadik.kiev.model.Customer;
-import com.chadik.kiev.service.ICustomerService;
+import com.chadik.kiev.model.BankInfo;
+import com.chadik.kiev.service.IBankInfoService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
-import com.chadik.kiev.view.dialog.ICustomerDialog;
-import com.chadik.kiev.view.panel.ICustomerPanel;
+import com.chadik.kiev.view.dialog.IBankInfoDialog;
+import com.chadik.kiev.view.panel.IBankInfoPanel;
 
 @Component
-public class CustomerPanelImpl implements ICustomerPanel {
-
+public class BankInfoPanelImpl implements IBankInfoPanel {
+	
 	private JPanel panelAll;
 
 	private JPanel panelTableHolder;
@@ -61,19 +61,19 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	private DefaultTableModel defaultTableModel;
 	private JTable table;
 
-	private JLabel labelCustomerId;
-	private JLabel labelCustomerName;
-	private JLabel labelCustomerAddress;
-	private JLabel labelCustomerPhoneNumber;
-	private JLabel labelCustomerEmail;
-	private JLabel labelCustomerAdditionalInfo;
+	private JLabel labelBankInfoId;
+	private JLabel labelBankInfoName;
+	private JLabel labelBankInfoAddress;
+	private JLabel labelBankInfoPhoneNumber;
+	private JLabel labelBankInfoEmail;
+	private JLabel labelBankInfoAdditionalInfo;
 
-	private JTextField textFieldCustomerId;
-	private JTextField textFieldCustomerName;
-	private JTextField textFieldCustomerAddress;
-	private JTextField textFieldCustomerPhoneNumber;
-	private JTextField textFieldCustomerEmail;
-	private JTextField textFieldCustomerAdditionalInfo;
+	private JTextField textFieldBankInfoId;
+	private JTextField textFieldBankInfoName;
+	private JTextField textFieldBankInfoAddress;
+	private JTextField textFieldBankInfoPhoneNumber;
+	private JTextField textFieldBankInfoEmail;
+	private JTextField textFieldBankInfoAdditionalInfo;
 
 	private JButton buttonNew;
 	private JButton buttonEdit;
@@ -85,19 +85,19 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	private Color nonEditableTextFieldColor;
 	private Color mandatoryTextFieldColor;
 
-	private String selectedCustomerTableRow;
+	private String selectedBankInfoTableRow;
 	
 	private boolean editMode;
 
-	private List<Customer> customers;
+	private List<BankInfo> banksInfo;
 
 	@Autowired
-	private ICustomerService customerServiceImpl;
+	private IBankInfoService bankInfoServiceImpl;
 	@Autowired
-	private ICustomerDialog customerDialogImpl;
+	private IBankInfoDialog bankInfoDialogImpl;
 
 	@Override
-	public JPanel initCustomerPanel() {
+	public JPanel initBankInfoPanel() {
 		panelAll = new JPanel();
 		panelAll.setLayout(new BorderLayout());
 
@@ -112,7 +112,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelTableHolderContentTable.setPreferredSize(new Dimension(400, 550));
 		panelTableHolderContentTable.setBackground(new Color(224, 224, 224));
 		panelTableHolderContentTable.setBorder(new TitledBorder(
-				"Листа на клиенти"));
+				"Листа на сметки"));
 
 		panelTableHolderContentButtons = new JPanel();
 		panelTableHolderContentButtons.setLayout(new FlowLayout());
@@ -144,7 +144,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 				return false;
 			}
 		};
-		defaultTableModel.setColumnIdentifiers(getTableCustomerColumnNames());
+		defaultTableModel.setColumnIdentifiers(getTableBankInfoColumnNames());
 
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -154,18 +154,18 @@ public class CustomerPanelImpl implements ICustomerPanel {
 					table.setEnabled(false);
 				} else {
 				int row = table.getSelectedRow();
-				String selectedRowCustomerId = (String) table
+				String selectedRowBankInfoId = (String) table
 						.getValueAt(row, 1);
-				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
-				populateCustomerFields(customer);
-				setCustomerInfoButtonsDisabled();
+				BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
+				populateBankInfoFields(bankInfo);
+				setBankInfoInfoButtonsDisabled();
 				}
 			}
 		});
 
 		table.setModel(defaultTableModel);
 
-		TableUtil.hideColumns(table, getTableCustomerHiddenColumns());
+		TableUtil.hideColumns(table, getTableBankInfoHiddenColumns());
 
 		TableUtil.allignCells(table, SwingConstants.CENTER);
 
@@ -182,7 +182,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setAllButtonsDisabled();
-				customerDialogImpl.initCustomerDialog();
+				bankInfoDialogImpl.initBankInfoDialog();
 			}
 		});
 
@@ -191,8 +191,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonEdit.setEnabled(false);
 		buttonEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setCustomerFieldsEditable();
-				setCustomerInfoButtonsEnabled();
+				setBankInfoFieldsEditable();
+				setBankInfoInfoButtonsEnabled();
 				buttonNew.setEnabled(false);
 				setEditMode(true);
 				table.setEnabled(false);
@@ -205,7 +205,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonDelete.setEnabled(false);
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				deleteCustomer();
+				deleteBankInfo();
 			}
 		});
 
@@ -217,74 +217,74 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 
-		labelCustomerName = new JLabel("Име:");
-		labelCustomerName.setBounds(xLabel, y, weightLabel, height);
-		labelCustomerName.setForeground(mandatoryTextFieldColor);
+		labelBankInfoName = new JLabel("Име:");
+		labelBankInfoName.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoName.setForeground(mandatoryTextFieldColor);
 
-		textFieldCustomerName = new JTextField();
-		textFieldCustomerName.setBounds(xTextField, y, weightTextField, height);
-		textFieldCustomerName.setMargin(new Insets(2, 2, 2, 2));
+		textFieldBankInfoName = new JTextField();
+		textFieldBankInfoName.setBounds(xTextField, y, weightTextField, height);
+		textFieldBankInfoName.setMargin(new Insets(2, 2, 2, 2));
 
-		originalTextFieldColor = textFieldCustomerName.getBackground();
+		originalTextFieldColor = textFieldBankInfoName.getBackground();
 		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		y = y + height + spacing;
 
-		labelCustomerAddress = new JLabel("Адреса:");
-		labelCustomerAddress.setBounds(xLabel, y, weightLabel, height);
-		labelCustomerAddress.setForeground(mandatoryTextFieldColor);
+		labelBankInfoAddress = new JLabel("Адреса:");
+		labelBankInfoAddress.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoAddress.setForeground(mandatoryTextFieldColor);
 
-		textFieldCustomerAddress = new JTextField();
-		textFieldCustomerAddress.setBounds(xTextField, y, weightTextField,
+		textFieldBankInfoAddress = new JTextField();
+		textFieldBankInfoAddress.setBounds(xTextField, y, weightTextField,
 				height);
-		textFieldCustomerAddress.setMargin(new Insets(2, 2, 2, 2));
+		textFieldBankInfoAddress.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
-		labelCustomerPhoneNumber = new JLabel("Телефонски Број:");
-		labelCustomerPhoneNumber.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoPhoneNumber = new JLabel("Телефонски Број:");
+		labelBankInfoPhoneNumber.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldCustomerPhoneNumber = new JTextField();
-		textFieldCustomerPhoneNumber.setBounds(xTextField, y, weightTextField,
+		textFieldBankInfoPhoneNumber = new JTextField();
+		textFieldBankInfoPhoneNumber.setBounds(xTextField, y, weightTextField,
 				height);
-		textFieldCustomerPhoneNumber.setMargin(new Insets(2, 2, 2, 2));
+		textFieldBankInfoPhoneNumber.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
-		labelCustomerEmail = new JLabel("Email:");
-		labelCustomerEmail.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoEmail = new JLabel("Email:");
+		labelBankInfoEmail.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldCustomerEmail = new JTextField();
-		textFieldCustomerEmail
+		textFieldBankInfoEmail = new JTextField();
+		textFieldBankInfoEmail
 				.setBounds(xTextField, y, weightTextField, height);
-		textFieldCustomerEmail.setMargin(new Insets(2, 2, 2, 2));
+		textFieldBankInfoEmail.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
-		labelCustomerAdditionalInfo = new JLabel("Забелешки:");
-		labelCustomerAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoAdditionalInfo = new JLabel("Забелешки:");
+		labelBankInfoAdditionalInfo.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldCustomerAdditionalInfo = new JTextField();
-		textFieldCustomerAdditionalInfo.setBounds(xTextField, y,
+		textFieldBankInfoAdditionalInfo = new JTextField();
+		textFieldBankInfoAdditionalInfo.setBounds(xTextField, y,
 				weightTextField, height);
-		textFieldCustomerAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
+		textFieldBankInfoAdditionalInfo.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
-		labelCustomerId = new JLabel("ID:");
-		labelCustomerId.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoId = new JLabel("ID:");
+		labelBankInfoId.setBounds(xLabel, y, weightLabel, height);
 
-		textFieldCustomerId = new JTextField();
-		textFieldCustomerId.setBounds(xTextField, y, weightTextField, height);
-		textFieldCustomerId.setMargin(new Insets(2, 2, 2, 2));
+		textFieldBankInfoId = new JTextField();
+		textFieldBankInfoId.setBounds(xTextField, y, weightTextField, height);
+		textFieldBankInfoId.setMargin(new Insets(2, 2, 2, 2));
 
 		buttonSave = new JButton("Зачувај");
 		buttonSave.setPreferredSize(new Dimension(100, 25));
 		buttonSave.setEnabled(false);
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (validateCustomerFields()) {
-					saveCustomer();
+				if (validateBankInfoFields()) {
+					saveBankInfo();
 					setEditMode(false);
 					table.setEnabled(true);
 				} else {
@@ -304,12 +304,12 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
-				String selectedRowCustomerId = (String) table
+				String selectedRowBankInfoId = (String) table
 						.getValueAt(row, 1);
-				Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
-				populateCustomerFields(customer);
-				setCustomerFieldsNonEditable();
-				setCustomerInfoButtonsDisabled();
+				BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
+				populateBankInfoFields(bankInfo);
+				setBankInfoFieldsNonEditable();
+				setBankInfoInfoButtonsDisabled();
 				setEditMode(false);
 				table.setEnabled(true);
 			}
@@ -329,28 +329,28 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 		panelTableHolder.add(panelTableHolderContent);
 
-		panelInfoHolderContentInfo.add(labelCustomerName,
+		panelInfoHolderContentInfo.add(labelBankInfoName,
 				firstLabelConstrains());
-		panelInfoHolderContentInfo.add(textFieldCustomerName,
+		panelInfoHolderContentInfo.add(textFieldBankInfoName,
 				textFieldConstraints());
 
 		panelInfoHolderContentInfo
-				.add(labelCustomerAddress, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerAddress,
+				.add(labelBankInfoAddress, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldBankInfoAddress,
 				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelCustomerPhoneNumber,
+		panelInfoHolderContentInfo.add(labelBankInfoPhoneNumber,
 				labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerPhoneNumber,
+		panelInfoHolderContentInfo.add(textFieldBankInfoPhoneNumber,
 				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelCustomerEmail, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerEmail,
+		panelInfoHolderContentInfo.add(labelBankInfoEmail, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldBankInfoEmail,
 				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelCustomerAdditionalInfo,
+		panelInfoHolderContentInfo.add(labelBankInfoAdditionalInfo,
 				labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldCustomerAdditionalInfo,
+		panelInfoHolderContentInfo.add(textFieldBankInfoAdditionalInfo,
 				lastComponentConstrains());
 
 		panelInfoHolderContentButtons.add(buttonSave);
@@ -366,106 +366,106 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		panelAll.add(panelTableHolder, BorderLayout.WEST);
 		panelAll.add(panelInfoHolder, BorderLayout.CENTER);
 
-		setSelectedCustomerTableRow("");
-		populateCustomerTable();
+		setSelectedBankInfoTableRow("");
+		populateBankInfoTable();
 
 		return panelAll;
 	}
 
 	@Override
-	public void populateCustomerTable() {
-		String selectedRowCustomerId = "";
-		customers = customerServiceImpl.findAllCustomers();
+	public void populateBankInfoTable() {
+		String selectedRowBankInfoId = "";
+		banksInfo = bankInfoServiceImpl.findAllBanksInfo();
 
 		int i = 0;
 
 		defaultTableModel.setRowCount(0);
 
-		for (Customer customer : customers) {
+		for (BankInfo bankInfo : banksInfo) {
 			defaultTableModel.addRow(new String[] { Integer.toString(++i),
-					customer.getCustomerId().toString(),
-					customer.getCustomerName(), customer.getCustomerAddress(),
-					customer.getCustomerPhoneNumber(),
-					customer.getCustomerEmail(),
-					customer.getCustomerAdditionalInfo() });
+					bankInfo.getBankInfoId().toString(),
+					bankInfo.getBankInfoName(), bankInfo.getBankInfoAddress(),
+					bankInfo.getBankInfoPhoneNumber(),
+					bankInfo.getBankInfoEmail(),
+					bankInfo.getBankInfoAdditionalInfo() });
 		}
 
 		if (table.getRowCount() > 0) {
 			int selectedRow = table.getRowCount() - 1;
 
-			if (!getSelectedCustomerTableRow().equals("")) {
-				selectedRow = Integer.parseInt(getSelectedCustomerTableRow());
+			if (!getSelectedBankInfoTableRow().equals("")) {
+				selectedRow = Integer.parseInt(getSelectedBankInfoTableRow());
 			}
 
 			table.setRowSelectionInterval(selectedRow, selectedRow);
 
-			selectedRowCustomerId = (String) table.getValueAt(selectedRow, 1);
-			Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
-			populateCustomerFields(customer);
+			selectedRowBankInfoId = (String) table.getValueAt(selectedRow, 1);
+			BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
+			populateBankInfoFields(bankInfo);
 
-			setCustomerTableButtonsEnabled();
+			setBankInfoTableButtonsEnabled();
 
 		}
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 
-		setCustomerFieldsNonEditable();
+		setBankInfoFieldsNonEditable();
 
-		setSelectedCustomerTableRow("");
+		setSelectedBankInfoTableRow("");
 
 	}
 
-	public void populateCustomerFields(Customer customer) {
-		textFieldCustomerId.setText(customer.getCustomerId().toString());
-		textFieldCustomerName.setText(customer.getCustomerName());
-		textFieldCustomerAddress.setText(customer.getCustomerAddress());
-		textFieldCustomerPhoneNumber.setText(customer.getCustomerPhoneNumber());
-		textFieldCustomerEmail.setText(customer.getCustomerEmail());
-		textFieldCustomerAdditionalInfo.setText(customer
-				.getCustomerAdditionalInfo());
+	public void populateBankInfoFields(BankInfo bankInfo) {
+		textFieldBankInfoId.setText(bankInfo.getBankInfoId().toString());
+		textFieldBankInfoName.setText(bankInfo.getBankInfoName());
+		textFieldBankInfoAddress.setText(bankInfo.getBankInfoAddress());
+		textFieldBankInfoPhoneNumber.setText(bankInfo.getBankInfoPhoneNumber());
+		textFieldBankInfoEmail.setText(bankInfo.getBankInfoEmail());
+		textFieldBankInfoAdditionalInfo.setText(bankInfo
+				.getBankInfoAdditionalInfo());
 	}
 
-	public void clearCustomerFields() {
-		textFieldCustomerId.setText("");
-		textFieldCustomerName.setText("");
-		textFieldCustomerAddress.setText("");
-		textFieldCustomerPhoneNumber.setText("");
-		textFieldCustomerEmail.setText("");
-		textFieldCustomerAdditionalInfo.setText("");
+	public void clearBankInfoFields() {
+		textFieldBankInfoId.setText("");
+		textFieldBankInfoName.setText("");
+		textFieldBankInfoAddress.setText("");
+		textFieldBankInfoPhoneNumber.setText("");
+		textFieldBankInfoEmail.setText("");
+		textFieldBankInfoAdditionalInfo.setText("");
 	}
 
-	public String[] getTableCustomerColumnNames() {
+	public String[] getTableBankInfoColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Адреса",
 				"Телефонски број", "Email", "Забелешки" };
 	}
 
-	public int[] getTableCustomerHiddenColumns() {
+	public int[] getTableBankInfoHiddenColumns() {
 		return new int[] { 1, 3, 5, 6 };
 	}
 
-	public Customer getCustomerFromCustomerTable(String selectedRowCustomerId) {
-		BigDecimal customerId = new BigDecimal(selectedRowCustomerId);
-		return customerServiceImpl.findCustomerById(customerId);
+	public BankInfo getBankInfoFromBankInfoTable(String selectedRowBankInfoId) {
+		BigDecimal bankInfoId = new BigDecimal(selectedRowBankInfoId);
+		return bankInfoServiceImpl.findBankInfoById(bankInfoId);
 	}
 
-	public Customer getCustomerFromCustomerFields() {
+	public BankInfo getBankInfoFromBankInfoFields() {
 		int row = table.getSelectedRow();
-		String selectedRowCustomerId = (String) table.getValueAt(row, 1);
-		Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
-		customer.setCustomerName(textFieldCustomerName.getText());
-		customer.setCustomerAddress(textFieldCustomerAddress.getText());
-		customer.setCustomerPhoneNumber(textFieldCustomerPhoneNumber.getText());
-		customer.setCustomerEmail(textFieldCustomerEmail.getText());
-		customer.setCustomerAdditionalInfo(textFieldCustomerAdditionalInfo
+		String selectedRowBankInfoId = (String) table.getValueAt(row, 1);
+		BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
+		bankInfo.setBankInfoName(textFieldBankInfoName.getText());
+		bankInfo.setBankInfoAddress(textFieldBankInfoAddress.getText());
+		bankInfo.setBankInfoPhoneNumber(textFieldBankInfoPhoneNumber.getText());
+		bankInfo.setBankInfoEmail(textFieldBankInfoEmail.getText());
+		bankInfo.setBankInfoAdditionalInfo(textFieldBankInfoAdditionalInfo
 				.getText());
 
-		return customer;
+		return bankInfo;
 	}
 
 	@Override
-	public String getSelectedCustomerTableRow() {
-		return selectedCustomerTableRow;
+	public String getSelectedBankInfoTableRow() {
+		return selectedBankInfoTableRow;
 	}
 	
 	public boolean isEditMode() {
@@ -477,42 +477,42 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	}
 
 	@Override
-	public void setSelectedCustomerTableRow(String selectedCustomerTableRow) {
-		this.selectedCustomerTableRow = selectedCustomerTableRow;
+	public void setSelectedBankInfoTableRow(String selectedBankInfoTableRow) {
+		this.selectedBankInfoTableRow = selectedBankInfoTableRow;
 	}
 
-	public void setCustomerFieldsNonEditable() {
-		textFieldCustomerName.setEditable(false);
-		textFieldCustomerName.setBackground(nonEditableTextFieldColor);
-		textFieldCustomerAddress.setEditable(false);
-		textFieldCustomerAddress.setBackground(nonEditableTextFieldColor);
-		textFieldCustomerPhoneNumber.setEditable(false);
-		textFieldCustomerPhoneNumber.setBackground(nonEditableTextFieldColor);
-		textFieldCustomerEmail.setEditable(false);
-		textFieldCustomerEmail.setBackground(nonEditableTextFieldColor);
-		textFieldCustomerAdditionalInfo.setEditable(false);
-		textFieldCustomerAdditionalInfo
+	public void setBankInfoFieldsNonEditable() {
+		textFieldBankInfoName.setEditable(false);
+		textFieldBankInfoName.setBackground(nonEditableTextFieldColor);
+		textFieldBankInfoAddress.setEditable(false);
+		textFieldBankInfoAddress.setBackground(nonEditableTextFieldColor);
+		textFieldBankInfoPhoneNumber.setEditable(false);
+		textFieldBankInfoPhoneNumber.setBackground(nonEditableTextFieldColor);
+		textFieldBankInfoEmail.setEditable(false);
+		textFieldBankInfoEmail.setBackground(nonEditableTextFieldColor);
+		textFieldBankInfoAdditionalInfo.setEditable(false);
+		textFieldBankInfoAdditionalInfo
 				.setBackground(nonEditableTextFieldColor);
-		textFieldCustomerId.setEditable(false);
-		textFieldCustomerId.setBackground(nonEditableTextFieldColor);
+		textFieldBankInfoId.setEditable(false);
+		textFieldBankInfoId.setBackground(nonEditableTextFieldColor);
 	}
 
-	public void setCustomerFieldsEditable() {
-		textFieldCustomerName.setEditable(true);
-		textFieldCustomerName.setBackground(originalTextFieldColor);
-		textFieldCustomerAddress.setEditable(true);
-		textFieldCustomerAddress.setBackground(originalTextFieldColor);
-		textFieldCustomerPhoneNumber.setEditable(true);
-		textFieldCustomerPhoneNumber.setBackground(originalTextFieldColor);
-		textFieldCustomerEmail.setEditable(true);
-		textFieldCustomerEmail.setBackground(originalTextFieldColor);
-		textFieldCustomerAdditionalInfo.setEditable(true);
-		textFieldCustomerAdditionalInfo.setBackground(originalTextFieldColor);
-		textFieldCustomerId.setEditable(true);
-		textFieldCustomerId.setBackground(originalTextFieldColor);
+	public void setBankInfoFieldsEditable() {
+		textFieldBankInfoName.setEditable(true);
+		textFieldBankInfoName.setBackground(originalTextFieldColor);
+		textFieldBankInfoAddress.setEditable(true);
+		textFieldBankInfoAddress.setBackground(originalTextFieldColor);
+		textFieldBankInfoPhoneNumber.setEditable(true);
+		textFieldBankInfoPhoneNumber.setBackground(originalTextFieldColor);
+		textFieldBankInfoEmail.setEditable(true);
+		textFieldBankInfoEmail.setBackground(originalTextFieldColor);
+		textFieldBankInfoAdditionalInfo.setEditable(true);
+		textFieldBankInfoAdditionalInfo.setBackground(originalTextFieldColor);
+		textFieldBankInfoId.setEditable(true);
+		textFieldBankInfoId.setBackground(originalTextFieldColor);
 	}
 
-	public void setCustomerTableButtonsEnabled() {
+	public void setBankInfoTableButtonsEnabled() {
 		buttonNew.setEnabled(true); 
 		if (table.getRowCount() > 0) {
 			buttonEdit.setEnabled(true);
@@ -520,17 +520,17 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		}
 	}
 
-	public void setCustomerTableButtonsDisabled() {
+	public void setBankInfoTableButtonsDisabled() {
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
 	}
 
-	public void setCustomerInfoButtonsEnabled() {
+	public void setBankInfoInfoButtonsEnabled() {
 		buttonSave.setEnabled(true);
 		buttonCancel.setEnabled(true);
 	}
 
-	public void setCustomerInfoButtonsDisabled() {
+	public void setBankInfoInfoButtonsDisabled() {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
 	}
@@ -543,42 +543,42 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonCancel.setEnabled(false);
 	}
 
-	public boolean validateCustomerFields() {
+	public boolean validateBankInfoFields() {
 		boolean result = true;
-		result = result && (!"".equals(textFieldCustomerName.getText()))
-				&& (!"".equals(textFieldCustomerAddress.getText()));
+		result = result && (!"".equals(textFieldBankInfoName.getText()))
+				&& (!"".equals(textFieldBankInfoAddress.getText()));
 		return result;
 	}
 
-	public void saveCustomer() {
-		Customer customer = getCustomerFromCustomerFields();
-		customerServiceImpl.saveCustomer(customer);
+	public void saveBankInfo() {
+		BankInfo bankInfo = getBankInfoFromBankInfoFields();
+		bankInfoServiceImpl.saveBankInfo(bankInfo);
 		int row = table.getSelectedRow();
 		String selectedRow = Integer.toString(row);
-		setSelectedCustomerTableRow(selectedRow);
-		populateCustomerTable();
-		setCustomerFieldsNonEditable();
-		setCustomerInfoButtonsDisabled();
+		setSelectedBankInfoTableRow(selectedRow);
+		populateBankInfoTable();
+		setBankInfoFieldsNonEditable();
+		setBankInfoInfoButtonsDisabled();
 	}
 
-	public void deleteCustomer() {
+	public void deleteBankInfo() {
 		int row = table.getSelectedRow();
-		String selectedRowCustomerId = (String) table.getValueAt(row, 1);
-		Customer customer = getCustomerFromCustomerTable(selectedRowCustomerId);
-		customerServiceImpl.deleteCustomer(customer);
+		String selectedRowBankInfoId = (String) table.getValueAt(row, 1);
+		BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
+		bankInfoServiceImpl.deleteBankInfo(bankInfo);
 		String selectedRow = Integer.toString(row);
 		int intSelectedRow = Integer.parseInt(selectedRow);
 		
-		clearCustomerFields();
+		clearBankInfoFields();
 
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
 		
 		if (table.getRowCount() - 1 > intSelectedRow) {
-			setSelectedCustomerTableRow(selectedRow);
+			setSelectedBankInfoTableRow(selectedRow);
 		}
 		
-		populateCustomerTable();
+		populateBankInfoTable();
 		
 		if (table.getRowCount() > 0) {			
 			buttonEdit.setEnabled(true);
@@ -586,12 +586,11 @@ public class CustomerPanelImpl implements ICustomerPanel {
 
 		}
 
-
-		setCustomerFieldsNonEditable();
-		setCustomerInfoButtonsDisabled();
+		setBankInfoFieldsNonEditable();
+		setBankInfoInfoButtonsDisabled();
 	}
 
-	public GridBagConstraints customerPanelConstraints() {
+	public GridBagConstraints bankInfoPanelConstraints() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4, 10, 4, 10);
 		return c;
@@ -616,14 +615,14 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	}
 
 	public GridBagConstraints labelConstraints() {
-		GridBagConstraints c = customerPanelConstraints();
+		GridBagConstraints c = bankInfoPanelConstraints();
 		c.anchor = GridBagConstraints.BASELINE_LEADING;
 		c.weightx = 0.0;
 		return c;
 	}
 
 	public GridBagConstraints textFieldConstraints() {
-		GridBagConstraints c = customerPanelConstraints();
+		GridBagConstraints c = bankInfoPanelConstraints();
 		c.anchor = GridBagConstraints.BASELINE;
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -632,7 +631,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	}
 
 	public GridBagConstraints lastComponentConstrains() {
-		GridBagConstraints c = customerPanelConstraints();
+		GridBagConstraints c = bankInfoPanelConstraints();
 		c.anchor = GridBagConstraints.BASELINE;
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;

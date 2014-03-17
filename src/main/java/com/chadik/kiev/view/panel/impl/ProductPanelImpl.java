@@ -175,6 +175,8 @@ public class ProductPanelImpl implements IProductPanel {
 		scrollPaneTable = new JScrollPane(table);
 
 		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
+		
+		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		buttonNew = new JButton("Креирај");
 		buttonNew.setPreferredSize(new Dimension(100, 25));
@@ -199,6 +201,7 @@ public class ProductPanelImpl implements IProductPanel {
 		});
 
 		buttonDelete = new JButton("Избриши");
+		buttonDelete.setForeground(mandatoryTextFieldColor);
 		buttonDelete.setPreferredSize(new Dimension(100, 25));
 		buttonDelete.setEnabled(false);
 		buttonDelete.addActionListener(new ActionListener() {
@@ -214,8 +217,6 @@ public class ProductPanelImpl implements IProductPanel {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
-
-		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		labelProductName = new JLabel("Име:");
 		labelProductName.setBounds(xLabel, y, weightLabel, height);
