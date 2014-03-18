@@ -101,6 +101,8 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		panelAll.add(panelTableHolder, BorderLayout.CENTER);
 
 		setOrderItemTable(table);
+		
+		setSelectedOrderItemTableRow("");
 
 		if (getInvoiceId() > 0) {
 			populateOrderItemTable();
@@ -160,8 +162,13 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		if (table.getRowCount() > 0) {
 
 			int selectedRow = table.getRowCount() - 1;
+			
+			if (!getSelectedOrderItemTableRow().equals("")) {
+				selectedRow = Integer.parseInt(getSelectedOrderItemTableRow());
+			}
 
 			table.setRowSelectionInterval(selectedRow, selectedRow);
+
 
 //			invoicePanelImpl.setProductButtonsEnabled();
 			invoicePanelImpl.setInvoiceOrderItemTotalValues(
@@ -172,6 +179,8 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 
 		scrollPaneTable.validate();
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+		
+		setSelectedOrderItemTableRow("");
 
 	}
 
@@ -193,6 +202,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		return orderItemServiceImpl.findOrderItemById(invoiceId);
 	}
 
+	@Override
 	public void setSelectedOrderItemTableRow(String selectedOrderItemTableRow) {
 		this.selectedOrderItemTableRow = selectedOrderItemTableRow;
 	}
@@ -213,8 +223,14 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		String selectedRowOrderItemId = (String) table.getValueAt(row, 1);
 		OrderItem orderItem = getOrderItemFromOrderItemTable(selectedRowOrderItemId);
 		orderItemServiceImpl.deleteOrderItem(orderItem);
+		String selectedRow = Integer.toString(row);
+		int intSelectedRow = Integer.parseInt(selectedRow);
 
 		invoicePanelImpl.setOrderItemRemoveButtonDisabled();
+		
+		if (table.getRowCount() - 1 > intSelectedRow) {
+			setSelectedOrderItemTableRow(selectedRow);
+		}
 
 		populateOrderItemTable();
 
@@ -232,6 +248,11 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	@Override
 	public void setInvoiceId(int invoiceId) {
 		this.invoiceId = invoiceId;
+	}
+
+	@Override
+	public String getSelectedOrderItemTableRow() {
+		return selectedOrderItemTableRow;
 	}
 
 }

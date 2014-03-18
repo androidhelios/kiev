@@ -25,5 +25,9 @@ public interface IOrderItemPanel {
 	public OrderItem getOrderItemFromOrderItemTable(String selectedRowOrderItemId);
 	
 	public void deleteOrderItem();
+	
+	public String getSelectedOrderItemTableRow();
+	
+	public void setSelectedOrderItemTableRow(String selectedCustomerTableRow);
 
 }

@@ -224,7 +224,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		panelInfoHolderContentInfoFields = new JPanel();
 		panelInfoHolderContentInfoFields.setLayout(new GridBagLayout());
 		panelInfoHolderContentInfoFields.setPreferredSize(new Dimension(400,
-				1000));
+				975));
 		panelInfoHolderContentInfoFields
 				.setBackground(new Color(192, 192, 192));
 		panelInfoHolderContentInfoFields.setBorder(BorderFactory
@@ -262,7 +262,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 						.getColor("Table.dropCellForeground");
 
 				String invoicePaymentInfo = (String) table.getValueAt(rowIndex,
-						12);
+						13);
 
 				if ("Неисплатена".equals(invoicePaymentInfo)
 						&& !isCellSelected(rowIndex, colIndex)) {
@@ -1509,7 +1509,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 		if (currentInvoiceNumber.equals(invoceNumberBeforeLast)) {
 			invoceNumberBeforeLast = "(" + currentInvoiceNumber
-					+ ") - Оваа фактура е последно внесена фактура";
+					+ ") - Моментална фактура";
 		}
 
 		return invoceNumberBeforeLast;

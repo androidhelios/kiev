@@ -60,8 +60,8 @@ public class App {
         Supplier supplier = new Supplier();
         supplier.setSupplierName("Име");
         supplier.setSupplierAddress("Адреса");
-        supplier.setSupplierRegistryNumber("Регистарски број");
-        supplier.setSupplierPhoneNumber("Телефонски број");
+        supplier.setSupplierRegistryNumber("0123456789");
+        supplier.setSupplierPhoneNumber("070123456");
         supplier.setSupplierEmail("Email");
         supplier.setSupplierUserName("korisnik");
         supplier.setSupplierPassword("korisnik1");
