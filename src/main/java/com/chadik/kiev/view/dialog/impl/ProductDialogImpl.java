@@ -262,11 +262,37 @@ public class ProductDialogImpl implements IProductDialog {
 
 	public boolean validateProductFields() {
 		boolean result = true;
-		result = result && (!"".equals(textFieldProductName.getText()))
+		result = result
+				&& (!"".equals(textFieldProductName.getText()))
 				&& (!"".equals(textFieldProductMeasurement.getText()))
-				&& (!"".equals(textFieldProductTax.getText()))
-				&& (!"".equals(textFieldProductPrice.getText()));
+				&& (!"".equals(textFieldProductTax.getText())
+						&& (isInt(textFieldProductTax.getText()) || isValidDecimal(textFieldProductTax
+							.getText())))
+				&& (!"".equals(textFieldProductPrice.getText())
+						&& (isInt(textFieldProductPrice.getText()) || isValidDecimal(textFieldProductPrice
+							.getText())));
 		return result;
+	}
+
+	public boolean isValidDecimal(String textFieldValue) {
+		boolean result = false;
+
+		final String regularExpression = "\\d+([,]\\d{1,2})?";
+
+		if (textFieldValue.matches(regularExpression)) {
+			result = true;
+		}
+
+		return result;
+	}
+
+	public boolean isInt(String textFieldValue) {
+		try {
+			Integer.parseInt(textFieldValue);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public void saveProductAndDispose() {

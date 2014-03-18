@@ -27,10 +27,6 @@ public class Supplier implements Serializable {
 	private String supplierName;
 	@NotNull(message = "Полето регистарски број на компанијата не е пополнето")
 	private String supplierRegistryNumber;
-	@NotNull(message = "Полето име на банка за компанијата не е пополнето")
-	private String supplierBankName;
-	@NotNull(message = "Полето банкарска сметка на компанијата не е пополнето")
-	private String supplierBankAccount;
 	@NotNull(message = "Полето адреса на компанијата не е пополнето")
 	private String supplierAddress;
 	private String supplierPhoneNumber;
@@ -67,22 +63,6 @@ public class Supplier implements Serializable {
 
 	public void setSupplierRegistryNumber(String supplierRegistryNumber) {
 		this.supplierRegistryNumber = supplierRegistryNumber;
-	}
-
-	public String getSupplierBankName() {
-		return supplierBankName;
-	}
-
-	public void setSupplierBankName(String supplierBankName) {
-		this.supplierBankName = supplierBankName;
-	}
-
-	public String getSupplierBankAccount() {
-		return supplierBankAccount;
-	}
-
-	public void setSupplierBankAccount(String supplierBankAccount) {
-		this.supplierBankAccount = supplierBankAccount;
 	}
 
 	public String getSupplierAddress() {

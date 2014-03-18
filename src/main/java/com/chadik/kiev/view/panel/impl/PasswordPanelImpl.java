@@ -51,6 +51,8 @@ public class PasswordPanelImpl implements IPasswordPanel {
 	private String supplierUserName;
 	private String supplierPassword;
 	
+	private Color mandatoryTextFieldColor;
+	
 	@Autowired
 	private FrameMain frameMain;
 	@Autowired
@@ -78,8 +80,11 @@ public class PasswordPanelImpl implements IPasswordPanel {
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
 		
+		mandatoryTextFieldColor = new Color(204, 0, 0);
+		
 		labelUserName = new JLabel("Име:");
 		labelUserName.setBounds(xLabel, y, weightLabel, height);
+		labelUserName.setForeground(mandatoryTextFieldColor);
 
 		textFieldUserName = new JTextField();
 		textFieldUserName.setBounds(xTextField, y, weightTextField, height);
@@ -89,7 +94,8 @@ public class PasswordPanelImpl implements IPasswordPanel {
 
 		labelPassword = new JLabel("Лозинка:");
 		labelPassword.setBounds(xLabel, y, weightLabel, height);
-
+		labelPassword.setForeground(mandatoryTextFieldColor);
+		
 		passwordFieldPassword = new JPasswordField();
 		passwordFieldPassword.setBounds(xTextField, y, weightTextField,
 				height);
@@ -145,6 +151,7 @@ public class PasswordPanelImpl implements IPasswordPanel {
 		buttonCancel = new JButton("Откажи");
 		buttonCancel.setBounds(xTextField + 125, y, weightTextField - 127,
 				height);
+		buttonCancel.setForeground(mandatoryTextFieldColor);
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);

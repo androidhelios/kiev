@@ -42,7 +42,7 @@ import com.chadik.kiev.view.panel.IBankInfoPanel;
 
 @Component
 public class BankInfoPanelImpl implements IBankInfoPanel {
-	
+
 	private JPanel panelAll;
 
 	private JPanel panelTableHolder;
@@ -63,6 +63,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 
 	private JLabel labelBankInfoId;
 	private JLabel labelBankInfoName;
+	private JLabel labelBankInfoAccount;
 	private JLabel labelBankInfoAddress;
 	private JLabel labelBankInfoPhoneNumber;
 	private JLabel labelBankInfoEmail;
@@ -70,6 +71,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 
 	private JTextField textFieldBankInfoId;
 	private JTextField textFieldBankInfoName;
+	private JTextField textFieldBankInfoAccount;
 	private JTextField textFieldBankInfoAddress;
 	private JTextField textFieldBankInfoPhoneNumber;
 	private JTextField textFieldBankInfoEmail;
@@ -86,7 +88,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	private Color mandatoryTextFieldColor;
 
 	private String selectedBankInfoTableRow;
-	
+
 	private boolean editMode;
 
 	private List<BankInfo> banksInfo;
@@ -153,12 +155,12 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 				if (isEditMode()) {
 					table.setEnabled(false);
 				} else {
-				int row = table.getSelectedRow();
-				String selectedRowBankInfoId = (String) table
-						.getValueAt(row, 1);
-				BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
-				populateBankInfoFields(bankInfo);
-				setBankInfoInfoButtonsDisabled();
+					int row = table.getSelectedRow();
+					String selectedRowBankInfoId = (String) table.getValueAt(
+							row, 1);
+					BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
+					populateBankInfoFields(bankInfo);
+					setBankInfoInfoButtonsDisabled();
 				}
 			}
 		});
@@ -174,7 +176,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		scrollPaneTable = new JScrollPane(table);
 
 		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
-		
+
 		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		buttonNew = new JButton("Креирај");
@@ -193,6 +195,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 			public void actionPerformed(ActionEvent e) {
 				setBankInfoFieldsEditable();
 				setBankInfoInfoButtonsEnabled();
+				setBankInfoTableButtonsDisabled();
 				buttonNew.setEnabled(false);
 				setEditMode(true);
 				table.setEnabled(false);
@@ -230,9 +233,19 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 
 		y = y + height + spacing;
 
+		labelBankInfoAccount = new JLabel("Сметка:");
+		labelBankInfoAccount.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoAccount.setForeground(mandatoryTextFieldColor);
+
+		textFieldBankInfoAccount = new JTextField();
+		textFieldBankInfoAccount.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldBankInfoAccount.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+
 		labelBankInfoAddress = new JLabel("Адреса:");
 		labelBankInfoAddress.setBounds(xLabel, y, weightLabel, height);
-		labelBankInfoAddress.setForeground(mandatoryTextFieldColor);
 
 		textFieldBankInfoAddress = new JTextField();
 		textFieldBankInfoAddress.setBounds(xTextField, y, weightTextField,
@@ -310,6 +323,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 				populateBankInfoFields(bankInfo);
 				setBankInfoFieldsNonEditable();
 				setBankInfoInfoButtonsDisabled();
+				setBankInfoTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
 			}
@@ -332,6 +346,11 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		panelInfoHolderContentInfo.add(labelBankInfoName,
 				firstLabelConstrains());
 		panelInfoHolderContentInfo.add(textFieldBankInfoName,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfo.add(labelBankInfoAccount,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldBankInfoAccount,
 				textFieldConstraints());
 
 		panelInfoHolderContentInfo
@@ -384,7 +403,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		for (BankInfo bankInfo : banksInfo) {
 			defaultTableModel.addRow(new String[] { Integer.toString(++i),
 					bankInfo.getBankInfoId().toString(),
-					bankInfo.getBankInfoName(), bankInfo.getBankInfoAddress(),
+					bankInfo.getBankInfoName(), bankInfo.getBankInfoAccount(),
+					bankInfo.getBankInfoAddress(),
 					bankInfo.getBankInfoPhoneNumber(),
 					bankInfo.getBankInfoEmail(),
 					bankInfo.getBankInfoAdditionalInfo() });
@@ -419,6 +439,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	public void populateBankInfoFields(BankInfo bankInfo) {
 		textFieldBankInfoId.setText(bankInfo.getBankInfoId().toString());
 		textFieldBankInfoName.setText(bankInfo.getBankInfoName());
+		textFieldBankInfoAccount.setText(bankInfo.getBankInfoAccount());
 		textFieldBankInfoAddress.setText(bankInfo.getBankInfoAddress());
 		textFieldBankInfoPhoneNumber.setText(bankInfo.getBankInfoPhoneNumber());
 		textFieldBankInfoEmail.setText(bankInfo.getBankInfoEmail());
@@ -429,6 +450,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	public void clearBankInfoFields() {
 		textFieldBankInfoId.setText("");
 		textFieldBankInfoName.setText("");
+		textFieldBankInfoAccount.setText("");
 		textFieldBankInfoAddress.setText("");
 		textFieldBankInfoPhoneNumber.setText("");
 		textFieldBankInfoEmail.setText("");
@@ -436,12 +458,12 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	}
 
 	public String[] getTableBankInfoColumnNames() {
-		return new String[] { "Реден Бр.", "Id", "Назив", "Адреса",
+		return new String[] { "Реден Бр.", "Id", "Назив", "Сметка", "Адреса",
 				"Телефонски број", "Email", "Забелешки" };
 	}
 
 	public int[] getTableBankInfoHiddenColumns() {
-		return new int[] { 1, 3, 5, 6 };
+		return new int[] { 1, 4, 5, 6, 7 };
 	}
 
 	public BankInfo getBankInfoFromBankInfoTable(String selectedRowBankInfoId) {
@@ -454,6 +476,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		String selectedRowBankInfoId = (String) table.getValueAt(row, 1);
 		BankInfo bankInfo = getBankInfoFromBankInfoTable(selectedRowBankInfoId);
 		bankInfo.setBankInfoName(textFieldBankInfoName.getText());
+		bankInfo.setBankInfoAccount(textFieldBankInfoAccount.getText());
 		bankInfo.setBankInfoAddress(textFieldBankInfoAddress.getText());
 		bankInfo.setBankInfoPhoneNumber(textFieldBankInfoPhoneNumber.getText());
 		bankInfo.setBankInfoEmail(textFieldBankInfoEmail.getText());
@@ -467,11 +490,11 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	public String getSelectedBankInfoTableRow() {
 		return selectedBankInfoTableRow;
 	}
-	
+
 	public boolean isEditMode() {
 		return editMode;
 	}
-	
+
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
 	}
@@ -484,6 +507,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	public void setBankInfoFieldsNonEditable() {
 		textFieldBankInfoName.setEditable(false);
 		textFieldBankInfoName.setBackground(nonEditableTextFieldColor);
+		textFieldBankInfoAccount.setEditable(false);
+		textFieldBankInfoAccount.setBackground(nonEditableTextFieldColor);
 		textFieldBankInfoAddress.setEditable(false);
 		textFieldBankInfoAddress.setBackground(nonEditableTextFieldColor);
 		textFieldBankInfoPhoneNumber.setEditable(false);
@@ -500,6 +525,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	public void setBankInfoFieldsEditable() {
 		textFieldBankInfoName.setEditable(true);
 		textFieldBankInfoName.setBackground(originalTextFieldColor);
+		textFieldBankInfoAccount.setEditable(true);
+		textFieldBankInfoAccount.setBackground(originalTextFieldColor);
 		textFieldBankInfoAddress.setEditable(true);
 		textFieldBankInfoAddress.setBackground(originalTextFieldColor);
 		textFieldBankInfoPhoneNumber.setEditable(true);
@@ -513,7 +540,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	}
 
 	public void setBankInfoTableButtonsEnabled() {
-		buttonNew.setEnabled(true); 
+		buttonNew.setEnabled(true);
 		if (table.getRowCount() > 0) {
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
@@ -534,7 +561,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
 	}
-	
+
 	public void setAllButtonsDisabled() {
 		buttonNew.setEnabled(false);
 		buttonEdit.setEnabled(false);
@@ -546,7 +573,7 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	public boolean validateBankInfoFields() {
 		boolean result = true;
 		result = result && (!"".equals(textFieldBankInfoName.getText()))
-				&& (!"".equals(textFieldBankInfoAddress.getText()));
+				&& (!"".equals(textFieldBankInfoAccount.getText()));
 		return result;
 	}
 
@@ -568,19 +595,19 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		bankInfoServiceImpl.deleteBankInfo(bankInfo);
 		String selectedRow = Integer.toString(row);
 		int intSelectedRow = Integer.parseInt(selectedRow);
-		
+
 		clearBankInfoFields();
 
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
-		
+
 		if (table.getRowCount() - 1 > intSelectedRow) {
 			setSelectedBankInfoTableRow(selectedRow);
 		}
-		
+
 		populateBankInfoTable();
-		
-		if (table.getRowCount() > 0) {			
+
+		if (table.getRowCount() > 0) {
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
 

@@ -42,8 +42,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 	private JLabel labelSupplierId;
 	private JLabel labelSupplierName;
 	private JLabel labelSupplierRegistryNumber;
-	private JLabel labelSupplierBankName;
-	private JLabel labelSupplierBankAccount;
 	private JLabel labelSupplierAddress;
 	private JLabel labelSupplierPhoneNumber;
 	private JLabel labelSupplierEmail;
@@ -54,8 +52,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 	private JTextField textFieldSupplierId;
 	private JTextField textFieldSupplierName;
 	private JTextField textFieldSupplierRegistryNumber;
-	private JTextField textFieldSupplierBankName;
-	private JTextField textFieldSupplierBankAccount;
 	private JTextField textFieldSupplierAddress;
 	private JTextField textFieldSupplierPhoneNumber;
 	private JTextField textFieldSupplierEmail;
@@ -116,6 +112,28 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		int y = 25;
 		
 		mandatoryTextFieldColor = new Color(204, 0, 0);
+		
+		labelSupplierUserName = new JLabel("Корисничко име:");
+		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierUserName.setForeground(mandatoryTextFieldColor);
+
+		textFieldSupplierUserName = new JTextField();
+		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
+		
+		y = y + height + spacing;
+
+		labelSupplierPassword = new JLabel("Корисничка лозинка:");
+		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierPassword.setForeground(mandatoryTextFieldColor);
+
+		textFieldSupplierPassword = new JTextField();
+		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
+		
+		y = y + height + spacing;
 
 		labelSupplierName = new JLabel("Име:");
 		labelSupplierName.setBounds(xLabel, y, weightLabel, height);
@@ -127,7 +145,7 @@ public class SupplierDialogImpl implements ISupplierDialog {
 
 		y = y + height + spacing;
 
-		labelSupplierRegistryNumber = new JLabel("Регистерски Број:");
+		labelSupplierRegistryNumber = new JLabel("Број за ДДВ:");
 		labelSupplierRegistryNumber.setBounds(xLabel, y, weightLabel, height);
 		labelSupplierRegistryNumber.setForeground(mandatoryTextFieldColor);
 
@@ -135,28 +153,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierRegistryNumber.setBounds(xTextField, y, weightTextField,
 				height);
 		textFieldSupplierRegistryNumber.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelSupplierBankName = new JLabel("Банка:");
-		labelSupplierBankName.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierBankName.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierBankName = new JTextField();
-		textFieldSupplierBankName.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierBankName.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelSupplierBankAccount = new JLabel("Банкарска Сметка:");
-		labelSupplierBankAccount.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierBankAccount.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierBankAccount = new JTextField();
-		textFieldSupplierBankAccount.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierBankAccount.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -188,28 +184,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		textFieldSupplierEmail.setBounds(xTextField, y, weightTextField, height);
 		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
 
-		y = y + height + spacing;
-
-		labelSupplierUserName = new JLabel("Корисничко име:");
-		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierUserName.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierUserName = new JTextField();
-		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
-		
-		y = y + height + spacing;
-
-		labelSupplierPassword = new JLabel("Лозинка:");
-		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierPassword.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierPassword = new JTextField();
-		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
-		
 		y = y + height + spacing;
 
 		labelSupplierAdditionalInfo = new JLabel("Забелешки:");
@@ -267,12 +241,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		panelFieldsContent.add(textFieldSupplierName);
 		panelFieldsContent.add(textFieldSupplierRegistryNumber);
 
-		panelFieldsContent.add(labelSupplierBankName);
-		panelFieldsContent.add(textFieldSupplierBankName);
-
-		panelFieldsContent.add(labelSupplierBankAccount);
-		panelFieldsContent.add(textFieldSupplierBankAccount);
-
 		panelFieldsContent.add(labelSupplierAddress);
 		panelFieldsContent.add(textFieldSupplierAddress);
 
@@ -314,8 +282,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		Supplier supplier = new Supplier();
 		supplier.setSupplierName(textFieldSupplierName.getText());
 		supplier.setSupplierRegistryNumber(textFieldSupplierRegistryNumber.getText());
-		supplier.setSupplierBankName(textFieldSupplierBankName.getText());
-		supplier.setSupplierBankAccount(textFieldSupplierBankAccount.getText());
 		supplier.setSupplierAddress(textFieldSupplierAddress.getText());
 		supplier.setSupplierPhoneNumber(textFieldSupplierPhoneNumber.getText());
 		supplier.setSupplierEmail(textFieldSupplierEmail.getText());
@@ -330,8 +296,6 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		boolean result = true;
 		result = result && (!"".equals(textFieldSupplierName.getText()))
 				&& (!"".equals(textFieldSupplierRegistryNumber.getText()))
-				&& (!"".equals(textFieldSupplierBankName.getText()))
-				&& (!"".equals(textFieldSupplierBankAccount.getText()))
 				&& (!"".equals(textFieldSupplierAddress.getText()))
 				&& (!"".equals(textFieldSupplierUserName.getText()))
 				&& (!"".equals(textFieldSupplierPassword.getText()));

@@ -33,6 +33,10 @@ public class Invoice implements Serializable {
 	@JoinColumn(name = "supplier")
 	@NotNull
 	private Supplier supplier;
+	@ManyToOne
+	@JoinColumn(name = "bankInfo")
+	@NotNull
+	private BankInfo bankInfo;
 	@NotNull(message = "Полето број на фактурата не е пополнето")
 	private String invoiceNumber;
 	private String invoiceSerialNumber;
@@ -76,6 +80,14 @@ public class Invoice implements Serializable {
 
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
+	}
+	
+	public BankInfo getBankInfo() {
+		return bankInfo;
+	}
+
+	public void setBankInfo(BankInfo bankInfo) {
+		this.bankInfo = bankInfo;
 	}
 
 	public String getInvoiceNumber() {

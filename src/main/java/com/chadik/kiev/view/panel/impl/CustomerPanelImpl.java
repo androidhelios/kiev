@@ -193,6 +193,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 			public void actionPerformed(ActionEvent e) {
 				setCustomerFieldsEditable();
 				setCustomerInfoButtonsEnabled();
+				setCustomerTableButtonsDisabled();
 				buttonNew.setEnabled(false);
 				setEditMode(true);
 				table.setEnabled(false);
@@ -310,6 +311,7 @@ public class CustomerPanelImpl implements ICustomerPanel {
 				populateCustomerFields(customer);
 				setCustomerFieldsNonEditable();
 				setCustomerInfoButtonsDisabled();
+				setCustomerTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
 			}

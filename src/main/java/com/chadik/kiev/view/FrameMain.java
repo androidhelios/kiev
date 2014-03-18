@@ -1,6 +1,7 @@
 package com.chadik.kiev.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ public class FrameMain {
 	private JMenuBar menuBar;
 
 	private JMenu menuFile;
+	private JMenu menuInvoice;
 
 	private JMenuItem menuItemInvoice;
 	private JMenuItem menuItemSupplier;
@@ -68,7 +70,7 @@ public class FrameMain {
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setPreferredSize(new Dimension(1000, 600));
 
-		mainFrame.setTitle("ПСРФ");
+		mainFrame.setTitle("ПСФ");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setContentPane(contentPane);
@@ -77,10 +79,14 @@ public class FrameMain {
 
 		menuFile = new JMenu("Датотека");
 		menuFile.setEnabled(false);
+		
+		menuInvoice = new JMenu("ПСФ");
+		menuInvoice.setEnabled(false);
 
 		menuBar.add(menuFile);
-
-		menuItemInvoice = new JMenuItem("Увид на фактури");
+		menuBar.add(menuInvoice);
+		
+		menuItemInvoice = new JMenuItem("     Фактури");
 		menuItemInvoice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane,
@@ -90,7 +96,7 @@ public class FrameMain {
 			}
 		});
 
-		menuItemSupplier = new JMenuItem("Увид на корисници");
+		menuItemSupplier = new JMenuItem("     Корисник");
 		menuItemSupplier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane,
@@ -100,7 +106,7 @@ public class FrameMain {
 			}
 		});
 
-		menuItemProduct = new JMenuItem("Увид на артикли");
+		menuItemProduct = new JMenuItem("     Артикли");
 		menuItemProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane,
@@ -110,7 +116,7 @@ public class FrameMain {
 			}
 		});
 
-		menuItemCustomer = new JMenuItem("Увид на клиенти");
+		menuItemCustomer = new JMenuItem("     Клиенти");
 		menuItemCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane,
@@ -120,7 +126,7 @@ public class FrameMain {
 			}
 		});
 
-		menuItemBankInfo = new JMenuItem("Увид на сметки");
+		menuItemBankInfo = new JMenuItem("     Сметки");
 		menuItemBankInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PanelUtil.switchPanel(mainFrame, contentPane,
@@ -130,19 +136,22 @@ public class FrameMain {
 			}
 		});
 
-		menuItemExit = new JMenuItem("Излез");
+		menuItemExit = new JMenuItem("     Излез");
+		menuItemExit.setForeground(new Color(204, 0, 0));
 		menuItemExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 
-		menuFile.add(menuItemInvoice);
-		menuFile.add(menuItemSupplier);
-		menuFile.add(menuItemProduct);
-		menuFile.add(menuItemCustomer);
-		menuFile.add(menuItemBankInfo);
-		menuFile.addSeparator();
+		menuInvoice.add(menuItemInvoice);
+		menuInvoice.add(menuItemCustomer);
+		menuInvoice.add(menuItemProduct);
+		menuInvoice.add(menuItemBankInfo);
+		menuInvoice.addSeparator();
+		menuInvoice.add(menuItemSupplier);
+		
+//		menuFile.addSeparator();
 		menuFile.add(menuItemExit);
 
 		supplierPanelImpl.initSupplierPanel();
@@ -163,6 +172,7 @@ public class FrameMain {
 
 	public void clearContentPane() {
 		menuFile.setEnabled(true);
+		menuInvoice.setEnabled(true);
 		contentPane.removeAll();
 		contentPane.validate();
 		contentPane.repaint();

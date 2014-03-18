@@ -18,5 +18,6 @@
     <mapping class="com.chadik.kiev.model.OrderItem" />
     <mapping class="com.chadik.kiev.model.Product" />
     <mapping class="com.chadik.kiev.model.Supplier" />
+    <mapping class="com.chadik.kiev.model.BankInfo" />
 </session-factory>
 </hibernate-configuration>

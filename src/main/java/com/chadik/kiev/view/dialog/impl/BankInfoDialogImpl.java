@@ -42,6 +42,7 @@ public class BankInfoDialogImpl implements IBankInfoDialog {
 
 	private JLabel labelBankInfoId;
 	private JLabel labelBankInfoName;
+	private JLabel labelBankInfoAccount;
 	private JLabel labelBankInfoAddress;
 	private JLabel labelBankInfoPhoneNumber;
 	private JLabel labelBankInfoEmail;
@@ -49,6 +50,7 @@ public class BankInfoDialogImpl implements IBankInfoDialog {
 
 	private JTextField textFieldBankInfoId;
 	private JTextField textFieldBankInfoName;
+	private JTextField textFieldBankInfoAccount;
 	private JTextField textFieldBankInfoAddress;
 	private JTextField textFieldBankInfoPhoneNumber;
 	private JTextField textFieldBankInfoEmail;
@@ -118,10 +120,19 @@ public class BankInfoDialogImpl implements IBankInfoDialog {
 		textFieldBankInfoName.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
+		
+		labelBankInfoAccount = new JLabel("Сметка:");
+		labelBankInfoAccount.setBounds(xLabel, y, weightLabel, height);
+		labelBankInfoAccount.setForeground(mandatoryTextFieldColor);
+
+		textFieldBankInfoAccount = new JTextField();
+		textFieldBankInfoAccount.setBounds(xTextField, y, weightTextField, height);
+		textFieldBankInfoAccount.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
 
 		labelBankInfoAddress = new JLabel("Адреса:");
 		labelBankInfoAddress.setBounds(xLabel, y, weightLabel, height);
-		labelBankInfoAddress.setForeground(mandatoryTextFieldColor);
 
 		textFieldBankInfoAddress = new JTextField();
 		textFieldBankInfoAddress.setBounds(xTextField, y, weightTextField,
@@ -202,6 +213,9 @@ public class BankInfoDialogImpl implements IBankInfoDialog {
 
 		panelFieldsContent.add(labelBankInfoName);
 		panelFieldsContent.add(textFieldBankInfoName);
+		
+		panelFieldsContent.add(labelBankInfoAccount);
+		panelFieldsContent.add(textFieldBankInfoAccount);
 
 		panelFieldsContent.add(labelBankInfoAddress);
 		panelFieldsContent.add(textFieldBankInfoAddress);
@@ -237,6 +251,7 @@ public class BankInfoDialogImpl implements IBankInfoDialog {
 	public BankInfo getBankInfoFromBankInfoFields() {
 		BankInfo bankInfo = new BankInfo();
 		bankInfo.setBankInfoName(textFieldBankInfoName.getText());
+		bankInfo.setBankInfoAccount(textFieldBankInfoAccount.getText());
 		bankInfo.setBankInfoAddress(textFieldBankInfoAddress.getText());
 		bankInfo.setBankInfoPhoneNumber(textFieldBankInfoPhoneNumber.getText());
 		bankInfo.setBankInfoEmail(textFieldBankInfoEmail.getText());
@@ -249,7 +264,7 @@ public class BankInfoDialogImpl implements IBankInfoDialog {
 	public boolean validateBankInfoFields() {
 		boolean result = true;
 		result = result && (!"".equals(textFieldBankInfoName.getText()))
-				&& (!"".equals(textFieldBankInfoAddress.getText()));
+				&& (!"".equals(textFieldBankInfoAccount.getText()));
 		return result;
 	}
 

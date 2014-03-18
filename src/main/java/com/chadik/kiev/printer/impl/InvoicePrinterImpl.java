@@ -143,8 +143,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellSupplierInfoAccountTextBankName);
 
 			PdfPCell cellSupplierInfoAccountTextBankAccountNumberValue = new PdfPCell(
-					new Phrase(invoice.getSupplier()
-							.getSupplierRegistryNumber(), fontInfoText));
+					new Phrase(invoice.getBankInfo().getBankInfoAccount(), fontInfoText));
 			cellSupplierInfoAccountTextBankAccountNumberValue
 					.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellSupplierInfoAccountTextBankAccountNumberValue
@@ -155,7 +154,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellSupplierInfoAccountTextBankAccountNumberValue);
 
 			PdfPCell cellSupplierInfoAccountTextRegistryNumberValue = new PdfPCell(
-					new Phrase(invoice.getSupplier().getSupplierBankAccount(),
+					new Phrase(invoice.getSupplier().getSupplierRegistryNumber(),
 							fontInfoText));
 			cellSupplierInfoAccountTextRegistryNumberValue
 					.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -166,7 +165,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellSupplierInfoAccountTextRegistryNumberValue);
 
 			PdfPCell cellSupplierInfoAccountTextBankNameValue = new PdfPCell(
-					new Phrase(invoice.getSupplier().getSupplierBankName(),
+					new Phrase(invoice.getBankInfo().getBankInfoName(),
 							fontInfoText));
 			cellSupplierInfoAccountTextBankNameValue
 					.setHorizontalAlignment(Element.ALIGN_LEFT);

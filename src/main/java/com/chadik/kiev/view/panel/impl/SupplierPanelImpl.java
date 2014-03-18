@@ -64,8 +64,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	private JLabel labelSupplierId;
 	private JLabel labelSupplierName;
 	private JLabel labelSupplierRegistryNumber;
-	private JLabel labelSupplierBankName;
-	private JLabel labelSupplierBankAccount;
 	private JLabel labelSupplierAddress;
 	private JLabel labelSupplierPhoneNumber;
 	private JLabel labelSupplierEmail;
@@ -76,8 +74,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	private JTextField textFieldSupplierId;
 	private JTextField textFieldSupplierName;
 	private JTextField textFieldSupplierRegistryNumber;
-	private JTextField textFieldSupplierBankName;
-	private JTextField textFieldSupplierBankAccount;
 	private JTextField textFieldSupplierAddress;
 	private JTextField textFieldSupplierPhoneNumber;
 	private JTextField textFieldSupplierEmail;
@@ -204,6 +200,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 			public void actionPerformed(ActionEvent e) {
 				setSupplierFieldsEditable();
 				setSupplierInfoButtonsEnabled();
+				setSupplierTableButtonsDisabled();
 				setEditMode(true);
 				table.setEnabled(false);
 			}
@@ -221,6 +218,28 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		int xLabel = 10;
 		int xTextField = xLabel + weightLabel + spacing;
 		int y = 25;
+		
+		labelSupplierUserName = new JLabel("Корисничко име:");
+		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierUserName.setForeground(mandatoryTextFieldColor);
+
+		textFieldSupplierUserName = new JTextField();
+		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+
+		labelSupplierPassword = new JLabel("Корисничка лозинка:");
+		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
+		labelSupplierPassword.setForeground(mandatoryTextFieldColor);
+
+		textFieldSupplierPassword = new JTextField();
+		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
+				height);
+		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
 
 		labelSupplierName = new JLabel("Име:");
 		labelSupplierName.setBounds(xLabel, y, weightLabel, height);
@@ -235,7 +254,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		y = y + height + spacing;
 
-		labelSupplierRegistryNumber = new JLabel("Регистерски Број:");
+		labelSupplierRegistryNumber = new JLabel("Број за ДДВ:");
 		labelSupplierRegistryNumber.setBounds(xLabel, y, weightLabel, height);
 		labelSupplierRegistryNumber.setForeground(mandatoryTextFieldColor);
 
@@ -243,28 +262,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierRegistryNumber.setBounds(xTextField, y,
 				weightTextField, height);
 		textFieldSupplierRegistryNumber.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelSupplierBankName = new JLabel("Банка:");
-		labelSupplierBankName.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierBankName.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierBankName = new JTextField();
-		textFieldSupplierBankName.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierBankName.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelSupplierBankAccount = new JLabel("Банкарска Сметка:");
-		labelSupplierBankAccount.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierBankAccount.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierBankAccount = new JTextField();
-		textFieldSupplierBankAccount.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierBankAccount.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -296,28 +293,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierEmail
 				.setBounds(xTextField, y, weightTextField, height);
 		textFieldSupplierEmail.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelSupplierUserName = new JLabel("Корисничко Име:");
-		labelSupplierUserName.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierUserName.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierUserName = new JTextField();
-		textFieldSupplierUserName.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierUserName.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelSupplierPassword = new JLabel("Лозинка:");
-		labelSupplierPassword.setBounds(xLabel, y, weightLabel, height);
-		labelSupplierPassword.setForeground(mandatoryTextFieldColor);
-
-		textFieldSupplierPassword = new JTextField();
-		textFieldSupplierPassword.setBounds(xTextField, y, weightTextField,
-				height);
-		textFieldSupplierPassword.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -370,6 +345,7 @@ public class SupplierPanelImpl implements ISupplierPanel {
 				populateSupplierFields(supplier);
 				setSupplierFieldsNonEditable();
 				setSupplierInfoButtonsDisabled();
+				setSupplierTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
 			}
@@ -388,25 +364,25 @@ public class SupplierPanelImpl implements ISupplierPanel {
 				BorderLayout.SOUTH);
 
 		panelTableHolder.add(panelTableHolderContent);
+		
+		panelInfoHolderContentInfo.add(labelSupplierUserName,
+				firstLabelConstrains());
+		panelInfoHolderContentInfo.add(textFieldSupplierUserName,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfo.add(labelSupplierPassword,
+				labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldSupplierPassword,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelSupplierName,
-				firstLabelConstrains());
+				labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierName,
 				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelSupplierRegistryNumber,
 				labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierRegistryNumber,
-				textFieldConstraints());
-
-		panelInfoHolderContentInfo.add(labelSupplierBankName,
-				labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierBankName,
-				textFieldConstraints());
-
-		panelInfoHolderContentInfo.add(labelSupplierBankAccount,
-				labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierBankAccount,
 				textFieldConstraints());
 
 		panelInfoHolderContentInfo
@@ -421,16 +397,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 
 		panelInfoHolderContentInfo.add(labelSupplierEmail, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldSupplierEmail,
-				textFieldConstraints());
-
-		panelInfoHolderContentInfo.add(labelSupplierUserName,
-				labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierUserName,
-				textFieldConstraints());
-
-		panelInfoHolderContentInfo.add(labelSupplierPassword,
-				labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldSupplierPassword,
 				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelSupplierAdditionalInfo,
@@ -470,12 +436,11 @@ public class SupplierPanelImpl implements ISupplierPanel {
 					supplier.getSupplierId().toString(),
 					supplier.getSupplierName(),
 					supplier.getSupplierRegistryNumber(),
-					supplier.getSupplierBankName(),
-					supplier.getSupplierBankAccount(),
 					supplier.getSupplierAddress(),
 					supplier.getSupplierPhoneNumber(),
 					supplier.getSupplierEmail(),
 					supplier.getSupplierAdditionalInfo() });
+			
 		}
 
 		if (table.getRowCount() > 0) {
@@ -512,8 +477,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierName.setText(supplier.getSupplierName());
 		textFieldSupplierRegistryNumber.setText(supplier
 				.getSupplierRegistryNumber());
-		textFieldSupplierBankName.setText(supplier.getSupplierBankName());
-		textFieldSupplierBankAccount.setText(supplier.getSupplierBankAccount());
 		textFieldSupplierAddress.setText(supplier.getSupplierAddress());
 		textFieldSupplierPhoneNumber.setText(supplier.getSupplierPhoneNumber());
 		textFieldSupplierEmail.setText(supplier.getSupplierEmail());
@@ -524,12 +487,12 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	}
 
 	public int[] getTableSupplierHiddenColumns() {
-		return new int[] { 1, 3, 4, 5, 6, 8, 9 };
+		return new int[] { 1, 4, 5, 6, 7 };
 	}
 
 	public String[] getTableSupplierColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Регистарски Број",
-				"Банка", "Банкарска Сметка", "Адреса", "Телефонски број",
+				"Адреса", "Телефонски број",
 				"Email", "Забелешки" };
 	}
 
@@ -545,8 +508,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		supplier.setSupplierName(textFieldSupplierName.getText());
 		supplier.setSupplierRegistryNumber(textFieldSupplierRegistryNumber
 				.getText());
-		supplier.setSupplierBankName(textFieldSupplierBankName.getText());
-		supplier.setSupplierBankAccount(textFieldSupplierBankAccount.getText());
 		supplier.setSupplierAddress(textFieldSupplierAddress.getText());
 		supplier.setSupplierPhoneNumber(textFieldSupplierPhoneNumber.getText());
 		supplier.setSupplierEmail(textFieldSupplierEmail.getText());
@@ -582,10 +543,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierRegistryNumber.setEditable(false);
 		textFieldSupplierRegistryNumber
 				.setBackground(nonEditableTextFieldColor);
-		textFieldSupplierBankName.setEditable(false);
-		textFieldSupplierBankName.setBackground(nonEditableTextFieldColor);
-		textFieldSupplierBankAccount.setEditable(false);
-		textFieldSupplierBankAccount.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierAddress.setEditable(false);
 		textFieldSupplierAddress.setBackground(nonEditableTextFieldColor);
 		textFieldSupplierPhoneNumber.setEditable(false);
@@ -608,10 +565,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		textFieldSupplierName.setBackground(originalTextFieldColor);
 		textFieldSupplierRegistryNumber.setEditable(true);
 		textFieldSupplierRegistryNumber.setBackground(originalTextFieldColor);
-		textFieldSupplierBankName.setEditable(true);
-		textFieldSupplierBankName.setBackground(originalTextFieldColor);
-		textFieldSupplierBankAccount.setEditable(true);
-		textFieldSupplierBankAccount.setBackground(originalTextFieldColor);
 		textFieldSupplierAddress.setEditable(true);
 		textFieldSupplierAddress.setBackground(originalTextFieldColor);
 		textFieldSupplierPhoneNumber.setEditable(true);
@@ -655,8 +608,6 @@ public class SupplierPanelImpl implements ISupplierPanel {
 		boolean result = true;
 		result = result && (!"".equals(textFieldSupplierName.getText()))
 				&& (!"".equals(textFieldSupplierRegistryNumber.getText()))
-				&& (!"".equals(textFieldSupplierBankName.getText()))
-				&& (!"".equals(textFieldSupplierBankAccount.getText()))
 				&& (!"".equals(textFieldSupplierAddress.getText()))
 				&& (!"".equals(textFieldSupplierUserName.getText()))
 				&& (!"".equals(textFieldSupplierPassword.getText()));

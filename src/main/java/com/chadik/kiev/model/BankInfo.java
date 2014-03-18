@@ -31,7 +31,7 @@ public class BankInfo implements Serializable {
 	private String bankInfoPhoneNumber;
 	private String bankInfoEmail;
 	private String bankInfoAdditionalInfo;
-	@OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bankInfo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	@Valid
 	private List<Invoice> invoices = new ArrayList<Invoice>();
