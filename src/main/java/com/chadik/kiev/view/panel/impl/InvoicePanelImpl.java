@@ -832,7 +832,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 			}
 		});
 
-		ImageIcon iconButtonAddProduct = new ImageIcon("img/text-plus-icon.png");
+		ImageIcon iconButtonAddProduct = new ImageIcon("img/plus.png");
 
 		buttonAddProduct = new JButton(iconButtonAddProduct);
 		// buttonAddProduct.setBackground(new Color(224, 224, 224));
@@ -852,7 +852,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		});
 
 		ImageIcon iconButtonDeleteProduct = new ImageIcon(
-				"img/Math-minus-icon.png");
+				"img/minus.png");
 
 		buttonDeleteProduct = new JButton(iconButtonDeleteProduct);
 		// buttonDeleteProduct.setBackground(new Color(224, 224, 224));

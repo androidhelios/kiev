@@ -70,7 +70,7 @@ public class FrameMain {
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setPreferredSize(new Dimension(1000, 600));
 
-		mainFrame.setTitle("ПСФ");
+		mainFrame.setTitle("ПСФ - в(0.0.1)");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setContentPane(contentPane);
