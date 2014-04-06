@@ -7,6 +7,9 @@ import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -17,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,7 +63,11 @@ public class ProductDialogImpl implements IProductDialog {
 	private JButton buttonSave;
 	private JButton buttonCancel;
 
+	private DecimalFormat decimalFormat;
+
+	private Color nonEditableTextFieldColor;
 	private Color mandatoryTextFieldColor;
+	private Color originalTextFieldColor;
 
 	@Autowired
 	private IProductService productServiceImpl;
@@ -72,6 +81,14 @@ public class ProductDialogImpl implements IProductDialog {
 		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нов Артикл");
 		dialog.setResizable(false);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+			}
+
+			public void windowClosing(WindowEvent e) {
+				productPanelImpl.setProductTableButtonsEnabled();
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
@@ -107,6 +124,7 @@ public class ProductDialogImpl implements IProductDialog {
 		int y = 25;
 
 		mandatoryTextFieldColor = new Color(204, 0, 0);
+		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		labelProductName = new JLabel("Име:");
 		labelProductName.setBounds(xLabel, y, weightLabel, height);
@@ -135,27 +153,70 @@ public class ProductDialogImpl implements IProductDialog {
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTax.getDocument().addDocumentListener(
+				new DocumentListener() {
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+				});
 		textFieldProductTax.setMargin(new Insets(2, 2, 2, 2));
-
-		y = y + height + spacing;
-
-		labelProductPrice = new JLabel("Цена без данок:");
-		labelProductPrice.setBounds(xLabel, y, weightLabel, height);
-		labelProductPrice.setForeground(mandatoryTextFieldColor);
-
-		textFieldProductPrice = new JTextField();
-		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
-		textFieldProductPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
 		labelProductTaxPrice = new JLabel("Цена со данок:");
 		labelProductTaxPrice.setBounds(xLabel, y, weightLabel, height);
+		labelProductTaxPrice.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductTaxPrice = new JTextField();
 		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldProductTaxPrice.getDocument().addDocumentListener(
+				new DocumentListener() {
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+				});
 		textFieldProductTaxPrice.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+
+		labelProductPrice = new JLabel("Цена без данок:");
+		labelProductPrice.setBounds(xLabel, y, weightLabel, height);
+		// labelProductPrice.setForeground(mandatoryTextFieldColor);
+
+		textFieldProductPrice = new JTextField();
+		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductPrice.setEditable(false);
+		textFieldProductPrice.setBackground(nonEditableTextFieldColor);
+		textFieldProductPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -182,6 +243,9 @@ public class ProductDialogImpl implements IProductDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (validateProductFields()) {
 					saveProductAndDispose();
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(),
+							"Артиклот е запишан", "Информација",
+							JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					dialog.setVisible(false);
 
@@ -260,17 +324,43 @@ public class ProductDialogImpl implements IProductDialog {
 		return product;
 	}
 
+	public void calculateProductPrice(String productTax, String productPrice) {
+		decimalFormat = new DecimalFormat("#.##");
+
+		if (!"".equals(textFieldProductTax.getText())
+				&& isValidDecimal(textFieldProductTax.getText())
+				&& !"".equals(productPrice) && isValidDecimal(productPrice)) {
+
+			double doubleProductTax = Double.parseDouble(productTax);
+			double doubleProductPrice = Double.parseDouble(productPrice
+					.replaceAll(",", "."));
+
+			double percentageResult = (Double) (doubleProductPrice * (doubleProductTax / 100));
+
+			double productPriceResult = doubleProductPrice - percentageResult;
+
+			textFieldProductPrice.setText(decimalFormat
+					.format(productPriceResult));
+		} else {
+			textFieldProductPrice.setText("");
+		}
+
+	}
+
 	public boolean validateProductFields() {
 		boolean result = true;
 		result = result
 				&& (!"".equals(textFieldProductName.getText()))
 				&& (!"".equals(textFieldProductMeasurement.getText()))
-				&& (!"".equals(textFieldProductTax.getText())
-						&& (isInt(textFieldProductTax.getText()) || isValidDecimal(textFieldProductTax
-							.getText())))
-				&& (!"".equals(textFieldProductPrice.getText())
-						&& (isInt(textFieldProductPrice.getText()) || isValidDecimal(textFieldProductPrice
-							.getText())));
+				&& (!"".equals(textFieldProductTax.getText()) && (isInt(textFieldProductTax
+						.getText()) || isValidDecimal(textFieldProductTax
+						.getText())))
+				&& (!"".equals(textFieldProductPrice.getText()) && (isInt(textFieldProductPrice
+						.getText()) || isValidDecimal(textFieldProductPrice
+						.getText())))
+				&& (!"".equals(textFieldProductTaxPrice.getText()) && (isInt(textFieldProductTaxPrice
+						.getText()) || isValidDecimal(textFieldProductTaxPrice
+						.getText())));
 		return result;
 	}
 

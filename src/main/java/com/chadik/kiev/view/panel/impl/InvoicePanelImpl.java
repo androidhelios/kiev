@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,14 +42,17 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.BankInfo;
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Invoice;
+import com.chadik.kiev.model.OrderItem;
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.printer.IInvoicePrinter;
 import com.chadik.kiev.service.IBankInfoService;
 import com.chadik.kiev.service.ICustomerService;
 import com.chadik.kiev.service.IInvoiceService;
 import com.chadik.kiev.service.ISupplierService;
+import com.chadik.kiev.util.HibernateUtil;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.IInvoiceDialog;
 import com.chadik.kiev.view.dialog.IOrderItemDialog;
 import com.chadik.kiev.view.panel.IInvoicePanel;
@@ -163,6 +167,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private String selectedInvoiceTableRow;
 
 	private boolean editMode;
+	
+	private Invoice tempInvoice;
 
 	private Map<Integer, Integer> mapSuppliers;
 	private Map<Integer, Integer> mapCustomers;
@@ -170,6 +176,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private Map<Integer, String> mapPaymentsInfo;
 
 	private List<Invoice> invoices;
+	private List<OrderItem> tempOrderItems;
 
 	@Autowired
 	private IInvoiceService invoiceServiceImpl;
@@ -187,6 +194,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	private IOrderItemDialog orderItemDialogImpl;
 	@Autowired
 	private IInvoicePrinter documentPrinterImpl;
+	@Autowired
+	private FrameMain frameMain;
 
 	@Override
 	public JPanel initInvoicePanel() {
@@ -330,6 +339,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				invoiceDialogImpl.initInvoiceDialog();
 			}
 		});
+		
+		tempOrderItems = new ArrayList<OrderItem>();
 
 		buttonEdit = new JButton("Измени");
 		buttonEdit.setPreferredSize(new Dimension(100, 25));
@@ -353,6 +364,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteInvoice();
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Фактурата е избришана",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -803,6 +816,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 					setInvoiceInfoPrintButtonEnabled();
 					setEditMode(false);
 					table.setEnabled(true);
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е запишана",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					Object[] options = { "OK" };
 					int input = JOptionPane.showOptionDialog(null,
@@ -829,6 +844,8 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				setInvoiceTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е откажана",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -868,6 +885,10 @@ public class InvoicePanelImpl implements IInvoicePanel {
 						.valueOf(bigDecimalSelectedRowInvoiceId.intValue());
 				orderItemPanelImpl.setInvoiceId(intSelectedRowInvoiceId);
 				orderItemPanelImpl.deleteOrderItem();
+				orderItemPanelImpl.populateOrderItemTable();
+				setInvoiceInfoButtonsEnabled();				
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Артиклот е избришан",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -881,7 +902,7 @@ public class InvoicePanelImpl implements IInvoicePanel {
 				Invoice invoice = getInvoiceFromInvoiceTable(selectedRowInvoiceId);
 				documentPrinterImpl.setInvoice(invoice);
 				documentPrinterImpl.initInvoicePrinter();
-				JOptionPane.showMessageDialog(null, "Фактурата е испечатена",
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Фактурата е испечатена",
 						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -1273,12 +1294,18 @@ public class InvoicePanelImpl implements IInvoicePanel {
 		textFieldInvoiceDeliveryDate.setText(invoice.getInvoiceDeliveryDate());
 		textFieldInvoiceDeliveryNumber.setText(invoice
 				.getInvoiceDeliveryNumber());
+		if (invoice.getOrderItems().size() > 0) {
 		textFieldInvoiceTotalQuantityPrice.setText(invoice
 				.getInvoiceTotalPrice());
 		textFieldInvoiceTotalQuantityPriceWithoutTax.setText(invoice
 				.getInvoiceTotalTax());
 		textFieldInvoiceTotalQuantityTax.setText(invoice
 				.getInvoiceTotalPriceTax());
+		} else {
+			textFieldInvoiceTotalQuantityPrice.setText("0,00");
+			textFieldInvoiceTotalQuantityPriceWithoutTax.setText("0,00");
+			textFieldInvoiceTotalQuantityTax.setText("0,00");
+		}
 		textFieldInvoiceCurrency.setText(invoice.getInvoiceCurrency());
 		comboBoxInvoicePaymentInfo
 				.setSelectedIndex(getSelectedInvoicePaymentInfoComboBoxIndex(invoice));
@@ -1641,10 +1668,14 @@ public class InvoicePanelImpl implements IInvoicePanel {
 	}
 
 	public void setInvoiceInfoButtonsEnabled() {
+		buttonDeleteProduct.setEnabled(false);
 		buttonSave.setEnabled(true);
 		buttonCancel.setEnabled(true);
 		buttonAddProduct.setEnabled(true);
-		buttonDeleteProduct.setEnabled(true);
+		if (orderItemPanelImpl.getOrderItemTable().getRowCount() > 0) {
+			buttonDeleteProduct.setEnabled(true);
+		}
+		
 	}
 
 	public void setInvoiceInfoButtonsDisabled() {
@@ -1667,8 +1698,11 @@ public class InvoicePanelImpl implements IInvoicePanel {
 
 	@Override
 	public void setProductButtonsEnabled() {
-		buttonAddProduct.setEnabled(true);
-		buttonDeleteProduct.setEnabled(true);
+		buttonAddProduct.setEnabled(true);	
+		buttonDeleteProduct.setEnabled(false);
+		if (orderItemPanelImpl.getOrderItemTable().getRowCount() > 0) {
+			buttonDeleteProduct.setEnabled(true);
+		}
 	}
 
 	public void setInvoicePrintEnabled() {

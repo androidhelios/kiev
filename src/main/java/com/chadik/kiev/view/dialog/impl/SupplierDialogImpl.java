@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -76,6 +78,14 @@ public class SupplierDialogImpl implements ISupplierDialog {
 		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нов Корисник");
 		dialog.setResizable(false);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+			}
+
+			public void windowClosing(WindowEvent e) {
+				supplierPanelImpl.setSupplierTableButtonsEnabled();
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
@@ -209,6 +219,8 @@ public class SupplierDialogImpl implements ISupplierDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (validateSupplierFields()) {
 					saveSupplierAndDispose();
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Корисникот е запишан",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					dialog.setVisible(false);
 

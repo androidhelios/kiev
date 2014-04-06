@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -28,6 +29,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.IProductService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.IProductDialog;
 import com.chadik.kiev.view.panel.IProductPanel;
 
@@ -83,12 +87,14 @@ public class ProductPanelImpl implements IProductPanel {
 	private JButton buttonSave;
 	private JButton buttonCancel;
 
+	private DecimalFormat decimalFormat;
+
 	private Color originalTextFieldColor;
 	private Color nonEditableTextFieldColor;
 	private Color mandatoryTextFieldColor;
 
 	private String selectedProductTableRow;
-	
+
 	private boolean editMode;
 
 	private List<Product> products;
@@ -97,6 +103,8 @@ public class ProductPanelImpl implements IProductPanel {
 	private IProductService productServiceImpl;
 	@Autowired
 	private IProductDialog productDialogImpl;
+	@Autowired
+	private FrameMain frameMain;
 
 	@Override
 	public JPanel initProductPanel() {
@@ -155,11 +163,12 @@ public class ProductPanelImpl implements IProductPanel {
 				if (isEditMode()) {
 					table.setEnabled(false);
 				} else {
-				int row = table.getSelectedRow();
-				String selectedRowProductId = (String) table.getValueAt(row, 1);
-				Product product = getProductFromProductTable(selectedRowProductId);
-				populateProductFields(product);
-				setProductInfoButtonsDisabled();
+					int row = table.getSelectedRow();
+					String selectedRowProductId = (String) table.getValueAt(
+							row, 1);
+					Product product = getProductFromProductTable(selectedRowProductId);
+					populateProductFields(product);
+					setProductInfoButtonsDisabled();
 				}
 			}
 		});
@@ -175,7 +184,7 @@ public class ProductPanelImpl implements IProductPanel {
 		scrollPaneTable = new JScrollPane(table);
 
 		verticalScrollBar = scrollPaneTable.getVerticalScrollBar();
-		
+
 		mandatoryTextFieldColor = new Color(204, 0, 0);
 
 		buttonNew = new JButton("Креирај");
@@ -208,6 +217,9 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteProduct();
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(),
+						"Артиклот е избришан", "Информација",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -249,26 +261,69 @@ public class ProductPanelImpl implements IProductPanel {
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTax.getDocument().addDocumentListener(
+				new DocumentListener() {
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+				});
 		textFieldProductTax.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
 		labelProductPrice = new JLabel("Цена без данок:");
 		labelProductPrice.setBounds(xLabel, y, weightLabel, height);
-		labelProductPrice.setForeground(mandatoryTextFieldColor);
+		// labelProductPrice.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductPrice = new JTextField();
 		textFieldProductPrice.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductPrice.setEditable(false);
+		textFieldProductPrice.setBackground(nonEditableTextFieldColor);
 		textFieldProductPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
 		labelProductTaxPrice = new JLabel("Цена со данок:");
 		labelProductTaxPrice.setBounds(xLabel, y, weightLabel, height);
+		labelProductTaxPrice.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductTaxPrice = new JTextField();
 		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldProductTaxPrice.getDocument().addDocumentListener(
+				new DocumentListener() {
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+				});
 		textFieldProductTaxPrice.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -299,6 +354,9 @@ public class ProductPanelImpl implements IProductPanel {
 					saveProduct();
 					setEditMode(false);
 					table.setEnabled(true);
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(),
+							"Промената е запишана", "Информација",
+							JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					Object[] options = { "OK" };
 					int input = JOptionPane.showOptionDialog(null,
@@ -324,6 +382,9 @@ public class ProductPanelImpl implements IProductPanel {
 				setProductTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(),
+						"Промената е откажана", "Информација",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -355,13 +416,13 @@ public class ProductPanelImpl implements IProductPanel {
 		panelInfoHolderContentInfo.add(textFieldProductTax,
 				textFieldConstraints());
 
-		panelInfoHolderContentInfo.add(labelProductPrice, labelConstraints());
-		panelInfoHolderContentInfo.add(textFieldProductPrice,
-				textFieldConstraints());
-
 		panelInfoHolderContentInfo
 				.add(labelProductTaxPrice, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldProductTaxPrice,
+				textFieldConstraints());
+
+		panelInfoHolderContentInfo.add(labelProductPrice, labelConstraints());
+		panelInfoHolderContentInfo.add(textFieldProductPrice,
 				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelProductAdditionalInfo,
@@ -453,6 +514,29 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductAdditionalInfo.setText("");
 	}
 
+	public void calculateProductPrice(String productTax, String productPrice) {
+		decimalFormat = new DecimalFormat("#.##");
+
+		if (!"".equals(textFieldProductTax.getText())
+				&& isValidDecimal(textFieldProductTax.getText())
+				&& !"".equals(productPrice) && isValidDecimal(productPrice)) {
+
+			double doubleProductTax = Double.parseDouble(productTax);
+			double doubleProductPrice = Double.parseDouble(productPrice
+					.replaceAll(",", "."));
+
+			double percentageResult = (Double) (doubleProductPrice * (doubleProductTax / 100));
+
+			double productPriceResult = doubleProductPrice - percentageResult;
+
+			textFieldProductPrice.setText(decimalFormat
+					.format(productPriceResult));
+		} else {
+			textFieldProductPrice.setText("");
+		}
+
+	}
+
 	public String[] getTableProductColumnNames() {
 		return new String[] { "Реден Бр.", "Id", "Назив", "Мерна Единица",
 				"Данок", "Цена без данок", "Цена со данок", "Забелешки" };
@@ -486,11 +570,11 @@ public class ProductPanelImpl implements IProductPanel {
 	public String getSelectedProductTableRow() {
 		return selectedProductTableRow;
 	}
-	
+
 	public boolean isEditMode() {
 		return editMode;
 	}
-	
+
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
 	}
@@ -507,8 +591,8 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductMeasurement.setBackground(nonEditableTextFieldColor);
 		textFieldProductTax.setEditable(false);
 		textFieldProductTax.setBackground(nonEditableTextFieldColor);
-		textFieldProductPrice.setEditable(false);
-		textFieldProductPrice.setBackground(nonEditableTextFieldColor);
+		// textFieldProductPrice.setEditable(false);
+		// textFieldProductPrice.setBackground(nonEditableTextFieldColor);
 		textFieldProductTaxPrice.setEditable(false);
 		textFieldProductTaxPrice.setBackground(nonEditableTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(false);
@@ -524,8 +608,8 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductMeasurement.setBackground(originalTextFieldColor);
 		textFieldProductTax.setEditable(true);
 		textFieldProductTax.setBackground(originalTextFieldColor);
-		textFieldProductPrice.setEditable(true);
-		textFieldProductPrice.setBackground(originalTextFieldColor);
+		// textFieldProductPrice.setEditable(true);
+		// textFieldProductPrice.setBackground(originalTextFieldColor);
 		textFieldProductTaxPrice.setEditable(true);
 		textFieldProductTaxPrice.setBackground(originalTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(true);
@@ -556,7 +640,7 @@ public class ProductPanelImpl implements IProductPanel {
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
 	}
-	
+
 	public void setAllButtonsDisabled() {
 		buttonNew.setEnabled(false);
 		buttonEdit.setEnabled(false);
@@ -570,15 +654,18 @@ public class ProductPanelImpl implements IProductPanel {
 		result = result
 				&& (!"".equals(textFieldProductName.getText()))
 				&& (!"".equals(textFieldProductMeasurement.getText()))
-				&& (!"".equals(textFieldProductTax.getText())
-						&& (isInt(textFieldProductTax.getText()) || isValidDecimal(textFieldProductTax
-							.getText())))
-				&& (!"".equals(textFieldProductPrice.getText())
-						&& (isInt(textFieldProductPrice.getText()) || isValidDecimal(textFieldProductPrice
-							.getText())));
+				&& (!"".equals(textFieldProductTax.getText()) && (isInt(textFieldProductTax
+						.getText()) || isValidDecimal(textFieldProductTax
+						.getText())))
+				&& (!"".equals(textFieldProductPrice.getText()) && (isInt(textFieldProductPrice
+						.getText()) || isValidDecimal(textFieldProductPrice
+						.getText())))
+				&& (!"".equals(textFieldProductTaxPrice.getText()) && (isInt(textFieldProductTaxPrice
+						.getText()) || isValidDecimal(textFieldProductTaxPrice
+						.getText())));
 		return result;
 	}
-	
+
 	public boolean isValidDecimal(String textFieldValue) {
 		boolean result = false;
 
@@ -620,22 +707,22 @@ public class ProductPanelImpl implements IProductPanel {
 		int intSelectedRow = Integer.parseInt(selectedRow);
 
 		clearProductFields();
-		
+
 		buttonEdit.setEnabled(false);
 		buttonDelete.setEnabled(false);
-		
+
 		if (table.getRowCount() - 1 > intSelectedRow) {
 			setSelectedProductTableRow(selectedRow);
 		}
 
 		populateProductTable();
 
-		if (table.getRowCount() > 0) {			
+		if (table.getRowCount() > 0) {
 			buttonEdit.setEnabled(true);
 			buttonDelete.setEnabled(true);
 
 		}
-		
+
 		setProductFieldsNonEditable();
 		setProductInfoButtonsDisabled();
 	}

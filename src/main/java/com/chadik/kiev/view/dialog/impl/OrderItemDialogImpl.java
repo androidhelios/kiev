@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ import com.chadik.kiev.service.IOrderItemService;
 import com.chadik.kiev.service.IProductService;
 import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.IOrderItemDialog;
+import com.chadik.kiev.view.panel.IInvoicePanel;
 import com.chadik.kiev.view.panel.IOrderItemPanel;
 
 @Component
@@ -83,16 +86,19 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 	private Color nonEditableTextFieldColor;
 	private Color mandatoryTextFieldColor;
+	private Color originalTextFieldColor;
 
 	private DecimalFormat decimalFormat;
 
 	private Map<Integer, Integer> mapProducts;
 
-//	private Invoice invoice;
+	// private Invoice invoice;
 	private int invoiceId;
 
 	@Autowired
 	private IOrderItemPanel orderItemPanelImpl;
+	@Autowired
+	private IInvoicePanel invoicePanelImpl;
 	@Autowired
 	private IOrderItemService orderItemServiceImpl;
 	@Autowired
@@ -107,6 +113,15 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нова Фактура");
 		dialog.setResizable(false);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+				
+			}
+
+			public void windowClosing(WindowEvent e) {
+
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
@@ -143,6 +158,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		int y = 25;
 
 		mandatoryTextFieldColor = new Color(204, 0, 0);
+		nonEditableTextFieldColor = new Color(255, 255, 204);
 
 		labelOrderItemProductName = new JLabel("Продукт:");
 		labelOrderItemProductName.setBounds(xLabel, y, weightLabel, height);
@@ -157,7 +173,12 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int selectedComboBoxProductIndex = comboBox.getSelectedIndex();
+				textFieldOrderItemQuantity.setEditable(false);	
+				textFieldOrderItemQuantity.setBackground(new Color(255, 255, 204));
+				textFieldOrderItemQuantity.setText("");
 				if (selectedComboBoxProductIndex > 0) {
+					textFieldOrderItemQuantity.setEditable(true);
+					textFieldOrderItemQuantity.setBackground(new Color(255, 255, 255));
 					Integer selectedComboBoxProductId = mapProducts
 							.get(selectedComboBoxProductIndex);
 					int intSelectedComboBoxProductId = selectedComboBoxProductId
@@ -176,7 +197,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		labelOrderItemQuantity.setBounds(xLabel, y, weightLabel, height);
 		labelOrderItemQuantity.setForeground(mandatoryTextFieldColor);
 
-		nonEditableTextFieldColor = new Color(255, 255, 204);
+		
 
 		textFieldOrderItemQuantity = new JTextField();
 		textFieldOrderItemQuantity.setBounds(xTextField, y, weightTextField,
@@ -201,7 +222,8 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 								.getText());
 					}
 				});
-
+		textFieldOrderItemQuantity.setEditable(false);
+		textFieldOrderItemQuantity.setBackground(new Color(255, 255, 204));
 		textFieldOrderItemQuantity.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -329,6 +351,8 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (validateOrderItemFields()) {
 					saveOrderItemAndDispose();
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Артиклот е додаден",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					dialog.setVisible(false);
 
@@ -462,7 +486,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	public OrderItem getOrderItemFromOrderItemFields() {
 		OrderItem orderItem = new OrderItem();
 		BigDecimal bigDecimalId = new BigDecimal(String.valueOf(getInvoiceId()));
-		
+
 		Invoice invoice = invoiceServiceImpl.findInvoiceById(bigDecimalId);
 
 		orderItem.setInvoice(invoice);
@@ -505,11 +529,12 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	}
 
 	public void saveOrderItemAndDispose() {
-		OrderItem orderItem = getOrderItemFromOrderItemFields();		
+		OrderItem orderItem = getOrderItemFromOrderItemFields();
 		orderItemServiceImpl.saveOrderItem(orderItem);
 		dialog.dispose();
 		orderItemPanelImpl.setInvoiceId(getInvoiceId());
 		orderItemPanelImpl.populateOrderItemTable();
+		invoicePanelImpl.setProductButtonsEnabled();
 	}
 
 	public boolean isInt(String textFieldValue) {
@@ -533,7 +558,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	@Override
 	public void setInvoiceId(int invoiceId) {
 		this.invoiceId = invoiceId;
-		
+
 	}
 
 }

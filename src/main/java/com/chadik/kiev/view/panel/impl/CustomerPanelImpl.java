@@ -37,6 +37,7 @@ import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.service.ICustomerService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.ICustomerDialog;
 import com.chadik.kiev.view.panel.ICustomerPanel;
 
@@ -95,6 +96,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 	private ICustomerService customerServiceImpl;
 	@Autowired
 	private ICustomerDialog customerDialogImpl;
+	@Autowired
+	private FrameMain frameMain;
 
 	@Override
 	public JPanel initCustomerPanel() {
@@ -207,6 +210,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteCustomer();
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Клиентот е избришан",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -288,6 +293,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 					saveCustomer();
 					setEditMode(false);
 					table.setEnabled(true);
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е запишана",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					Object[] options = { "OK" };
 					int input = JOptionPane.showOptionDialog(null,
@@ -314,6 +321,8 @@ public class CustomerPanelImpl implements ICustomerPanel {
 				setCustomerTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е откажана",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 

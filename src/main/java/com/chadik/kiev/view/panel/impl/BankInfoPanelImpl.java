@@ -37,6 +37,7 @@ import com.chadik.kiev.model.BankInfo;
 import com.chadik.kiev.service.IBankInfoService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.IBankInfoDialog;
 import com.chadik.kiev.view.panel.IBankInfoPanel;
 
@@ -97,6 +98,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 	private IBankInfoService bankInfoServiceImpl;
 	@Autowired
 	private IBankInfoDialog bankInfoDialogImpl;
+	@Autowired
+	private FrameMain frameMain;
 
 	@Override
 	public JPanel initBankInfoPanel() {
@@ -209,6 +212,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteBankInfo();
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Сметката е избришана",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -300,6 +305,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 					saveBankInfo();
 					setEditMode(false);
 					table.setEnabled(true);
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е запишана",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					Object[] options = { "OK" };
 					int input = JOptionPane.showOptionDialog(null,
@@ -326,6 +333,8 @@ public class BankInfoPanelImpl implements IBankInfoPanel {
 				setBankInfoTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е откажана",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 

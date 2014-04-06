@@ -4,34 +4,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import antlr.debug.NewLineEvent;
-
 import com.chadik.kiev.model.Invoice;
 import com.chadik.kiev.model.OrderItem;
 import com.chadik.kiev.printer.IInvoicePrinter;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.Pfm2afm;
-import com.itextpdf.text.pdf.draw.LineSeparator;
 
 @Component
 public class InvoicePrinterImpl implements IInvoicePrinter {
@@ -55,6 +45,10 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			int headerwidths[] = { 5, 10, 10, 10, 10, 10, 10, 10, 10 };
 			String orderItemColumnNames[] = getTableOrderItemColumnNames();
 
+			// String fileName = createFileName(invoice).replaceAll("\\", "-")
+			// .replaceAll("/", "-").replaceAll(".", "-")
+			// .replaceAll("_", "-");
+
 			String fileName = createFileName(invoice);
 
 			BaseFont baseFont = BaseFont.createFont(
@@ -75,7 +69,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 
 			pdfDocument.open();
 
-			pdfDocument.addTitle("ПСРФ - " + fileName);
+			pdfDocument.addTitle("PSF - v(0.0.1) - " + fileName);
 
 			PdfPTable tableSupplierInfoText = new PdfPTable(1);
 			tableSupplierInfoText.setWidthPercentage(100);
@@ -143,7 +137,8 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellSupplierInfoAccountTextBankName);
 
 			PdfPCell cellSupplierInfoAccountTextBankAccountNumberValue = new PdfPCell(
-					new Phrase(invoice.getBankInfo().getBankInfoAccount(), fontInfoText));
+					new Phrase(invoice.getBankInfo().getBankInfoAccount(),
+							fontInfoText));
 			cellSupplierInfoAccountTextBankAccountNumberValue
 					.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellSupplierInfoAccountTextBankAccountNumberValue
@@ -154,8 +149,8 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellSupplierInfoAccountTextBankAccountNumberValue);
 
 			PdfPCell cellSupplierInfoAccountTextRegistryNumberValue = new PdfPCell(
-					new Phrase(invoice.getSupplier().getSupplierRegistryNumber(),
-							fontInfoText));
+					new Phrase(invoice.getSupplier()
+							.getSupplierRegistryNumber(), fontInfoText));
 			cellSupplierInfoAccountTextRegistryNumberValue
 					.setHorizontalAlignment(Element.ALIGN_LEFT);
 			cellSupplierInfoAccountTextRegistryNumberValue
@@ -235,12 +230,14 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					1);
 			tableInvoceInfoContentNestedSerialNumberValue
 					.setWidthPercentage(100);
-			
-			Phrase phraseInvoceSerialNumberValue = new Phrase(invoice.getInvoiceSerialNumber(), fontInfoText);
+
+			Phrase phraseInvoceSerialNumberValue = new Phrase(
+					invoice.getInvoiceSerialNumber(), fontInfoText);
 			phraseInvoceSerialNumberValue.add(" ");
-			
-			PdfPCell cellInvoceInfoContentNestedSerialNumberValueNested = new PdfPCell(phraseInvoceSerialNumberValue);
-//			cellInvoceInfoContentNestedSerialNumberValueNested.setFixedHeight(20);
+
+			PdfPCell cellInvoceInfoContentNestedSerialNumberValueNested = new PdfPCell(
+					phraseInvoceSerialNumberValue);
+			// cellInvoceInfoContentNestedSerialNumberValueNested.setFixedHeight(20);
 			cellInvoceInfoContentNestedSerialNumberValueNested
 					.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			cellInvoceInfoContentNestedSerialNumberValueNested
@@ -273,11 +270,13 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			tableInvoceInfoContentNestedInvoiceNumberValue
 					.setWidthPercentage(100);
 
-			Phrase phraseInvoceNumberValue = new Phrase(invoice.getInvoiceNumber(), fontInfoText);
+			Phrase phraseInvoceNumberValue = new Phrase(
+					invoice.getInvoiceNumber(), fontInfoText);
 			phraseInvoceNumberValue.add(" ");
-			
-			PdfPCell cellInvoceInfoContentNestedInvoiceNumberValueNested = new PdfPCell(phraseInvoceNumberValue);
-//			cellInvoceInfoContentNestedInvoiceNumberValueNested.setFixedHeight(18);
+
+			PdfPCell cellInvoceInfoContentNestedInvoiceNumberValueNested = new PdfPCell(
+					phraseInvoceNumberValue);
+			// cellInvoceInfoContentNestedInvoiceNumberValueNested.setFixedHeight(18);
 			cellInvoceInfoContentNestedInvoiceNumberValueNested
 					.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			cellInvoceInfoContentNestedInvoiceNumberValueNested
@@ -337,11 +336,11 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			cellInvoceInfoContentNestedInvoiceCurrencyText.setFixedHeight(20);
 			cellInvoceInfoContentNestedInvoiceCurrencyText.setPaddingRight(10);
 
-			String invoiceCurrencyValue = "";			
+			String invoiceCurrencyValue = "";
 			if (!"- Избери валута -".equals(invoice.getInvoiceCurrency())) {
 				invoiceCurrencyValue = invoice.getInvoiceCurrency();
 			}
-			
+
 			PdfPCell cellInvoceInfoContentNestedInvoiceCurrencyValue = new PdfPCell(
 					new Phrase(invoiceCurrencyValue, fontSerialNumber));
 			cellInvoceInfoContentNestedInvoiceCurrencyValue
@@ -524,9 +523,9 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellInvoiceSignaturesInvoiceFillMiddleUpperCellLeft);
 
 			PdfPCell cellInvoiceSignaturesInvoiceFillMiddleUpperCellMiddle = new PdfPCell(
-					new Phrase("", fontNormal));
+					new Phrase("Примил,", fontNormal));
 			cellInvoiceSignaturesInvoiceFillMiddleUpperCellMiddle
-					.setHorizontalAlignment(Element.ALIGN_MIDDLE);
+					.setHorizontalAlignment(Element.ALIGN_CENTER);
 			cellInvoiceSignaturesInvoiceFillMiddleUpperCellMiddle
 					.setBorder(Rectangle.NO_BORDER);
 			tableInvoiceSignatures
@@ -568,7 +567,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellInvoiceSignaturesInvoiceFillMiddleLowerCellLeft);
 
 			PdfPCell cellInvoiceSignaturesInvoiceFillMiddleLowerCellMiddle = new PdfPCell(
-					new Phrase("", fontNormal));
+					new Phrase("______________________", fontNormal));
 			cellInvoiceSignaturesInvoiceFillMiddleLowerCellMiddle
 					.setHorizontalAlignment(Element.ALIGN_MIDDLE);
 			cellInvoiceSignaturesInvoiceFillMiddleLowerCellMiddle
@@ -606,7 +605,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 	}
 
 	public String[] getTableOrderItemColumnNames() {
-		return new String[] { "Реден Бр.", "Назив", "Мерна единица",
+		return new String[] { "Реден Бр.", "Опис", "Мерна единица",
 				"Количина", "Цена без данок", "Износ без данок", "ДДВ",
 				"Износ на ДДВ", "Вкупен износ со ДДВ" };
 	}
@@ -629,13 +628,19 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 		String folder = "pdf/";
 		String invoiceDate = "";
 
-		String invoiceNumber = invoice.getInvoiceNumber();
+		String invoiceNumber = invoice.getInvoiceNumber()
+				.replaceAll("[.]+", "").replaceAll("[^\\w]", "");
 		String invoiceCustomerName = "-"
-				+ invoice.getCustomer().getCustomerName();
+				+ invoice.getCustomer().getCustomerName()
+						.replaceAll("[.]+", "").replaceAll("[^\\w]", "");
 		if (!"".equals(invoice.getInvoiceDate())) {
-			invoiceDate = "-" + invoice.getInvoiceDate();
+			invoiceDate = "-"
+					+ invoice.getInvoiceDate().replaceAll("[.]+", "")
+							.replaceAll("[^\\w]", "");
 		} else {
-			invoiceDate = "-" + simpleDateFormat.format(cal.getTime());
+			invoiceDate = "-"
+					+ simpleDateFormat.format(cal.getTime())
+							.replaceAll("[.]+", "").replaceAll("[^\\w]", "");
 		}
 
 		String extension = ".pdf";

@@ -8,6 +8,8 @@ import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -74,6 +76,14 @@ public class CustomerDialogImpl implements ICustomerDialog {
 		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нов Клиент");
 		dialog.setResizable(false);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+			}
+
+			public void windowClosing(WindowEvent e) {
+				customerPanelImpl.setCustomerTableButtonsEnabled();
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
@@ -174,6 +184,8 @@ public class CustomerDialogImpl implements ICustomerDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (validateCustomerFields()) {
 					saveCustomerAndDispose();
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Клиентот е запишан",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					dialog.setVisible(false);
 

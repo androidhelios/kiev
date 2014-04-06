@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Component;
 import com.chadik.kiev.model.BankInfo;
 import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Invoice;
+import com.chadik.kiev.model.OrderItem;
 import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.IBankInfoService;
 import com.chadik.kiev.service.ICustomerService;
@@ -157,6 +160,14 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		dialog = new JDialog(frameMain.getMainFrame(), true);
 		dialog.setTitle("Нова Фактура");
 		dialog.setResizable(false);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+			}
+
+			public void windowClosing(WindowEvent e) {
+				invoicePanelImpl.setInvoiceTableButtonsEnabled();
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
@@ -668,6 +679,8 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 			public void actionPerformed(ActionEvent e) {
 				if (validateInvoiceFields()) {
 					saveInvoiceAndDispose();
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Фактурата е запишана",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					dialog.setVisible(false);
 
@@ -691,6 +704,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				invoicePanelImpl.setInvoiceTableButtonsEnabled();
+				
 			}
 		});
 

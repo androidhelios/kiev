@@ -37,6 +37,7 @@ import com.chadik.kiev.model.Supplier;
 import com.chadik.kiev.service.ISupplierService;
 import com.chadik.kiev.util.PanelUtil;
 import com.chadik.kiev.util.TableUtil;
+import com.chadik.kiev.view.FrameMain;
 import com.chadik.kiev.view.dialog.ISupplierDialog;
 import com.chadik.kiev.view.panel.ISupplierPanel;
 
@@ -101,6 +102,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 	private ISupplierService supplierServiceImpl;
 	@Autowired
 	private ISupplierDialog supplierDialogImpl;
+	@Autowired
+	private FrameMain frameMain;
 
 	@Override
 	public JPanel initSupplierPanel() {
@@ -322,6 +325,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 					saveSupplier();
 					setEditMode(false);
 					table.setEnabled(true);
+					JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е запишана",
+							"Информација", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					Object[] options = { "OK" };
 					int input = JOptionPane.showOptionDialog(null,
@@ -348,6 +353,8 @@ public class SupplierPanelImpl implements ISupplierPanel {
 				setSupplierTableButtonsEnabled();
 				setEditMode(false);
 				table.setEnabled(true);
+				JOptionPane.showMessageDialog(frameMain.getMainFrame(), "Промената е запишана",
+						"Информација", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 

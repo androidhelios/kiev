@@ -1,6 +1,7 @@
 package com.chadik.kiev.view.panel;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -28,6 +29,6 @@ public interface IOrderItemPanel {
 	
 	public String getSelectedOrderItemTableRow();
 	
-	public void setSelectedOrderItemTableRow(String selectedCustomerTableRow);
+	public void setSelectedOrderItemTableRow(String selectedOrderItemTableRow);
 
 }

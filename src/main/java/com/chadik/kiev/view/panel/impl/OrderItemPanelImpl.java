@@ -43,6 +43,9 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 	private int invoiceId;
 
 	private List<OrderItem> orderItems;
+	private List<OrderItem> tempOrderItems;
+	
+	private boolean isRequired;
 
 	private DecimalFormat decimalFormat;
 
@@ -122,6 +125,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		Invoice invoice = invoiceServiceImpl.findInvoiceById(new BigDecimal(
 				String.valueOf(getInvoiceId())));
 
+
 		orderItems = invoice.getOrderItems();
 
 		int i = 0;
@@ -158,6 +162,11 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 					+ Double.parseDouble(orderItemTotalQuantityPrice.replace(
 							",", "."));
 		}
+		
+		invoicePanelImpl.setInvoiceOrderItemTotalValues(
+				"0,00",
+				"0,00",
+				"0,00");
 
 		if (table.getRowCount() > 0) {
 
@@ -181,7 +190,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 		
 		setSelectedOrderItemTableRow("");
-
+		
 	}
 
 	public String[] getTableOrderItemColumnNames() {
@@ -226,7 +235,7 @@ public class OrderItemPanelImpl implements IOrderItemPanel {
 		String selectedRow = Integer.toString(row);
 		int intSelectedRow = Integer.parseInt(selectedRow);
 
-		invoicePanelImpl.setOrderItemRemoveButtonDisabled();
+//		invoicePanelImpl.setOrderItemRemoveButtonDisabled();
 		
 		if (table.getRowCount() - 1 > intSelectedRow) {
 			setSelectedOrderItemTableRow(selectedRow);

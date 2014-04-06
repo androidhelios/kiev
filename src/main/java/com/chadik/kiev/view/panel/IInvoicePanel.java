@@ -2,6 +2,8 @@ package com.chadik.kiev.view.panel;
 
 import javax.swing.JPanel;
 
+import com.chadik.kiev.model.Invoice;
+
 public interface IInvoicePanel {
 
 	public JPanel initInvoicePanel();
