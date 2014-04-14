@@ -61,6 +61,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	private JLabel labelOrderItemProductMeasurement;
 	private JLabel labelOrderItemQuantity;
 	private JLabel labelOrderItemProductPrice;
+	private JLabel labelOrderItemProductPriceTax;
 	private JLabel labelOrderItemQuantityPriceWithoutTax;
 	private JLabel labelOrderItemProductTax;
 	private JLabel labelOrderItemQuantityTax;
@@ -73,6 +74,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	private JTextField textFieldOrderItemProductMeasurement;
 	private JTextField textFieldOrderItemQuantity;
 	private JTextField textFieldOrderItemProductPrice;
+	private JTextField textFieldOrderItemProductPriceTax;
 	private JTextField textFieldOrderItemQuantityPriceWithoutTax;
 	private JTextField textFieldOrderItemProductTax;
 	private JTextField textFieldOrderItemQuantityTax;
@@ -237,6 +239,18 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		textFieldOrderItemProductPrice.setEditable(false);
 		textFieldOrderItemProductPrice.setBackground(nonEditableTextFieldColor);
 		textFieldOrderItemProductPrice.setMargin(new Insets(2, 2, 2, 2));
+		
+		y = y + height + spacing;
+
+		labelOrderItemProductPriceTax = new JLabel("Цена co данок:");
+		labelOrderItemProductPriceTax.setBounds(xLabel, y, weightLabel, height);
+
+		textFieldOrderItemProductPriceTax = new JTextField();
+		textFieldOrderItemProductPriceTax.setBounds(xTextField, y,
+				weightTextField, height);
+		textFieldOrderItemProductPriceTax.setEditable(false);
+		textFieldOrderItemProductPriceTax.setBackground(nonEditableTextFieldColor);
+		textFieldOrderItemProductPriceTax.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
 
@@ -265,7 +279,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		textFieldOrderItemProductTax.setBackground(nonEditableTextFieldColor);
 		textFieldOrderItemProductTax.setMargin(new Insets(2, 2, 2, 2));
 
-		y = y + height + spacing;
+//		y = y + height + spacing;
 
 		labelOrderItemQuantityTax = new JLabel("Износ на ДДВ:");
 		labelOrderItemQuantityTax.setBounds(xLabel, y, weightLabel, height);
@@ -387,12 +401,15 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		panelFieldsContent.add(labelOrderItemProductPrice);
 		panelFieldsContent.add(textFieldOrderItemProductPrice);
+		
+		panelFieldsContent.add(labelOrderItemProductPriceTax);
+		panelFieldsContent.add(textFieldOrderItemProductPriceTax);
 
 		panelFieldsContent.add(labelOrderItemQuantityPriceWithoutTax);
 		panelFieldsContent.add(textFieldOrderItemQuantityPriceWithoutTax);
 
-		panelFieldsContent.add(labelOrderItemProductTax);
-		panelFieldsContent.add(textFieldOrderItemProductTax);
+//		panelFieldsContent.add(labelOrderItemProductTax);
+//		panelFieldsContent.add(textFieldOrderItemProductTax);
 
 		panelFieldsContent.add(labelOrderItemQuantityTax);
 		panelFieldsContent.add(textFieldOrderItemQuantityTax);
@@ -428,6 +445,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 		textFieldOrderItemProductMeasurement.setText(product
 				.getProductMeasurement());
 		textFieldOrderItemProductPrice.setText(product.getProductPrice());
+		textFieldOrderItemProductPriceTax.setText(product.getProductTaxPrice());
 		textFieldOrderItemProductTax.setText(product.getProductTax());
 	}
 
@@ -456,16 +474,21 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 		if (isInt(quantity)) {
 			double quantityTextFieldValue = Double.parseDouble(quantity);
-			String doubleOrderItemProductPriceDotSeparator = textFieldOrderItemProductPrice
-					.getText().replace(",", ".");
+			
+			double doubleOrderItemProductPriceTax = Double
+					.parseDouble(textFieldOrderItemProductPriceTax
+							.getText().replace(",", "."));
 			double doubleOrderItemProductPrice = Double
-					.parseDouble(doubleOrderItemProductPriceDotSeparator);
+					.parseDouble(textFieldOrderItemProductPrice
+							.getText().replace(",", "."));
 			double doubleOrderItemProductTax = Double
 					.parseDouble(textFieldOrderItemProductTax.getText());
-
+			
+			double doubleOrderItemQuantityPriceTax = quantityTextFieldValue
+					* doubleOrderItemProductPriceTax;
 			double doubleOrderItemQuantityPriceWithoutTax = quantityTextFieldValue
 					* doubleOrderItemProductPrice;
-			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceWithoutTax
+			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceTax
 					* doubleOrderItemProductTax / 100;
 			double doubleOrderItemQuantityPrice = doubleOrderItemQuantityPriceWithoutTax
 					+ doubleOrderItemQuantityTax;

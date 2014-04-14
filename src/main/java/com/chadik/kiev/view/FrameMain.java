@@ -70,7 +70,7 @@ public class FrameMain {
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setPreferredSize(new Dimension(1000, 600));
 
-		mainFrame.setTitle("PSF - v(0.0.1)");
+		mainFrame.setTitle("PSF - v(0.0.2)");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setContentPane(contentPane);

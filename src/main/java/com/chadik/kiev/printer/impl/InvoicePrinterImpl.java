@@ -69,7 +69,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 
 			pdfDocument.open();
 
-			pdfDocument.addTitle("PSF - v(0.0.1) - " + fileName);
+			pdfDocument.addTitle("PSF - v(0.0.2) - " + fileName);
 
 			PdfPTable tableSupplierInfoText = new PdfPTable(1);
 			tableSupplierInfoText.setWidthPercentage(100);

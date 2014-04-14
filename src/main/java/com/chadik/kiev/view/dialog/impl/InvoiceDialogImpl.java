@@ -572,6 +572,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		textFieldInvoiceTotalQuantityPriceWithoutTax.setBounds(xTextField, y,
 				weightTextField, height);
 		textFieldInvoiceTotalQuantityPriceWithoutTax.setText("0,00");
+		textFieldInvoiceTotalQuantityPriceWithoutTax.setEditable(false);
 		textFieldInvoiceTotalQuantityPriceWithoutTax
 				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceTotalQuantityPriceWithoutTax.setMargin(new Insets(2, 2,
@@ -586,6 +587,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		textFieldInvoiceTotalQuantityTax.setBounds(xTextField, y,
 				weightTextField, height);
 		textFieldInvoiceTotalQuantityTax.setText("0,00");
+		textFieldInvoiceTotalQuantityTax.setEditable(false);
 		textFieldInvoiceTotalQuantityTax
 				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceTotalQuantityTax.setMargin(new Insets(2, 2, 2, 2));
@@ -600,6 +602,7 @@ public class InvoiceDialogImpl implements IInvoiceDialog {
 		textFieldInvoiceTotalQuantityPrice.setBounds(xTextField, y,
 				weightTextField, height);
 		textFieldInvoiceTotalQuantityPrice.setText("0,00");
+		textFieldInvoiceTotalQuantityPrice.setEditable(false);
 		textFieldInvoiceTotalQuantityPrice
 				.setBackground(nonEditableTextFieldColor);
 		textFieldInvoiceTotalQuantityPrice.setMargin(new Insets(2, 2, 2, 2));
