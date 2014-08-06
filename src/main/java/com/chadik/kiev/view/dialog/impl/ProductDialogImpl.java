@@ -71,7 +71,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 	private DecimalFormat decimalFormat;
 	
-	private Map<Integer, String> mapTaxInfo;
+	private Map<String, String> mapTaxInfo;
 
 	private Color nonEditableTextFieldColor;
 	private Color mandatoryTextFieldColor;
@@ -339,11 +339,11 @@ public class ProductDialogImpl implements IProductDialog {
 	
 	public void populateComboboxProductTaxShown() {
 		comboboxProductTaxShown.removeAllItems();
-		mapTaxInfo = new HashMap<Integer, String>();
-		mapTaxInfo.put(0, "5");
-		mapTaxInfo.put(1, "18");
+		mapTaxInfo = new HashMap<String, String>();
+		mapTaxInfo.put("15,2542", "5");
+		mapTaxInfo.put("4,762", "18");
 
-		for (Map.Entry<Integer, String> entry : mapTaxInfo.entrySet()) {
+		for (Map.Entry<String, String> entry : mapTaxInfo.entrySet()) {
 			comboboxProductTaxShown.addItem(entry.getValue());
 		}
 	}
