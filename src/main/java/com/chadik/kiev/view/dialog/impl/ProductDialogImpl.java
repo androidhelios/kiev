@@ -339,6 +339,20 @@ public class ProductDialogImpl implements IProductDialog {
 	
 	public void populateComboboxProductTaxShown() {
 		comboboxProductTaxShown.removeAllItems();
+		String firstItem = "- Избери данок -";
+		comboboxProductTaxShown.addItem(firstItem);
+		
+		mapTaxInfo = new HashMap<String, String>();
+		mapTaxInfo.put("15,2542", "5");
+		mapTaxInfo.put("4,762", "18");
+
+		for (Map.Entry<String, String> entry : mapTaxInfo.entrySet()) {
+			comboboxProductTaxShown.addItem(entry.getValue());
+		}
+	}
+	
+	public void populateTextFieldProductTax() {
+		comboboxProductTaxShown.removeAllItems();
 		mapTaxInfo = new HashMap<String, String>();
 		mapTaxInfo.put("15,2542", "5");
 		mapTaxInfo.put("4,762", "18");
