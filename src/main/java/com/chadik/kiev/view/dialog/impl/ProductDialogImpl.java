@@ -10,9 +10,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -47,6 +50,7 @@ public class ProductDialogImpl implements IProductDialog {
 	private JLabel labelProductId;
 	private JLabel labelProductName;
 	private JLabel labelProductMeasurement;
+	private JLabel labelProductTaxShown;
 	private JLabel labelProductTax;
 	private JLabel labelProductPrice;
 	private JLabel labelProductTaxPrice;
@@ -59,11 +63,15 @@ public class ProductDialogImpl implements IProductDialog {
 	private JTextField textFieldProductPrice;
 	private JTextField textFieldProductTaxPrice;
 	private JTextField textFieldProductAdditionalInfo;
+	
+	private JComboBox comboboxProductTaxShown;
 
 	private JButton buttonSave;
 	private JButton buttonCancel;
 
 	private DecimalFormat decimalFormat;
+	
+	private Map<Integer, String> mapTaxInfo;
 
 	private Color nonEditableTextFieldColor;
 	private Color mandatoryTextFieldColor;
@@ -144,6 +152,24 @@ public class ProductDialogImpl implements IProductDialog {
 		textFieldProductMeasurement.setBounds(xTextField, y, weightTextField,
 				height);
 		textFieldProductMeasurement.setMargin(new Insets(2, 2, 2, 2));
+
+		y = y + height + spacing;
+		
+		labelProductTaxShown = new JLabel("Прикажан данок:");
+		labelProductTaxShown.setBounds(xLabel, y, weightLabel, height);
+		labelProductTaxShown.setForeground(mandatoryTextFieldColor);
+
+		comboboxProductTaxShown = new JComboBox();
+		comboboxProductTaxShown.setBounds(xTextField, y, weightTextField,
+				height);
+		comboboxProductTaxShown.setEnabled(false);
+		populateComboboxProductTaxShown();
+		comboboxProductTaxShown.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
 
 		y = y + height + spacing;
 
@@ -309,6 +335,17 @@ public class ProductDialogImpl implements IProductDialog {
 
 		return dialog;
 
+	}
+	
+	public void populateComboboxProductTaxShown() {
+		comboboxProductTaxShown.removeAllItems();
+		mapTaxInfo = new HashMap<Integer, String>();
+		mapTaxInfo.put(0, "5");
+		mapTaxInfo.put(1, "18");
+
+		for (Map.Entry<Integer, String> entry : mapTaxInfo.entrySet()) {
+			comboboxProductTaxShown.addItem(entry.getValue());
+		}
 	}
 
 	public Product getProductFromProductFields() {
