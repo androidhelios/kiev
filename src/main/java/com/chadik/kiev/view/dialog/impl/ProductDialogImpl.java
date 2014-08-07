@@ -376,7 +376,7 @@ public class ProductDialogImpl implements IProductDialog {
 		Product product = new Product();
 		product.setProductName(textFieldProductName.getText());
 		product.setProductMeasurement(textFieldProductMeasurement.getText());
-		product.setProductTax(textFieldProductTax.getText());
+		product.setProductTax(String.valueOf(comboboxProductTaxShown.getSelectedItem()));
 		product.setProductPrice(textFieldProductPrice.getText());
 		product.setProductTaxPrice(textFieldProductTaxPrice.getText());
 		product.setProductAdditionalInfo(textFieldProductAdditionalInfo
