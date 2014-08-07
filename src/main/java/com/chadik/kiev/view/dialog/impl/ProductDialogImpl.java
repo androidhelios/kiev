@@ -174,7 +174,15 @@ public class ProductDialogImpl implements IProductDialog {
 				if (selectedComboBoxTaxShownIndex > 0) {
 					String selectedComboBoxTaxShownTaxValue = mapTaxInfo
 							.get(String.valueOf(comboBox.getSelectedItem()));
-					populateTextFieldProductTax(selectedComboBoxTaxShownTaxValue);
+					textFieldProductTax.setText(selectedComboBoxTaxShownTaxValue);
+					if (!"".equals(textFieldProductTaxPrice.getText())) {
+						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+								.getText());
+					}
+				} else {
+					textFieldProductTax.setText("");
+					textFieldProductPrice.setText("");
+					textFieldProductTaxPrice.setText("");
 				}
 			}
 		});
@@ -364,10 +372,6 @@ public class ProductDialogImpl implements IProductDialog {
 		}
 	}
 	
-	public void populateTextFieldProductTax(String productTax) {
-		textFieldProductTax.setText(productTax);
-	}
-
 	public Product getProductFromProductFields() {
 		Product product = new Product();
 		product.setProductName(textFieldProductName.getText());
@@ -382,7 +386,7 @@ public class ProductDialogImpl implements IProductDialog {
 	}
 
 	public void calculateProductPrice(String productTax, String productPrice) {
-		decimalFormat = new DecimalFormat("#.##");
+		decimalFormat = new DecimalFormat("0.00");
 		decimalFormat.setRoundingMode(RoundingMode.DOWN);
 
 		if (!"".equals(textFieldProductTax.getText())
@@ -419,7 +423,8 @@ public class ProductDialogImpl implements IProductDialog {
 						.getText())))
 				&& (!"".equals(textFieldProductTaxPrice.getText()) && (isInt(textFieldProductTaxPrice
 						.getText()) || isValidDecimal(textFieldProductTaxPrice
-						.getText())));
+						.getText())))
+				&& (comboboxProductTaxShown.getSelectedIndex() > 0);
 		return result;
 	}
 
