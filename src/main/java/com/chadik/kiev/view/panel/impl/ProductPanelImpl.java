@@ -565,6 +565,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setText("");
 		textFieldProductName.setText("");
 		textFieldProductMeasurement.setText("");
+		comboboxProductTaxShown.setSelectedIndex(0);
 		textFieldProductTax.setText("");
 		textFieldProductPrice.setText("");
 		textFieldProductTaxPrice.setText("");
@@ -614,7 +615,7 @@ public class ProductPanelImpl implements IProductPanel {
 		Product product = getProductFromProductTable(selectedRowProductId);
 		product.setProductName(textFieldProductName.getText());
 		product.setProductMeasurement(textFieldProductMeasurement.getText());
-		product.setProductTax(textFieldProductTax.getText());
+		product.setProductTax(String.valueOf(comboboxProductTaxShown.getSelectedItem()));
 		product.setProductPrice(textFieldProductPrice.getText());
 		product.setProductTaxPrice(textFieldProductTaxPrice.getText());
 		product.setProductAdditionalInfo(textFieldProductAdditionalInfo
