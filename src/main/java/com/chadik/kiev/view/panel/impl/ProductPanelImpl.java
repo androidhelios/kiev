@@ -344,6 +344,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductTaxPrice = new JTextField();
 		textFieldProductTaxPrice.setBounds(xTextField, y, weightTextField,
 				height);
+		textFieldProductTaxPrice.setEditable(false);
 		textFieldProductTaxPrice.getDocument().addDocumentListener(
 				new DocumentListener() {
 					@Override
@@ -540,7 +541,21 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductId.setText(product.getProductId().toString());
 		textFieldProductName.setText(product.getProductName());
 		textFieldProductMeasurement.setText(product.getProductMeasurement());
-		textFieldProductTax.setText(product.getProductTax());
+		if (product.getProductTax().equals("5")) {
+			comboboxProductTaxShown.setSelectedIndex(1);
+		} else if (product.getProductTax().equals("18")) {
+			comboboxProductTaxShown.setSelectedIndex(2);
+		} else {
+			comboboxProductTaxShown.setSelectedIndex(0);
+		} 
+		if (product.getProductTax().equals("5")) {
+			textFieldProductTax.setText("4,762");
+		} else if (product.getProductTax().equals("18")) {
+			textFieldProductTax.setText("15,2542");
+		} else {
+			textFieldProductTax.setText("");
+		}
+//		textFieldProductTax.setText(product.getProductTax());
 		textFieldProductPrice.setText(product.getProductPrice());
 		textFieldProductTaxPrice.setText(product.getProductTaxPrice());
 		textFieldProductAdditionalInfo.setText(product
@@ -670,7 +685,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductTax.setBackground(originalTextFieldColor);
 		// textFieldProductPrice.setEditable(true);
 		// textFieldProductPrice.setBackground(originalTextFieldColor);
-		textFieldProductTaxPrice.setEditable(true);
+//		textFieldProductTaxPrice.setEditable(true);
 		textFieldProductTaxPrice.setBackground(originalTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(true);
 		textFieldProductAdditionalInfo.setBackground(originalTextFieldColor);
