@@ -270,6 +270,7 @@ public class ProductPanelImpl implements IProductPanel {
 		comboboxProductTaxShown = new JComboBox();
 		comboboxProductTaxShown.setBounds(xTextField, y, weightTextField,
 				height);
+		comboboxProductTaxShown.setEnabled(false);
 		populateComboboxProductTaxShown();
 		comboboxProductTaxShown.addActionListener(new ActionListener() {
 			@Override
@@ -645,6 +646,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductName.setBackground(nonEditableTextFieldColor);
 		textFieldProductMeasurement.setEditable(false);
 		textFieldProductMeasurement.setBackground(nonEditableTextFieldColor);
+		comboboxProductTaxShown.setEnabled(false);
 		textFieldProductTax.setEditable(false);
 		textFieldProductTax.setBackground(nonEditableTextFieldColor);
 		// textFieldProductPrice.setEditable(false);
@@ -662,6 +664,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductName.setBackground(originalTextFieldColor);
 		textFieldProductMeasurement.setEditable(true);
 		textFieldProductMeasurement.setBackground(originalTextFieldColor);
+		comboboxProductTaxShown.setEnabled(true);
 		textFieldProductTax.setEditable(true);
 		textFieldProductTax.setBackground(originalTextFieldColor);
 		// textFieldProductPrice.setEditable(true);
