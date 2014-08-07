@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +31,7 @@ import javax.swing.event.DocumentListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.chadik.kiev.model.Customer;
 import com.chadik.kiev.model.Product;
 import com.chadik.kiev.service.IProductService;
 import com.chadik.kiev.view.FrameMain;
@@ -162,12 +165,17 @@ public class ProductDialogImpl implements IProductDialog {
 		comboboxProductTaxShown = new JComboBox();
 		comboboxProductTaxShown.setBounds(xTextField, y, weightTextField,
 				height);
-		comboboxProductTaxShown.setEnabled(false);
 		populateComboboxProductTaxShown();
 		comboboxProductTaxShown.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				JComboBox comboBox = (JComboBox) e.getSource();
+				int selectedComboBoxTaxShownIndex = comboBox.getSelectedIndex();
+				if (selectedComboBoxTaxShownIndex > 0) {
+					String selectedComboBoxTaxShownTaxValue = mapTaxInfo
+							.get(String.valueOf(comboBox.getSelectedItem()));
+					populateTextFieldProductTax(selectedComboBoxTaxShownTaxValue);
+				}
 			}
 		});
 
@@ -175,30 +183,32 @@ public class ProductDialogImpl implements IProductDialog {
 
 		labelProductTax = new JLabel("Данок:");
 		labelProductTax.setBounds(xLabel, y, weightLabel, height);
-		labelProductTax.setForeground(mandatoryTextFieldColor);
+//		labelProductTax.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
-		textFieldProductTax.getDocument().addDocumentListener(
-				new DocumentListener() {
-					@Override
-					public void removeUpdate(DocumentEvent e) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
-					}
-
-					@Override
-					public void insertUpdate(DocumentEvent e) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
-					}
-
-					@Override
-					public void changedUpdate(DocumentEvent e) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
-					}
-				});
+		textFieldProductTax.setEditable(false);
+		textFieldProductTax.setBackground(nonEditableTextFieldColor);
+//		textFieldProductTax.getDocument().addDocumentListener(
+//				new DocumentListener() {
+//					@Override
+//					public void removeUpdate(DocumentEvent e) {
+//						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+//								.getText());
+//					}
+//
+//					@Override
+//					public void insertUpdate(DocumentEvent e) {
+//						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+//								.getText());
+//					}
+//
+//					@Override
+//					public void changedUpdate(DocumentEvent e) {
+//						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
+//								.getText());
+//					}
+//				});
 		textFieldProductTax.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -304,6 +314,9 @@ public class ProductDialogImpl implements IProductDialog {
 
 		panelFieldsContent.add(labelProductMeasurement);
 		panelFieldsContent.add(textFieldProductMeasurement);
+		
+		panelFieldsContent.add(labelProductTaxShown);
+		panelFieldsContent.add(comboboxProductTaxShown);
 
 		panelFieldsContent.add(labelProductTax);
 		panelFieldsContent.add(textFieldProductTax);
@@ -343,23 +356,16 @@ public class ProductDialogImpl implements IProductDialog {
 		comboboxProductTaxShown.addItem(firstItem);
 		
 		mapTaxInfo = new HashMap<String, String>();
-		mapTaxInfo.put("15,2542", "5");
-		mapTaxInfo.put("4,762", "18");
+		mapTaxInfo.put("5", "4,762");
+		mapTaxInfo.put("18", "15,2542");
 
 		for (Map.Entry<String, String> entry : mapTaxInfo.entrySet()) {
-			comboboxProductTaxShown.addItem(entry.getValue());
+			comboboxProductTaxShown.addItem(entry.getKey());
 		}
 	}
 	
-	public void populateTextFieldProductTax() {
-		comboboxProductTaxShown.removeAllItems();
-		mapTaxInfo = new HashMap<String, String>();
-		mapTaxInfo.put("15,2542", "5");
-		mapTaxInfo.put("4,762", "18");
-
-		for (Map.Entry<String, String> entry : mapTaxInfo.entrySet()) {
-			comboboxProductTaxShown.addItem(entry.getValue());
-		}
+	public void populateTextFieldProductTax(String productTax) {
+		textFieldProductTax.setText(productTax);
 	}
 
 	public Product getProductFromProductFields() {
@@ -377,12 +383,14 @@ public class ProductDialogImpl implements IProductDialog {
 
 	public void calculateProductPrice(String productTax, String productPrice) {
 		decimalFormat = new DecimalFormat("#.##");
+		decimalFormat.setRoundingMode(RoundingMode.DOWN);
 
 		if (!"".equals(textFieldProductTax.getText())
 				&& isValidDecimal(textFieldProductTax.getText())
 				&& !"".equals(productPrice) && isValidDecimal(productPrice)) {
-
-			double doubleProductTax = Double.parseDouble(productTax);
+			
+			double doubleProductTax = Double.parseDouble(productTax
+					.replaceAll(",", "."));
 			double doubleProductPrice = Double.parseDouble(productPrice
 					.replaceAll(",", "."));
 
@@ -418,7 +426,7 @@ public class ProductDialogImpl implements IProductDialog {
 	public boolean isValidDecimal(String textFieldValue) {
 		boolean result = false;
 
-		final String regularExpression = "\\d+([,]\\d{1,2})?";
+		final String regularExpression = "\\d+([,]\\d{1,4})?";
 
 		if (textFieldValue.matches(regularExpression)) {
 			result = true;
