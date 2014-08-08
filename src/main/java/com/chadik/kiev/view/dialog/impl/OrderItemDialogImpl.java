@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -446,7 +447,16 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 				.getProductMeasurement());
 		textFieldOrderItemProductPrice.setText(product.getProductPrice());
 		textFieldOrderItemProductPriceTax.setText(product.getProductTaxPrice());
-		textFieldOrderItemProductTax.setText(product.getProductTax());
+		if ("5".equals(product.getProductTax())) {
+			textFieldOrderItemProductTax.setText("4,762".replaceAll(
+					",", "."));
+		} else if ("18".equals(product.getProductTax())) {
+			textFieldOrderItemProductTax.setText("15,2542".replaceAll(
+					",", "."));
+		} else {
+			textFieldOrderItemProductTax.setText("".replaceAll(
+					",", "."));
+		}
 	}
 
 	public void populateOrderItemProductComboBox() {
@@ -469,7 +479,8 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	}
 
 	public void populateCalculatedOrderItemFields(String quantity) {
-		decimalFormat = new DecimalFormat("#.##");
+		decimalFormat = new DecimalFormat("0.00");
+//		decimalFormat.setRoundingMode(RoundingMode.DOWN);
 		String emptyString = "";
 
 		if (isInt(quantity)) {

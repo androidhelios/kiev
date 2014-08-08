@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +85,7 @@ public class ProductPanelImpl implements IProductPanel {
 	private JTextField textFieldProductPrice;
 	private JTextField textFieldProductTaxPrice;
 	private JTextField textFieldProductAdditionalInfo;
-	
+
 	private JComboBox comboboxProductTaxShown;
 
 	private JButton buttonNew;
@@ -94,7 +95,7 @@ public class ProductPanelImpl implements IProductPanel {
 	private JButton buttonCancel;
 
 	private DecimalFormat decimalFormat;
-	
+
 	private Map<String, String> mapTaxInfo;
 
 	private Color originalTextFieldColor;
@@ -262,7 +263,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductMeasurement.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
-		
+
 		labelProductTaxShown = new JLabel("Прикажан данок:");
 		labelProductTaxShown.setBounds(xLabel, y, weightLabel, height);
 		labelProductTaxShown.setForeground(mandatoryTextFieldColor);
@@ -280,10 +281,11 @@ public class ProductPanelImpl implements IProductPanel {
 				if (selectedComboBoxTaxShownIndex > 0) {
 					String selectedComboBoxTaxShownTaxValue = mapTaxInfo
 							.get(String.valueOf(comboBox.getSelectedItem()));
-					textFieldProductTax.setText(selectedComboBoxTaxShownTaxValue);
+					textFieldProductTax
+							.setText(selectedComboBoxTaxShownTaxValue);
 					if (!"".equals(textFieldProductTaxPrice.getText())) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
+						calculateProductPrice(textFieldProductTax.getText(),
+								textFieldProductTaxPrice.getText());
 					}
 				} else {
 					textFieldProductTax.setText("");
@@ -297,30 +299,33 @@ public class ProductPanelImpl implements IProductPanel {
 
 		labelProductTax = new JLabel("Данок:");
 		labelProductTax.setBounds(xLabel, y, weightLabel, height);
-//		labelProductTax.setForeground(mandatoryTextFieldColor);
+		// labelProductTax.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
-//		textFieldProductTax.getDocument().addDocumentListener(
-//				new DocumentListener() {
-//					@Override
-//					public void removeUpdate(DocumentEvent e) {
-//						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-//								.getText());
-//					}
-//
-//					@Override
-//					public void insertUpdate(DocumentEvent e) {
-//						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-//								.getText());
-//					}
-//
-//					@Override
-//					public void changedUpdate(DocumentEvent e) {
-//						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-//								.getText());
-//					}
-//				});
+		// textFieldProductTax.getDocument().addDocumentListener(
+		// new DocumentListener() {
+		// @Override
+		// public void removeUpdate(DocumentEvent e) {
+		// calculateProductPrice(textFieldProductTax.getText(),
+		// textFieldProductTaxPrice
+		// .getText());
+		// }
+		//
+		// @Override
+		// public void insertUpdate(DocumentEvent e) {
+		// calculateProductPrice(textFieldProductTax.getText(),
+		// textFieldProductTaxPrice
+		// .getText());
+		// }
+		//
+		// @Override
+		// public void changedUpdate(DocumentEvent e) {
+		// calculateProductPrice(textFieldProductTax.getText(),
+		// textFieldProductTaxPrice
+		// .getText());
+		// }
+		// });
 		textFieldProductTax.setMargin(new Insets(2, 2, 2, 2));
 
 		y = y + height + spacing;
@@ -349,20 +354,20 @@ public class ProductPanelImpl implements IProductPanel {
 				new DocumentListener() {
 					@Override
 					public void removeUpdate(DocumentEvent e) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
+						calculateProductPrice(textFieldProductTax.getText(),
+								textFieldProductTaxPrice.getText());
 					}
 
 					@Override
 					public void insertUpdate(DocumentEvent e) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
+						calculateProductPrice(textFieldProductTax.getText(),
+								textFieldProductTaxPrice.getText());
 					}
 
 					@Override
 					public void changedUpdate(DocumentEvent e) {
-						calculateProductPrice(textFieldProductTax.getText(), textFieldProductTaxPrice
-								.getText());
+						calculateProductPrice(textFieldProductTax.getText(),
+								textFieldProductTaxPrice.getText());
 					}
 				});
 		textFieldProductTaxPrice.setMargin(new Insets(2, 2, 2, 2));
@@ -452,9 +457,11 @@ public class ProductPanelImpl implements IProductPanel {
 				labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldProductMeasurement,
 				textFieldConstraints());
-		
-		panelInfoHolderContentInfo.add(labelProductTaxShown, labelConstraints());
-		panelInfoHolderContentInfo.add(comboboxProductTaxShown, textFieldConstraints());
+
+		panelInfoHolderContentInfo
+				.add(labelProductTaxShown, labelConstraints());
+		panelInfoHolderContentInfo.add(comboboxProductTaxShown,
+				textFieldConstraints());
 
 		panelInfoHolderContentInfo.add(labelProductTax, labelConstraints());
 		panelInfoHolderContentInfo.add(textFieldProductTax,
@@ -547,7 +554,7 @@ public class ProductPanelImpl implements IProductPanel {
 			comboboxProductTaxShown.setSelectedIndex(2);
 		} else {
 			comboboxProductTaxShown.setSelectedIndex(0);
-		} 
+		}
 		if (product.getProductTax().equals("5")) {
 			textFieldProductTax.setText("4,762");
 		} else if (product.getProductTax().equals("18")) {
@@ -555,18 +562,18 @@ public class ProductPanelImpl implements IProductPanel {
 		} else {
 			textFieldProductTax.setText("");
 		}
-//		textFieldProductTax.setText(product.getProductTax());
+		// textFieldProductTax.setText(product.getProductTax());
 		textFieldProductPrice.setText(product.getProductPrice());
 		textFieldProductTaxPrice.setText(product.getProductTaxPrice());
 		textFieldProductAdditionalInfo.setText(product
 				.getProductAdditionalInfo());
 	}
-	
+
 	public void populateComboboxProductTaxShown() {
 		comboboxProductTaxShown.removeAllItems();
 		String firstItem = "- Избери данок -";
 		comboboxProductTaxShown.addItem(firstItem);
-		
+
 		mapTaxInfo = new HashMap<String, String>();
 		mapTaxInfo.put("5", "4,762");
 		mapTaxInfo.put("18", "15,2542");
@@ -588,13 +595,15 @@ public class ProductPanelImpl implements IProductPanel {
 	}
 
 	public void calculateProductPrice(String productTax, String productPrice) {
-		decimalFormat = new DecimalFormat("#.##");
+		decimalFormat = new DecimalFormat("0.00");
+//		decimalFormat.setRoundingMode(RoundingMode.DOWN);
 
 		if (!"".equals(textFieldProductTax.getText())
 				&& isValidDecimal(textFieldProductTax.getText())
 				&& !"".equals(productPrice) && isValidDecimal(productPrice)) {
 
-			double doubleProductTax = Double.parseDouble(productTax);
+			double doubleProductTax = Double.parseDouble(productTax.replaceAll(
+					",", "."));
 			double doubleProductPrice = Double.parseDouble(productPrice
 					.replaceAll(",", "."));
 
@@ -630,7 +639,8 @@ public class ProductPanelImpl implements IProductPanel {
 		Product product = getProductFromProductTable(selectedRowProductId);
 		product.setProductName(textFieldProductName.getText());
 		product.setProductMeasurement(textFieldProductMeasurement.getText());
-		product.setProductTax(String.valueOf(comboboxProductTaxShown.getSelectedItem()));
+		product.setProductTax(String.valueOf(comboboxProductTaxShown
+				.getSelectedItem()));
 		product.setProductPrice(textFieldProductPrice.getText());
 		product.setProductTaxPrice(textFieldProductTaxPrice.getText());
 		product.setProductAdditionalInfo(textFieldProductAdditionalInfo
@@ -665,8 +675,8 @@ public class ProductPanelImpl implements IProductPanel {
 		comboboxProductTaxShown.setEnabled(false);
 		textFieldProductTax.setEditable(false);
 		textFieldProductTax.setBackground(nonEditableTextFieldColor);
-		// textFieldProductPrice.setEditable(false);
-		// textFieldProductPrice.setBackground(nonEditableTextFieldColor);
+		textFieldProductPrice.setEditable(false);
+		textFieldProductPrice.setBackground(nonEditableTextFieldColor);
 		textFieldProductTaxPrice.setEditable(false);
 		textFieldProductTaxPrice.setBackground(nonEditableTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(false);
@@ -685,7 +695,7 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductTax.setBackground(originalTextFieldColor);
 		// textFieldProductPrice.setEditable(true);
 		// textFieldProductPrice.setBackground(originalTextFieldColor);
-//		textFieldProductTaxPrice.setEditable(true);
+		textFieldProductTaxPrice.setEditable(true);
 		textFieldProductTaxPrice.setBackground(originalTextFieldColor);
 		textFieldProductAdditionalInfo.setEditable(true);
 		textFieldProductAdditionalInfo.setBackground(originalTextFieldColor);
@@ -745,7 +755,7 @@ public class ProductPanelImpl implements IProductPanel {
 	public boolean isValidDecimal(String textFieldValue) {
 		boolean result = false;
 
-		final String regularExpression = "\\d+([,]\\d{1,2})?";
+		final String regularExpression = "\\d+([,]\\d{1,4})?";
 
 		if (textFieldValue.matches(regularExpression)) {
 			result = true;

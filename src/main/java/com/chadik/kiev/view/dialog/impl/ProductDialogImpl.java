@@ -387,7 +387,7 @@ public class ProductDialogImpl implements IProductDialog {
 
 	public void calculateProductPrice(String productTax, String productPrice) {
 		decimalFormat = new DecimalFormat("0.00");
-		decimalFormat.setRoundingMode(RoundingMode.DOWN);
+//		decimalFormat.setRoundingMode(RoundingMode.DOWN);
 
 		if (!"".equals(textFieldProductTax.getText())
 				&& isValidDecimal(textFieldProductTax.getText())
