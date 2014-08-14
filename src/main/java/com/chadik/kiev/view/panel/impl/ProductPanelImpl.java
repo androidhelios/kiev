@@ -299,10 +299,13 @@ public class ProductPanelImpl implements IProductPanel {
 
 		labelProductTax = new JLabel("Данок:");
 		labelProductTax.setBounds(xLabel, y, weightLabel, height);
+		
 		// labelProductTax.setForeground(mandatoryTextFieldColor);
 
 		textFieldProductTax = new JTextField();
 		textFieldProductTax.setBounds(xTextField, y, weightTextField, height);
+		textFieldProductTax.setEditable(false);
+		textFieldProductTax.setBackground(nonEditableTextFieldColor);
 		// textFieldProductTax.getDocument().addDocumentListener(
 		// new DocumentListener() {
 		// @Override
@@ -691,8 +694,8 @@ public class ProductPanelImpl implements IProductPanel {
 		textFieldProductMeasurement.setEditable(true);
 		textFieldProductMeasurement.setBackground(originalTextFieldColor);
 		comboboxProductTaxShown.setEnabled(true);
-		textFieldProductTax.setEditable(true);
-		textFieldProductTax.setBackground(originalTextFieldColor);
+//		textFieldProductTax.setEditable(true);
+//		textFieldProductTax.setBackground(originalTextFieldColor);
 		// textFieldProductPrice.setEditable(true);
 		// textFieldProductPrice.setBackground(originalTextFieldColor);
 		textFieldProductTaxPrice.setEditable(true);
