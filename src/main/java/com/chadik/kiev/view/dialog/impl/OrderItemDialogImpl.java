@@ -92,6 +92,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	private Color originalTextFieldColor;
 
 	private DecimalFormat decimalFormat;
+	private DecimalFormat decimalFormatNoTrailingZeros;
 
 	private Map<Integer, Integer> mapProducts;
 
@@ -114,7 +115,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 	@Override
 	public JDialog initOrderItemDialog() {
 		dialog = new JDialog(frameMain.getMainFrame(), true);
-		dialog.setTitle("Нова Фактура");
+		dialog.setTitle("Нова количина артикли");
 		dialog.setResizable(false);
 		dialog.addWindowListener(new WindowAdapter() {
 			public void windowClosed(WindowEvent e) {
@@ -480,6 +481,7 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 
 	public void populateCalculatedOrderItemFields(String quantity) {
 		decimalFormat = new DecimalFormat("0.00");
+		decimalFormatNoTrailingZeros = new DecimalFormat("#.##");
 //		decimalFormat.setRoundingMode(RoundingMode.DOWN);
 		String emptyString = "";
 
@@ -499,16 +501,22 @@ public class OrderItemDialogImpl implements IOrderItemDialog {
 					* doubleOrderItemProductPriceTax;
 			double doubleOrderItemQuantityPriceWithoutTax = quantityTextFieldValue
 					* doubleOrderItemProductPrice;
-			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceTax
-					* doubleOrderItemProductTax / 100;
+			
+			double doublepercentageResult = (Double) (doubleOrderItemProductPriceTax * (doubleOrderItemProductTax / 100));
+			String stringPercentageResultDecimalFormat = decimalFormat.format(doublepercentageResult);
+			double doublePercentageResultDecimalformat = Double.parseDouble(stringPercentageResultDecimalFormat.replace(",", "."));
+			double percentageResultTotal = quantityTextFieldValue * doublePercentageResultDecimalformat;			
+			
+//			double doubleOrderItemQuantityTax = doubleOrderItemQuantityPriceTax
+//					* doubleOrderItemProductTax / 100;
 			double doubleOrderItemQuantityPrice = doubleOrderItemQuantityPriceWithoutTax
-					+ doubleOrderItemQuantityTax;
+					+ percentageResultTotal;
 
 			textFieldOrderItemQuantityPriceWithoutTax.setText(decimalFormat
 					.format(doubleOrderItemQuantityPriceWithoutTax));
 			textFieldOrderItemQuantityTax.setText(decimalFormat
-					.format(doubleOrderItemQuantityTax));
-			textFieldOrderItemQuantityPrice.setText(decimalFormat
+					.format(percentageResultTotal));
+			textFieldOrderItemQuantityPrice.setText(decimalFormatNoTrailingZeros
 					.format(doubleOrderItemQuantityPrice));
 		} else {
 			textFieldOrderItemQuantityPriceWithoutTax.setText(emptyString);
