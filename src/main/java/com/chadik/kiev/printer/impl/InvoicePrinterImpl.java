@@ -3,6 +3,7 @@ package com.chadik.kiev.printer.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -31,18 +32,24 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 
 	private Invoice invoice;
 	private List<OrderItem> orderItems;
+	
+	private DecimalFormat decimalFormat;
+	private DecimalFormat decimalFormatNoTrailingZeros;
 
 	@Override
 	public void initInvoicePrinter() {
 
 		try {
+			
+			decimalFormat = new DecimalFormat("0.00");
+			decimalFormatNoTrailingZeros = new DecimalFormat("#.##");
 
 			invoice = getInvoice();
 			orderItems = invoice.getOrderItems();
 
 			int numberOfRows = 25;
 
-			int headerwidths[] = { 5, 10, 10, 10, 10, 10, 10, 10, 10 };
+			int headerwidths[] = { 5, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
 			String orderItemColumnNames[] = getTableOrderItemColumnNames();
 
 			// String fileName = createFileName(invoice).replaceAll("\\", "-")
@@ -397,14 +404,46 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			tableInvoiceOrderItems.setWidths(headerwidths);
 			tableInvoiceOrderItems.setWidthPercentage(100);
 
-			for (int i = 0; i < orderItemColumnNames.length; i++) {
-				tableInvoiceOrderItems.addCell(new Phrase(
+			for (int i = 0; i < orderItemColumnNames.length - 4; i++) {
+
+				PdfPCell headerCell = new PdfPCell(new Phrase(
 						orderItemColumnNames[i], fontTableHeader));
+				headerCell.setRowspan(2);
+				headerCell.setVerticalAlignment(Element.ALIGN_CENTER);
+
+				tableInvoiceOrderItems.addCell(headerCell);
 			}
+
+			PdfPCell headerCellTax = new PdfPCell(new Phrase("Износ на ДДВ",
+					fontTableHeader));
+			headerCellTax.setColspan(2);
+			headerCellTax.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+			tableInvoiceOrderItems.addCell(headerCellTax);
+
+			PdfPCell headerCellTotalTax = new PdfPCell(new Phrase(
+					"Вкупен износ со ДДВ", fontTableHeader));
+			headerCellTotalTax.setColspan(2);
+			headerCellTotalTax.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+			tableInvoiceOrderItems.addCell(headerCellTotalTax);
+
+			tableInvoiceOrderItems.addCell(new Phrase("18%", fontTableHeader));
+			tableInvoiceOrderItems.addCell(new Phrase("5%", fontTableHeader));
+			tableInvoiceOrderItems.addCell(new Phrase("18%", fontTableHeader));
+			tableInvoiceOrderItems.addCell(new Phrase("5%", fontTableHeader));
 
 			int rowNumber = 0;
 
-			tableInvoiceOrderItems.setHeaderRows(1);
+			tableInvoiceOrderItems.setHeaderRows(2);
+			
+			double doubleTempSumQuantityBigTax = 0;
+			double doubleTempSumQuantitySmallTax = 0;
+			double doubleTempSumQuantityTaxSummary = 0;
+			
+			double doubleTempSumQuantityBigTaxPrice = 0;
+			double doubleTempSumQuantitySmallTaxPrice = 0;
+			double doubleTempSumQuantityTaxPriceSummary = 0;
 
 			for (OrderItem orderItem : orderItems) {
 				++rowNumber;
@@ -421,12 +460,41 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 						.getProduct().getProductPrice(), fontTableText));
 				tableInvoiceOrderItems.addCell(new Phrase(orderItem
 						.getOrderItemQuantityPriceWithoutTax(), fontTableText));
-				tableInvoiceOrderItems.addCell(new Phrase(orderItem
-						.getProduct().getProductTax(), fontTableText));
-				tableInvoiceOrderItems.addCell(new Phrase(orderItem
-						.getOrderItemQuantityTax(), fontTableText));
-				tableInvoiceOrderItems.addCell(new Phrase(orderItem
-						.getOrderItemQuantityPrice(), fontTableText));
+				// tableInvoiceOrderItems.addCell(new Phrase(orderItem
+				// .getProduct().getProductTax(), fontTableText));
+				if (orderItem.getProduct().getProductTax().contains("18")) {
+					tableInvoiceOrderItems.addCell(new Phrase(orderItem
+							.getOrderItemQuantityTax(), fontTableText));
+					tableInvoiceOrderItems
+							.addCell(new Phrase("", fontTableText));
+					tableInvoiceOrderItems.addCell(new Phrase(orderItem
+							.getOrderItemQuantityPrice(), fontTableText));
+					tableInvoiceOrderItems
+							.addCell(new Phrase("", fontTableText));
+					
+					doubleTempSumQuantityBigTax = doubleTempSumQuantityBigTax + Double.parseDouble(orderItem
+							.getOrderItemQuantityTax().replace(",", "."));
+					
+					doubleTempSumQuantityBigTaxPrice = doubleTempSumQuantityBigTaxPrice + Double.parseDouble(orderItem
+							.getOrderItemQuantityPrice().replace(",", "."));
+					
+				} else {
+					tableInvoiceOrderItems
+							.addCell(new Phrase("", fontTableText));
+					tableInvoiceOrderItems.addCell(new Phrase(orderItem
+							.getOrderItemQuantityTax(), fontTableText));
+					tableInvoiceOrderItems
+							.addCell(new Phrase("", fontTableText));
+					tableInvoiceOrderItems.addCell(new Phrase(orderItem
+							.getOrderItemQuantityPrice(), fontTableText));
+					
+					doubleTempSumQuantitySmallTax = doubleTempSumQuantitySmallTax + Double.parseDouble(orderItem
+							.getOrderItemQuantityTax().replace(",", "."));
+					
+					doubleTempSumQuantitySmallTaxPrice = doubleTempSumQuantitySmallTaxPrice + Double.parseDouble(orderItem
+							.getOrderItemQuantityPrice().replace(",", "."));
+				}
+
 			}
 
 			int leftOverRows = numberOfRows - orderItems.size();
@@ -443,26 +511,88 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 				tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
 				tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
 				tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
+				tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
 			}
 
-			PdfPCell cellInvoiceTotalText = new PdfPCell(new Phrase("Вкупно",
+			PdfPCell cellInvoicePercentageTotalText = new PdfPCell(new Phrase("Вкупен збир:",
 					fontTableHeader));
-			cellInvoiceTotalText.setColspan(3);
-			cellInvoiceTotalText.setHorizontalAlignment(Element.ALIGN_RIGHT);
-			cellInvoiceTotalText.setPaddingRight(10);
-			tableInvoiceOrderItems.addCell(cellInvoiceTotalText);
+			cellInvoicePercentageTotalText.setColspan(4);
+			cellInvoicePercentageTotalText.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cellInvoicePercentageTotalText.setPaddingRight(10);
+			tableInvoiceOrderItems.addCell(cellInvoicePercentageTotalText);
+			
+			String stringDoubleTempSumQuantityBigTax = "";
+			String stringDoubleTempSumQuantitySmallTax = "";
+			String stringDoubleTempSumQuantityBigTaxPrice = "";
+			String stringDoubleTempSumQuantitySmallTaxPrice = "";
+			
+			if (doubleTempSumQuantityBigTax > 0) {
+				stringDoubleTempSumQuantityBigTax = decimalFormat.format(doubleTempSumQuantityBigTax);
+			}
+			
+			if (doubleTempSumQuantitySmallTax > 0) {
+				stringDoubleTempSumQuantitySmallTax = decimalFormat.format(doubleTempSumQuantitySmallTax);
+			}
+			
+			if (doubleTempSumQuantityBigTaxPrice > 0) {
+				stringDoubleTempSumQuantityBigTaxPrice = decimalFormat.format(doubleTempSumQuantityBigTaxPrice);
+			}
+			
+			if (doubleTempSumQuantitySmallTaxPrice > 0) {
+				stringDoubleTempSumQuantitySmallTaxPrice = decimalFormat.format(doubleTempSumQuantitySmallTaxPrice);
+			}
 
-			tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
 			tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
 			tableInvoiceOrderItems.addCell(new Phrase(invoice
 					.getInvoiceTotalTax(), fontTableText));
+			tableInvoiceOrderItems.addCell(new Phrase(new Phrase(stringDoubleTempSumQuantityBigTax,
+					fontTableText)));
+			tableInvoiceOrderItems.addCell(new Phrase(new Phrase(stringDoubleTempSumQuantitySmallTax,
+					fontTableText)));
+			tableInvoiceOrderItems.addCell(new Phrase(new Phrase(stringDoubleTempSumQuantityBigTaxPrice,
+					fontTableText)));
+			tableInvoiceOrderItems.addCell(new Phrase(new Phrase(stringDoubleTempSumQuantitySmallTaxPrice,
+					fontTableText)));
+			
+			PdfPCell cellInvoiceTotalText = new PdfPCell(new Phrase("ВКУПНО ЗА ПЛАЌАЊЕ:",
+					fontTableHeader));
+			cellInvoiceTotalText.setColspan(4);
+			cellInvoiceTotalText.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cellInvoiceTotalText.setPaddingRight(10);
+			tableInvoiceOrderItems.addCell(cellInvoiceTotalText);
+			
 			tableInvoiceOrderItems.addCell(new Phrase("", fontTableText));
 			tableInvoiceOrderItems.addCell(new Phrase(invoice
-					.getInvoiceTotalPriceTax(), fontTableText));
-			tableInvoiceOrderItems.addCell(new Phrase(invoice
-					.getInvoiceTotalPrice(), fontTableText));
+					.getInvoiceTotalTax(), fontTableHeader));
+			
+			doubleTempSumQuantityTaxSummary = doubleTempSumQuantityBigTax + doubleTempSumQuantitySmallTax;
+			
+			PdfPCell cellInvoiceTotalQuantityTaxText = new PdfPCell(new Phrase(decimalFormat.format(doubleTempSumQuantityTaxSummary),
+					fontTableHeader));
+			cellInvoiceTotalQuantityTaxText.setColspan(2);
+			cellInvoiceTotalQuantityTaxText.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cellInvoiceTotalQuantityTaxText.setPaddingRight(10);
+			tableInvoiceOrderItems.addCell(cellInvoiceTotalQuantityTaxText);
+			
+			doubleTempSumQuantityTaxPriceSummary = doubleTempSumQuantityBigTaxPrice + doubleTempSumQuantitySmallTaxPrice;
+			
+			PdfPCell cellInvoiceTotalQuantityPriceText = new PdfPCell(new Phrase(decimalFormat.format(doubleTempSumQuantityTaxPriceSummary),
+					fontTableHeader));
+			cellInvoiceTotalQuantityPriceText.setColspan(2);
+			cellInvoiceTotalQuantityPriceText.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cellInvoiceTotalQuantityPriceText.setPaddingRight(10);
+			tableInvoiceOrderItems.addCell(cellInvoiceTotalQuantityPriceText);
 
 			pdfDocument.add(tableInvoiceOrderItems);
+			
+			doubleTempSumQuantityBigTax = 0;
+			doubleTempSumQuantitySmallTax = 0;
+			
+			doubleTempSumQuantityBigTaxPrice = 0;
+			doubleTempSumQuantitySmallTaxPrice = 0;
+			
+			doubleTempSumQuantityTaxSummary = 0;
+			doubleTempSumQuantityTaxPriceSummary = 0;
 
 			// pdfDocument.add(new Phrase("\n\n\n\n\n\n"));
 
@@ -506,7 +636,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 			tableInvoiceSignatures.setWidthPercentage(100);
 
 			PdfPCell cellInvoiceSignaturesInvoiceReceiver = new PdfPCell(
-					new Phrase("Фактурирал,", fontNormal));
+					new Phrase("Овластено лице за потпис", fontNormal));
 			cellInvoiceSignaturesInvoiceReceiver
 					.setHorizontalAlignment(Element.ALIGN_CENTER);
 			cellInvoiceSignaturesInvoiceReceiver.setBorder(Rectangle.NO_BORDER);
@@ -523,7 +653,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellInvoiceSignaturesInvoiceFillMiddleUpperCellLeft);
 
 			PdfPCell cellInvoiceSignaturesInvoiceFillMiddleUpperCellMiddle = new PdfPCell(
-					new Phrase("Примил,", fontNormal));
+					new Phrase("", fontNormal));
 			cellInvoiceSignaturesInvoiceFillMiddleUpperCellMiddle
 					.setHorizontalAlignment(Element.ALIGN_CENTER);
 			cellInvoiceSignaturesInvoiceFillMiddleUpperCellMiddle
@@ -541,7 +671,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellInvoiceSignaturesInvoiceFillMiddleUpperCellRight);
 
 			PdfPCell cellInvoiceSignaturesInvoiceDirector = new PdfPCell(
-					new Phrase("Директор,", fontNormal));
+					new Phrase("Директор", fontNormal));
 			cellInvoiceSignaturesInvoiceDirector
 					.setHorizontalAlignment(Element.ALIGN_CENTER);
 			cellInvoiceSignaturesInvoiceDirector.setBorder(Rectangle.NO_BORDER);
@@ -567,7 +697,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellInvoiceSignaturesInvoiceFillMiddleLowerCellLeft);
 
 			PdfPCell cellInvoiceSignaturesInvoiceFillMiddleLowerCellMiddle = new PdfPCell(
-					new Phrase("______________________", fontNormal));
+					new Phrase("", fontNormal));
 			cellInvoiceSignaturesInvoiceFillMiddleLowerCellMiddle
 					.setHorizontalAlignment(Element.ALIGN_MIDDLE);
 			cellInvoiceSignaturesInvoiceFillMiddleLowerCellMiddle
@@ -605,9 +735,10 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 	}
 
 	public String[] getTableOrderItemColumnNames() {
-		return new String[] { "Реден Бр.", "Опис", "Мерна единица",
-				"Количина", "Цена без данок", "Износ без данок", "ДДВ",
-				"Износ на ДДВ", "Вкупен износ со ДДВ" };
+		return new String[] { "Реден Бр.", "Опис", "Мерна единица", "Количина",
+				"Цена без данок", "Износ без данок", "Износ на ДДВ 18",
+				"Износ на ДДВ 5", "Вкупен износ со ДДВ 18",
+				"Вкупен износ со ДДВ 5" };
 	}
 
 	@Override
