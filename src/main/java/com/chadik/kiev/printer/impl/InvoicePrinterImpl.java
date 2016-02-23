@@ -671,7 +671,7 @@ public class InvoicePrinterImpl implements IInvoicePrinter {
 					.addCell(cellInvoiceSignaturesInvoiceFillMiddleUpperCellRight);
 
 			PdfPCell cellInvoiceSignaturesInvoiceDirector = new PdfPCell(
-					new Phrase("Директор", fontNormal));
+					new Phrase("Примил", fontNormal));
 			cellInvoiceSignaturesInvoiceDirector
 					.setHorizontalAlignment(Element.ALIGN_CENTER);
 			cellInvoiceSignaturesInvoiceDirector.setBorder(Rectangle.NO_BORDER);
